@@ -2,7 +2,7 @@
 # Courier::Filter::Module::DNSBL class
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: DNSBL.pm,v 1.9 2004/10/04 21:08:08 julian Exp $
+# $Id: DNSBL.pm,v 1.10 2004/10/22 00:27:12 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::DNSBL;
 
 =head1 VERSION
 
-0.13
+0.14
 
 =cut
 
-our $VERSION = 0.13;
+our $VERSION = 0.14;
 
 =head1 SYNOPSIS
 

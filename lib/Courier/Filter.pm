@@ -3,7 +3,7 @@
 # a purely Perl-based filter framework for the Courier MTA.
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Filter.pm,v 1.15 2004/10/04 21:03:41 julian Exp $
+# $Id: Filter.pm,v 1.16 2004/10/21 19:29:43 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter;
 
 =head1 VERSION
 
-0.13
+0.14
 
 =cut
 
-our $VERSION = 0.13;
+our $VERSION = 0.14;
 
 use v5.8;
 
@@ -29,6 +29,7 @@ use warnings;
 #use diagnostics;
 use strict;
 #use threads;
+#BEGIN { require threads if ... }
 
 use Error qw(:try);
 
@@ -142,6 +143,26 @@ created in the C<allfilters> (B<true>) or the C<filters> (B<false>) directory
 in Courier's run-time state directory (see
 L<Courier::Config/"COURIER_RUNTIME_DIR">).  Defaults to B<true>.
 
+=begin comment
+
+=item B<threads>
+
+A scalar containing the number of worker threads that should be employed for
+considering messages.  If B<undef> or B<0>, no multi-threading will be used and
+everything (socket connection handling, message consideration, and logging)
+will be done in a single thread.  The unthreaded mode is is the most
+memory-conserving mode and is generally the best choice for single-processor
+systems.  Otherwise, i.e. if set to B<a positive number>, a pool of an
+according number of worker threads will be employed for considering messages.
+The worker threads are created during the startup of Courier::Filter and
+process messages that are dispatched to them by the main thread.  Logging is
+also done in a single separate thread.  The multi-threaded mode requires a
+certain amount of memory for each thread but is a viable way to distribute work
+on multi-processor systems.  No more than two threads per processor are
+recommended.  Defaults to B<undef>.
+
+=end comment
+
 =item B<logger>
 
 A B<Courier::Filter::Logger> object that will be used for logging message
@@ -215,7 +236,7 @@ satisfy very most needs.
 A boolean value controlling whether the I<whole> filter process should I<not>
 apply any filtering to trusted messages.  For details on how the trusted status
 is determined, see the description of the C<trusted> property in
-Courier::Message.  In most configurations, this option can be used to
+Courier::Message.  In most MTA configurations, this option can be used to
 white-list so-called outbound messages.  Defaults to B<false>.
 
 =item B<testing>
@@ -257,6 +278,7 @@ sub new {
     $0 =~ m{([^/]+)$};
     my $name        = $options{name} || $1;
     my $mandatory   = defined($options{mandatory}) ? $options{mandatory} : TRUE;
+    my $threads     = $options{threads};
     my $logger      = $options{logger};
     my $modules     = [ @{$options{modules}} ] || [];
     my $trusting    = $options{trusting};
@@ -300,6 +322,7 @@ sub new {
     my $filter = {
 	name        => $name,
 	mandatory   => $mandatory,
+        threads     => $threads,
         logger      => $logger,
 	modules     => $modules,
         trusting    => $trusting,
@@ -340,9 +363,10 @@ sub destroy {
     $filter->{'socket'}->close();
     unlink($filter->{socket_name});
     
-#    foreach my $thread (threads->list()) {
-#	$thread->join()
-#	    if $thread->tid and $thread != threads->self;
+    # Dissolve worker thread pool:
+#    foreach my $thread (threads->list) {
+#        $thread->join()
+#            if $thread->tid and $thread != threads->self;
 #    }
     
     return;
@@ -388,13 +412,8 @@ sub run {
 	foreach my $handle (@ready_handles) {
 	    if ($handle == $socket) {
 		# Incoming connection request.
-		my $connection = $socket->accept();
-#                STDERR->print("DEBUG: Creating thread (detached)\n");
-#                threads->new(\&handle_connection, $filter, $connection)->detach();
-#                STDERR->print("DEBUG: Created thread\n");
-                $filter->handle_connection($connection);
-#		threads->new(\&handle_connection, $filter, $connection);
-#		threads->new(\&handle_connection, $filter, $connection)->join();
+                $filter->handle_connection($socket);
+#                threads->new(\&handle_connection, $filter, $socket)->detach();
 	    }
 	    elsif ($handle == \*STDIN and STDIN->eof()) {
 		# STDIN got closed.
@@ -413,7 +432,7 @@ sub run {
 
 =begin comment
 
-=item B<handle_connection($connection)>: RETURNS SCALAR, SCALAR; THROWS Perl
+=item B<handle_connection($socket)>: RETURNS SCALAR, SCALAR; THROWS Perl
 exceptions
 
 Handles a single incoming connection to the courierfilter socket.  Reads the
@@ -427,8 +446,10 @@ returns the SMTP status response I<text> and I<code> given to Courier.
 =cut
 
 sub handle_connection {
-    my ($filter, $connection) = @_;
+    my ($filter, $socket) = @_;
     my $class = ref($filter);
+    
+    my $connection = $socket->accept();
     
     my $message_file_name;
     my @control_file_names;
@@ -563,6 +584,23 @@ sub mandatory {
     my ($filter) = @_;
     # Read-only!
     return $filter->{mandatory};
+}
+
+=begin comment
+
+=item B<threads>: RETURNS SCALAR
+
+Returns a scalar containing the number of filter threads, as set through the
+constructor's C<threads> option.
+
+=end comment
+
+=cut
+
+sub threads {
+    my ($filter) = @_;
+    # Read-only!
+    return $filter->{threads};
 }
 
 =item B<logger>: RETURNS Courier::Filter::Logger

@@ -2,7 +2,7 @@
 # Courier::Filter::Module::SPF class
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
-# $Id: SPF.pm,v 1.11 2004/10/04 21:10:22 julian Exp $
+# $Id: SPF.pm,v 1.12 2004/10/22 00:27:12 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::SPF;
 
 =head1 VERSION
 
-0.13
+0.14
 
 =cut
 
-our $VERSION = 0.13;
+our $VERSION = 0.14;
 
 =head1 SYNOPSIS
 

@@ -1,8 +1,18 @@
+libcourier-filter-perl (0.14) unstable; urgency=low
+
+  * Added documentation for the test-filter-module and pureperlfilter
+    executables.
+  * test-filter-module:
+    - Fixed the command-line parsing and handling of control file names.
+    - Made the result output format compatible with multi-line results.
+
+ -- Julian Mehnle <julian@mehnle.net>  Fri, 22 Oct 2004 02:16:18 +0200
+
 libcourier-filter-perl (0.13) unstable; urgency=low
 
   * Initial Debian release.
   * Deprecated the MIMEParts filter module in favor of the new Parts filter
-    module, which is compatible bot a lot more powerful:
+    module, which is compatible but a lot more powerful:
     - Switched from completely-in-memory processing to using temporary files
       in order to work around two nasty bugs in MIME::Parser and
       Archive::Zip.

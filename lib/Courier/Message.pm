@@ -2,7 +2,7 @@
 # Courier::Message class
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Message.pm,v 1.14 2004/10/04 21:03:57 julian Exp $
+# $Id: Message.pm,v 1.15 2004/10/22 00:27:12 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Message;
 
 =head1 VERSION
 
-0.13
+0.14
 
 =cut
 
-our $VERSION = 0.13;
+our $VERSION = 0.14;
 
 use v5.8;
 

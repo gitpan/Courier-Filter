@@ -2,7 +2,7 @@
 # Courier::Filter::Module::Parts class
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Parts.pm,v 1.1 2004/10/04 16:12:05 julian Exp $
+# $Id: Parts.pm,v 1.2 2004/10/22 00:27:12 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::Parts;
 
 =head1 VERSION
 
-0.13
+0.14
 
 =cut
 
-our $VERSION = 0.13;
+our $VERSION = 0.14;
 
 =head1 SYNOPSIS
 

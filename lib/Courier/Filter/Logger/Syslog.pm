@@ -2,7 +2,7 @@
 # Courier::Filter::Logger::Syslog class
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Syslog.pm,v 1.6 2004/10/04 21:07:29 julian Exp $
+# $Id: Syslog.pm,v 1.7 2004/10/22 00:27:12 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Logger::Syslog;
 
 =head1 VERSION
 
-0.13
+0.14
 
 =cut
 
-our $VERSION = 0.13;
+our $VERSION = 0.14;
 
 =head1 SYNOPSIS
 

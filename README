@@ -1,4 +1,4 @@
-Courier::Filter 0.13
+Courier::Filter 0.14
 A purely Perl-based mail filter framework for the Courier MTA.
 (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 <http://www.mehnle.net/software/courier-filter>
@@ -41,5 +41,5 @@ Read the following perldocs in order to get started with Courier::Filter:
 * Courier::Filter
 * Courier::Filter::Module
 
-# $Id: README,v 1.6 2004/10/02 16:35:22 julian Exp $
+# $Id: README,v 1.7 2004/10/22 00:27:05 julian Exp $
 # vim:tw=79

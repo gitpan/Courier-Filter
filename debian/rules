@@ -30,6 +30,11 @@ install-stamp: build-stamp
 	dh_clean -k
 	$(BUILD) test
 	$(BUILD) install destdir=$(TMP)
+	
+	# Special manpage handling for bin/pureperlfilter:
+	mkdir -p $(TMP)/usr/share/man/man8
+	pod2man -s8p bin/pureperlfilter $(TMP)/usr/share/man/man8/pureperlfilter.8p
+	
 	touch install-stamp
 
 # Build architecture-independent files here:

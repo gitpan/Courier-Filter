@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Courier-Filter
-version: 0.13
+version: 0.14
 author: Julian Mehnle <julian@mehnle.net>
 abstract: |-
   A purely Perl-based mail filter framework for the Courier MTA
@@ -22,50 +22,50 @@ recommends:
 provides:
   Courier::Config:
     file: lib/Courier/Config.pm
-    version: 0.13
+    version: 0.14
   Courier::Error:
     file: lib/Courier/Error.pm
-    version: 0.13
+    version: 0.14
   Courier::Filter:
     file: lib/Courier/Filter.pm
-    version: 0.13
+    version: 0.14
   Courier::Filter::Logger:
     file: lib/Courier/Filter/Logger.pm
-    version: 0.13
+    version: 0.14
   Courier::Filter::Logger::File:
     file: lib/Courier/Filter/Logger/File.pm
-    version: 0.13
+    version: 0.14
   Courier::Filter::Logger::IOHandle:
     file: lib/Courier/Filter/Logger/IOHandle.pm
-    version: 0.13
+    version: 0.14
   Courier::Filter::Logger::Syslog:
     file: lib/Courier/Filter/Logger/Syslog.pm
-    version: 0.13
+    version: 0.14
   Courier::Filter::Module:
     file: lib/Courier/Filter/Module.pm
-    version: 0.13
+    version: 0.14
   Courier::Filter::Module::DNSBL:
     file: lib/Courier/Filter/Module/DNSBL.pm
-    version: 0.13
+    version: 0.14
   Courier::Filter::Module::Envelope:
     file: lib/Courier/Filter/Module/Envelope.pm
-    version: 0.13
+    version: 0.14
   Courier::Filter::Module::Header:
     file: lib/Courier/Filter/Module/Header.pm
-    version: 0.13
+    version: 0.14
   Courier::Filter::Module::MIMEParts:
     file: lib/Courier/Filter/Module/MIMEParts.pm
-    version: 0.13
+    version: 0.14
   Courier::Filter::Module::Parts:
     file: lib/Courier/Filter/Module/Parts.pm
-    version: 0.13
+    version: 0.14
   Courier::Filter::Module::SPF:
     file: lib/Courier/Filter/Module/SPF.pm
-    version: 0.13
+    version: 0.14
   Courier::Message:
     file: lib/Courier/Message.pm
-    version: 0.13
+    version: 0.14
   MIME::Words::Better:
     file: lib/Courier/Message.pm
-    version: 0.13
+    version: 0.14
 generated_by: Module::Build version 0.25

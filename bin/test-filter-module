@@ -4,9 +4,59 @@
 # A tester for Courier::Filter modules.
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: test-filter-module,v 1.6 2004/10/02 17:23:04 julian Exp $
+# $Id: test-filter-module,v 1.7 2004/10/22 00:06:36 julian Exp $
 #
 ##############################################################################
+
+=head1 NAME
+
+test-filter-module - A tester for Courier::Filter modules
+
+=head1 VERSION
+
+0.14
+
+=head1 SYNOPSIS
+
+B<test-filter-module> I<module> [I<options>] I<message> [+I<control> ...] [...]
+
+=head1 DESCRIPTION
+
+This is a tester for B<Courier::Filter> modules.  It sets up the specified
+Courier::Filter::Module::I<module> filter module, using any supplied
+I<options>, and then queries the filter module for consideration of the given
+I<message> file and zero or more I<control> files.  More than one
+message/control files tuple may also be specified, in which case the filter
+module is applied to each message and its respective control file(s).  Filter
+module options must be specified in the format -I<option>=I<expr>, where
+I<expr> may be any valid Perl expression.
+
+=head1 EXAMPLES
+
+=over
+
+=item B<test-filter-module> DNSBL -zones='["bl.foo.org", "bl.bar.org"]'
+test.rfc2822 +test.control
+
+Applies the Courier::Filter::Module::DNSBL filter module to the
+F<test.rfc2822>/F<test.control> message/control file tuple (taking the sending
+machine's IP address from the control file), using the blacklist DNS zones
+C<bl.foo.org> and C<bl.bar.org>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Courier::Filter::Overview>, L<Courier::Filter>
+
+For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
+L<Courier::Filter::Overview>.
+
+=head1 AUTHOR
+
+Julian Mehnle <julian@mehnle.net>
+
+=cut
 
 use warnings;
 #use diagnostics;
@@ -32,14 +82,14 @@ if (@ARGV < 2 or $ARGV[0] =~ /^(?:-h|--help)$/) {
     ($script_name = $0) =~ s/^.*\///;
     STDERR->print(
         "Usage:\n" .
-        "    $script_name MODULE [OPTION...] MESSAGE [+CONTROL...] [...]\n" .
+        "    $script_name MODULE [OPTIONS] MESSAGE [+CONTROL ...] [...]\n" .
         "\n" .
         "Applies the " . MODULE_NAME_PREFIX . "MODULE filter module to the specified\n" .
         "MESSAGE file and any CONTROL files (if specified).  Multiple MESSAGE files can\n" .
         "be specified, and each one may be followed by any number of CONTROL files, each\n" .
         "prefixed by a '+' character.\n" .
-        "Optionally, OPTIONs in the format -<option>=<expr> can be given to the MODULE\n" .
-        "constructor, where <expr> can be any valid perl expression.\n" .
+        "Optionally, OPTIONS in the format -<option>=<expr> can be given to the MODULE\n" .
+        "constructor, where <expr> may be any valid Perl expression.\n" .
         "\n" .
         "Example:\n" .
         "    $script_name \\\n" .
@@ -60,7 +110,7 @@ my @messages;
 
 while (@ARGV) {
     my $file_name = shift();
-    if ($file_name !~ /^\+/) {
+    if ($file_name !~ /^\+(.*)/) {
         # Message file:
         my $message = Courier::Message->new(
             file_name => $file_name
@@ -71,8 +121,10 @@ while (@ARGV) {
         # Control file, belonging to the previous message file:
         STDERR->print("Orphan control file specified.  List a message file first.\n"), exit(64) # EX_USAGE
             if not @messages;
-        my $control_file_names = $messages[$#messages]->{control_file_names};
-        push(@$control_file_names, $file_name);
+        push(
+            @{ $messages[$#messages]->{control_file_names} },
+            $1
+        );
     }
 }
 
@@ -91,8 +143,19 @@ my $module = $class->new(
 
 foreach my $message (@messages) {
     my ($result, $code) = $module->consider($message);
-    $result ||= 'Ok';
-    $code &&= "[$code]";
-    $code ||= '';
-    print($message->file_name . ": $result $code\n");
+    
+    if ($result) {
+        $code ||= 550;
+    }
+    else {
+        $result = 'Ok';
+        $code ||= 200;
+    }
+    
+    my @lines = split(/\n/, $result);
+    my $last_line = pop(@lines);
+    print($message->file_name . ": $code-$_\n") foreach @lines;
+    print($message->file_name . ": $code $last_line\n");
 }
+
+# vim:tw=79

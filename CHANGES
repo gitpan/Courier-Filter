@@ -4,12 +4,20 @@
 #   * = Fixed a bug
 #   + = Added a feature (in a backwards compatible way)
 
+--- 0.14 (2004-10-22 00:10)
+
+  + Added documentation for the test-filter-module and pureperlfilter
+    executables.
+  * test-filter-module:
+    * Fixed the command-line parsing and handling of control file names.
+    * Made the result output format compatible with multi-line results.
+
 --- 0.13 (2004-10-04 23:00)
 
   + Added Debian package control files.
 
   x Deprecated the MIMEParts filter module in favor of the new Parts filter
-    module, which is compatible bot a lot more powerful:
+    module, which is compatible but a lot more powerful:
     x Switched from completely-in-memory processing to using temporary files in
       order to work around two nasty bugs in MIME::Parser and Archive::Zip.
     x Renamed the "max_size" constructor option to "max_message_size".
@@ -61,5 +69,5 @@
 
 --- 0.1 (initial release) (2004-02-16 23:00)
 
-# $Id: CHANGES,v 1.8 2004/10/05 10:11:00 julian Exp $
+# $Id: CHANGES,v 1.9 2004/10/22 00:15:40 julian Exp $
 # vim:tw=79

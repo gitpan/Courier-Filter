@@ -15,42 +15,42 @@ not run its Makefile.PL or Build.PL.
 Hash: SHA1
 
 SHA1 5a7a4bbdcf91c7d8658a0f7d6bf6b9ba9236c6c0 Build.PL
-SHA1 ce6cd1fec72ad207fc54a9ce7f901a503b04ccf5 CHANGES
+SHA1 d37a0cb70152f079e3cb303a44304a92497fcb46 CHANGES
 SHA1 78338b07f081aa553e9ce4950050b6e98518aa30 MANIFEST
-SHA1 190f15c33f702dc60e159e20356e4bbdeaf3d313 META.yml
+SHA1 42bed1b8663711c05df9c8fc0907ce5881a16b62 META.yml
 SHA1 1099db72cd05ad1cad02a0b579d5f8c9786e1e92 Makefile.PL
-SHA1 9bc7e081907f280309bb086502fbfcf6c4dfcc5a README
+SHA1 bba3f3389a652cf6f6abf0988ed06a08d6009b0b README
 SHA1 8d7c02992aa89e8fdec1f49e77d67f78055b4bab TODO
-SHA1 01627a8bece03c46cc75352198ed588325cea4fc bin/pureperlfilter
-SHA1 fe506b6c1556d7ce6df988046e4d5121aa8ffeeb bin/test-filter-module
-SHA1 ae16885bd36ee5c0959a4e840ce5355776863917 debian/changelog
+SHA1 816f97fd8380be9a73e778d8f303051ad6688d3d bin/pureperlfilter
+SHA1 37bbf2097f7c71c4ecdbe91697e6ec5550d66d54 bin/test-filter-module
+SHA1 5ebeae3a0a16d689bfb9f2bba3a8ce367791b19d debian/changelog
 SHA1 9c6b057a2b9d96a4067a749ee3b3b0158d390cf1 debian/compat
 SHA1 cb2934be885ad5d41df51f4493d05f23e84b94bb debian/control
 SHA1 99f2452d050a65f0096ca56950fb389117690e8f debian/copyright
 SHA1 41cef66e3314350d9e024fe5eec99af58725895a debian/install
-SHA1 916e55a29d82800bfdade0317b66aeb41e38ee58 debian/rules
+SHA1 98b8f2e36c762117745131bbf1e4c88557ad2e4c debian/rules
 SHA1 e940ca73dc10e7cbd2324e83ec6eb18a28273fc9 etc/pureperlfilter.conf
 SHA1 9e90f6c88f0aac6f5694a9fdffeb87771eb314a9 examples/pureperlfilter.conf
-SHA1 f3c0b42c9c528e0ef093096918caf6b36640c577 lib/Courier/Config.pm
-SHA1 335a1ee46b25a6d078d7034aa1c6f11545093890 lib/Courier/Error.pm
-SHA1 e3faddf59c118fe28e70c9d5d4f18ff9eef036de lib/Courier/Filter.pm
-SHA1 df5c6508e69dd5b4389e9f17946a99ab622641f5 lib/Courier/Filter/Logger.pm
-SHA1 bf4a71fb0b4046e3c31476457452ffff5c522e18 lib/Courier/Filter/Logger/File.pm
-SHA1 75f610172df99d47f2e035ba8157c39b5035f023 lib/Courier/Filter/Logger/IOHandle.pm
-SHA1 56f2c42a8189913624925dfe6a4258a3bfc15a77 lib/Courier/Filter/Logger/Syslog.pm
-SHA1 94472e81b74c8846e74c913a3dea1ad1676537ea lib/Courier/Filter/Module.pm
-SHA1 010214f6c244164f4238821f10d4fba3a471fbb8 lib/Courier/Filter/Module/DNSBL.pm
-SHA1 17853942f1ef5254aa63d072b68e5595cb8c9947 lib/Courier/Filter/Module/Envelope.pm
-SHA1 48ab5c5a433a6576e3a94a59c8a3749d6fe1e39a lib/Courier/Filter/Module/Header.pm
-SHA1 0d2762f3156024159c3058a2bd7e4e1a853f0acb lib/Courier/Filter/Module/MIMEParts.pm
-SHA1 2f6510c7104e6546e5055588192299aa6d18f473 lib/Courier/Filter/Module/Parts.pm
-SHA1 ed11f996ed6d3cadd4d9148f016f9b9f73d1aba2 lib/Courier/Filter/Module/SPF.pm
+SHA1 0feee13e28aba5f5e1ca263ecc0e399a05b0569a lib/Courier/Config.pm
+SHA1 feeaf89d90d61b6d491f9c58e66654de9aed1992 lib/Courier/Error.pm
+SHA1 0a5ca5ad2cc0f84cfbef8e69e934ae9f5dbe3fd8 lib/Courier/Filter.pm
+SHA1 c352cb99dd90dff650bb7e7e76ad20117e1a879b lib/Courier/Filter/Logger.pm
+SHA1 5835a0d7dc41646eec96fdf15524aadcd9faf79d lib/Courier/Filter/Logger/File.pm
+SHA1 a1729343e8454de7d31f7cbd26a741391871a8c4 lib/Courier/Filter/Logger/IOHandle.pm
+SHA1 99dce47101daa755344e2e6ccb0c7fdea47ac911 lib/Courier/Filter/Logger/Syslog.pm
+SHA1 50e5eb6181f97305de37c5a8c32577779130db39 lib/Courier/Filter/Module.pm
+SHA1 b0ba1631c1e548d75b1cd54148e079397518dc22 lib/Courier/Filter/Module/DNSBL.pm
+SHA1 96c6cd02612f429e83497b865b276ce195b1c7a6 lib/Courier/Filter/Module/Envelope.pm
+SHA1 05de3eaa62794b59e1b7511f46e1c193db3d8b64 lib/Courier/Filter/Module/Header.pm
+SHA1 11541c1a129854c85777486c4d0b163cadb194b1 lib/Courier/Filter/Module/MIMEParts.pm
+SHA1 95fc76f258d72eebf2c24cf9d5209b67d9a8a5d5 lib/Courier/Filter/Module/Parts.pm
+SHA1 68c5bbcfd9d5b372e0ddec4fb31f1984c0a47b7d lib/Courier/Filter/Module/SPF.pm
 SHA1 18f9b12a7554a96e5b6f469ae3503949aebe49b3 lib/Courier/Filter/Overview.pod
-SHA1 4db0ecde3780da3a3de5cd073ebd2623a1eacd3b lib/Courier/Message.pm
+SHA1 d49830f136c4955816ff64dbd449d1c82b7b88d6 lib/Courier/Message.pm
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.2.4 (GNU/Linux)
 
-iD8DBQFBYnN6aWlsL2XXXh8RAlQzAJ47ZnJ0U00Q89fJP29jpKEzgVQBYgCcCOee
-XZWhrTJyQbPU07spPnD0JW4=
-=6jGk
+iD8DBQFBeF+0aWlsL2XXXh8RArmQAJ4loohXGIXbMs8wLJn3yGtfu5GW0QCfdFcc
+ifalJtHGKl4UmkWJkuEYy/c=
+=rWnW
 -----END PGP SIGNATURE-----
