@@ -1,0 +1,45 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.35.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It would check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 87ba8940448baa88dacd0dd1f38c2021eb59c952 Build.PL
+SHA1 b9254ab71f8751d5664a24d3af9e0832282a433d CHANGES
+SHA1 0f392cbc6cf5a93f7cead713424bd0f4b7a20b27 MANIFEST
+SHA1 f5658fdfba9fc064b87f750da8124cec820eeba6 META.yml
+SHA1 c7aaffac137d85fb17345c8fd3de23a84542ff08 README
+SHA1 3c3143faaa28baa18c0e38925fffd2e515ff453c examples/pureperlfilter.conf
+SHA1 7a879b590815429eb9a61d17720b5a7b0467759a lib/Courier/Config.pm
+SHA1 59bbe5efc1984af85971c244af291b1db3dc7b57 lib/Courier/Error.pm
+SHA1 c49c0bc7606e5df11f5fde1695c0455127123f8b lib/Courier/Filter.pm
+SHA1 a1d9771dfe32a5c7f80d3f60eff0322b8de7f6b9 lib/Courier/Filter/Logger.pm
+SHA1 efad3d038b8f7e84a7a11a82bd4fef04c8e23b46 lib/Courier/Filter/Logger/File.pm
+SHA1 1b82c788baac62bdea68e20b73d19144aee6b7d8 lib/Courier/Filter/Logger/IOHandle.pm
+SHA1 cca45bff925a60e2a8e1b2539dd7efc76bc3f455 lib/Courier/Filter/Logger/Syslog.pm
+SHA1 c95bc0ebffff0428633c5f908c37ffd9486aecf9 lib/Courier/Filter/Module.pm
+SHA1 0ca4d78b9eb5ab02c24ec84e238f4e62948afbdc lib/Courier/Filter/Module/DNSBL.pm
+SHA1 e5ca830a915bb5a2eb2f7b0237875e4eee4a8acb lib/Courier/Filter/Module/Header.pm
+SHA1 c6385470108aa8a371a6a313a0bec0cb8a5a37a7 lib/Courier/Filter/Module/MIMEParts.pm
+SHA1 ffcca2808c89d4e964bc2d1e3f2a2531a8cef0df lib/Courier/Filter/Module/SPF.pm
+SHA1 ea1a9bea9f0eb01088d0b2066b71166ff679255e lib/Courier/Filter/Overview.pod
+SHA1 2bacd0257dcf0c2b859f761f151db5d13002c181 lib/Courier/Message.pm
+SHA1 9ba792abf636a24e4722934ee1658bc39389ad49 pureperlfilter
+SHA1 9a9c2428df64f0840cbc26cc7c22b90746f24184 test-filter-module
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.4 (GNU/Linux)
+
+iD8DBQFAMVycaWlsL2XXXh8RAvBQAJ0ex0LwIYD1ZCF0mffvcJcEHcneBwCePXuC
+n0JwUVkb1v30BS6U435cxGw=
+=Oaqh
+-----END PGP SIGNATURE-----

@@ -1,0 +1,24 @@
+Build.PL
+CHANGES
+examples/pureperlfilter.conf
+lib/Courier/Config.pm
+lib/Courier/Error.pm
+lib/Courier/Filter.pm
+lib/Courier/Filter/Logger.pm
+lib/Courier/Filter/Logger/File.pm
+lib/Courier/Filter/Logger/IOHandle.pm
+lib/Courier/Filter/Logger/Syslog.pm
+lib/Courier/Filter/Module.pm
+lib/Courier/Filter/Module/DNSBL.pm
+lib/Courier/Filter/Module/Header.pm
+lib/Courier/Filter/Module/MIMEParts.pm
+lib/Courier/Filter/Module/SPF.pm
+lib/Courier/Filter/Overview.pod
+lib/Courier/Message.pm
+MANIFEST			This list of files
+META.yml
+pureperlfilter
+README
+test-filter-module
+
+SIGNATURE    Added here by Module::Build

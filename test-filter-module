@@ -1,0 +1,118 @@
+#!/usr/bin/perl
+
+# A tester for pureperlfilter modules.
+#
+# (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
+#
+# $Id: test-filter-module.pl,v 1.4 2004/01/08 00:56:53 julian Exp $
+#
+# $Log: test-filter-module.pl,v $
+# Revision 1.4  2004/01/08 00:56:53  julian
+# - Use Courier::Message instead of Courier::Filter::Message.
+# - Use new Courier::Message::new() calling convention.
+#
+# Revision 1.3  2004/01/06 23:39:56  julian
+# - Undo the 'Courier::Filter::Module::' namespace change. That was a wrong
+#   decision.
+#
+# Revision 1.2  2004/01/06 18:57:33  julian
+# - Use 'Courier::Message' instead of 'Courier::Filter::Message'.
+# - Use 'Courier::Filter::' instead of 'Courier::Filter::Module::' as the
+#   module name prefix.
+# - Added usage info output.
+# - Allow control files to be specified (as '+control_file' after each
+#   message file).
+# - Enable testing mode for the module being tested, so it won't do any
+#   persistent things.
+#
+# Revision 1.1  2003/10/13 14:34:50  julian
+# Initial check-in.
+#
+##############################################################################
+
+use warnings;
+#use diagnostics;
+use strict;
+use boolean;
+
+use IO::Handle;
+
+use Courier::Message;
+
+# Declarations:
+##############################################################################
+
+use constant MODULE_NAME_PREFIX => 'Courier::Filter::Module::';
+
+# Implementation:
+##############################################################################
+
+if (@ARGV < 2 or $ARGV[0] =~ /^(?:-h|--help)$/) {
+    my $script_name;
+    ($script_name = $0) =~ s/^.*\///;
+    STDERR->print(
+        "Usage:\n" .
+        "    $script_name MODULE [OPTION...] MESSAGE [+CONTROL...] [...]\n" .
+        "\n" .
+        "Applies the " . MODULE_NAME_PREFIX . "MODULE filter module to the specified\n" .
+        "MESSAGE file and any CONTROL files (if specified).  Multiple MESSAGE files can\n" .
+        "be specified, and each one may be followed by any number of CONTROL files, each\n" .
+        "prefixed by a '+' character.\n" .
+        "Optionally, OPTIONs in the format -<option>=<expr> can be given to the MODULE\n" .
+        "constructor, where <expr> can be any valid perl expression.\n" .
+        "\n" .
+        "Example:\n" .
+        "    $script_name \\\n" .
+        "        DNSBL -zones='[qw(bl.foo.org bl.bar.org)]' \\\n" .
+        "        test.rfc2822 +test.control\n" .
+        "\n"
+    );
+    exit(64); # EX_USAGE
+}
+
+my $module_name = shift();
+
+my %options;
+$options{$1} = eval($2), shift()
+    while $ARGV[0] =~ /^-(.*?)=(.*)/;
+
+my @messages;
+
+while (@ARGV) {
+    my $file_name = shift();
+    if ($file_name !~ /^\+/) {
+        # Message file:
+        my $message = Courier::Message->new(
+            file_name => $file_name
+        );
+        push(@messages, $message);
+    }
+    else {
+        # Control file, belonging to the previous message file:
+        STDERR->print("Orphan control file specified.  List a message file first.\n"), exit(64) # EX_USAGE
+            if not @messages;
+        my $control_file_names = $messages[$#messages]->{control_file_names};
+        push(@$control_file_names, $file_name);
+    }
+}
+
+my $class = MODULE_NAME_PREFIX . $module_name;
+
+eval("use $class;");
+if ($@) {
+    STDERR->print("Unable to load filter module $module_name ($class).\n");
+    exit(1);
+}
+
+my $module = $class->new(
+    %options,
+    testing => TRUE # Enable testing mode, so no real-life/persistent things are done.
+);
+
+foreach my $message (@messages) {
+    my ($result, $code) = $module->consider($message);
+    $result ||= 'Ok';
+    $code &&= "[$code]";
+    $code ||= '';
+    print($message->file_name . ": $result $code\n");
+}

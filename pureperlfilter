@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+
+#
+# Bootstrapping module for Courier::Filter,
+# the purely Perl-based filter framework for the Courier MTA.
+#
+# (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
+#
+# $Id: pureperlfilter,v 1.6 2004/01/11 15:56:56 julian Exp $
+#
+# $Log: pureperlfilter,v $
+##############################################################################
+
+use warnings;
+#use diagnostics;
+use strict;
+use boolean;
+
+use Courier::Config;
+use Courier::Filter;
+
+our $options;
+my $config_file_name = Courier::Config::COURIER_FILTER_CONF;
+require $config_file_name;
+
+my $filter = Courier::Filter->new(%$options);
+exit($filter->run() || 0);
