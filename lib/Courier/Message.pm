@@ -3,7 +3,7 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Message.pm,v 1.9 2004/02/17 13:31:15 julian Exp $
+# $Id: Message.pm,v 1.11 2004/02/22 22:27:00 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +18,11 @@ package Courier::Message;
 
 =head1 VERSION
 
-0.1
+0.11
 
 =cut
 
-our $VERSION = 0.1;
+our $VERSION = 0.11;
 
 use v5.8;
 
@@ -542,7 +542,6 @@ package MIME::Words::Better;
 use warnings;
 #use diagnostics;
 use strict;
-use boolean;
 
 use base qw(Exporter);
 
@@ -551,6 +550,9 @@ our @EXPORT = qw(decode_mimewords);
 use Encode ();
 use MIME::Base64 ();
 use MIME::QuotedPrint ();
+
+use constant TRUE   => (0 == 0);
+use constant FALSE  => not TRUE;
 
 use constant FALLBACK_CHAR_ENCODING => 'utf-8';
 

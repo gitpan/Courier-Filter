@@ -6,17 +6,19 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: pureperlfilter,v 1.7 2004/02/21 01:02:29 julian Exp $
+# $Id: pureperlfilter,v 1.8 2004/02/22 22:06:38 julian Exp $
 #
 ##############################################################################
 
 use warnings;
 #use diagnostics;
 use strict;
-use boolean;
 
 use Courier::Config;
 use Courier::Filter;
+
+use constant TRUE   => (0 == 0);
+use constant FALSE  => not TRUE;
 
 our $options;
 my $config_file_name = Courier::Config::COURIER_FILTER_CONF;

@@ -3,7 +3,7 @@
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: SPF.pm,v 1.3 2004/02/21 01:23:19 julian Exp $
+# $Id: SPF.pm,v 1.5 2004/02/22 22:29:20 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +18,11 @@ package Courier::Filter::Module::SPF;
 
 =head1 VERSION
 
-0.1
+0.11
 
 =cut
 
-our $VERSION = 0.1;
+our $VERSION = 0.11;
 
 =head1 SYNOPSIS
 
@@ -195,7 +195,7 @@ sub match {
     return
 #        "result=\"$result\"" . ($message->trusted ? " (but trusted)" : "") . "; " .
 #        ($spf_record ? "record=\"$spf_record\"; " : '') .
-        $smtp_comment, ($result eq 'error' ? 451 : ())
+        "SPF: $smtp_comment", ($result eq 'error' ? 451 : ())
         if exists($reject_on{$result});
     
     return undef;
@@ -203,7 +203,7 @@ sub match {
 
 =head1 SEE ALSO
 
-L<Courier::Filter::Module>, L<Courier::Filter::Overview>.
+L<Courier::Filter::Module>, L<Courier::Filter::Overview>, L<Mail::SPF::Query>.
 
 For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
 L<Courier::Filter::Overview>.

@@ -3,7 +3,7 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: MIMEParts.pm,v 1.7 2004/02/17 13:38:17 julian Exp $
+# $Id: MIMEParts.pm,v 1.8 2004/02/22 22:29:20 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +18,11 @@ package Courier::Filter::Module::MIMEParts;
 
 =head1 VERSION
 
-0.1
+0.11
 
 =cut
 
-our $VERSION = 0.1;
+our $VERSION = 0.11;
 
 =head1 SYNOPSIS
 
