@@ -3,9 +3,8 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Module.pm,v 1.5 2004/02/16 22:40:08 julian Exp $
+# $Id: Module.pm,v 1.6 2004/02/17 13:33:01 julian Exp $
 #
-# $Log: Module.pm,v $
 ##############################################################################
 
 =head1 NAME
@@ -103,7 +102,7 @@ The following constructor is provided and may be overridden:
 
 =over
 
-=item new(%options): RETURNS Courier::Filter::Module (or derivative)
+=item B<new(%options)>: RETURNS Courier::Filter::Module (or derivative)
 
 Creates a new filter module using the %options.  Initializes the filter module,
 by opening I/O handles, connecting to databases, creating temporary files,
@@ -114,13 +113,13 @@ options:
 
 =over
 
-=item logger
+=item B<logger>
 
 A B<Courier::Filter::Logger> object that will be used for logging message
 rejections and error messages caused by this individual filter module.  If no
 logger is specified, Courier::Filter's global logger will be used.
 
-=item inverse
+=item B<inverse>
 
 A boolean value controlling whether the filter module should operate with
 inverse polarity (B<true>) as opposed to normal polarity (B<false>).  Under
@@ -130,7 +129,7 @@ translates I<match results> into I<acceptability results>, see
 L<Courier::Filter::Overview/"How Courier::Filter modules work">.  Defaults to
 B<false>.
 
-=item trusting
+=item B<trusting>
 
 A boolean value controlling whether the filter module should I<not> be applied
 to trusted messages.  For details on how the authenticated status is
@@ -138,13 +137,13 @@ determined, see the description of the C<trusted> property in
 L<Courier::Message>.  In most configurations, this option can be used to
 white-list so-called I<outbound> messages.  Defaults to B<false>.
 
-=item testing
+=item B<testing>
 
 A boolean value controlling whether the filter module should run in testing
 mode.  In testing mode, planned message rejections will be logged as usual, but
 no messages will actually be rejected.  Defaults to B<false>.
 
-=item debugging
+=item B<debugging>
 
 A boolean value controlling whether the filter module should log extra
 debugging information.  Defaults to B<false>.
@@ -174,7 +173,7 @@ The following destructor is provided and may be overridden:
 
 =over
 
-=item destroy
+=item B<destroy>
 
 Uninitializes the filter module, by closing I/O handles, disconnecting from
 databases, deleting temporary files, uninitializing parser libraries, etc..
@@ -196,7 +195,7 @@ The following instance methods are provided and may be overridden:
 
 =over
 
-=item consider($message): RETURNS SCALAR, [SCALAR]; THROWS Perl exceptions
+=item B<consider($message)>: RETURNS SCALAR, [SCALAR]; THROWS Perl exceptions
 
 Calls the C<match> method, passing it the $message object.  Returns the result
 of C<match>, negating it beforehand if the filter module has inverse polarity.
@@ -212,7 +211,7 @@ sub consider {
     return ($result, @code);
 }
 
-=item match($message): RETURNS SCALAR, [SCALAR]; THROWS Perl exceptions
+=item B<match($message)>: RETURNS SCALAR, [SCALAR]; THROWS Perl exceptions
 
 Examines the B<Courier::Message> object given as $message.  Returns a so-called
 I<match result> consisting of an SMTP status response I<text>, and an optional
@@ -230,9 +229,9 @@ sub match {
     return undef;
 }
 
-=item logger: RETURNS Courier::Filter::Logger
+=item B<logger>: RETURNS Courier::Filter::Logger
 
-=item logger($logger): RETURNS Courier::Filter::Logger
+=item B<logger($logger)>: RETURNS Courier::Filter::Logger
 
 If C<$logger> is specified, installs a new logger for this individual filter
 module.  Returns the current (new) logger.
@@ -246,7 +245,7 @@ sub logger {
     return $module->{logger};
 }
 
-=item inverse: RETURNS boolean
+=item B<inverse>: RETURNS boolean
 
 Returns a boolean value indicating whether the filter module is operating with
 inverse polarity, as set through the constructor's C<inverse> option.
@@ -259,7 +258,7 @@ sub inverse {
     return ($module->{inverse});
 }
 
-=item trusting: RETURNS boolean
+=item B<trusting>: RETURNS boolean
 
 Returns a boolean value indicating whether the filter module does I<not> apply
 to trusted messages, as set through the constructor's C<trusting> option.
@@ -272,7 +271,7 @@ sub trusting {
     return $module->{trusting};
 }
 
-=item testing: RETURNS boolean
+=item B<testing>: RETURNS boolean
 
 Returns a boolean value indicating whether the filter module is in testing
 mode, as set through the constructor's C<testing> option.
@@ -285,9 +284,9 @@ sub testing {
     return $module->{testing};
 }
 
-=item debugging: RETURNS boolean
+=item B<debugging>: RETURNS boolean
 
-=item debugging($debugging): RETURNS boolean
+=item B<debugging($debugging)>: RETURNS boolean
 
 If C<$debugging> is specified, sets the debugging mode for this individual
 filter module.  Returns the current (new) debugging mode.

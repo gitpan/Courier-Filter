@@ -3,9 +3,8 @@
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Header.pm,v 1.2 2004/02/16 23:38:42 julian Exp $
+# $Id: Header.pm,v 1.3 2004/02/17 13:37:50 julian Exp $
 #
-# $Log: Header.pm,v $
 ##############################################################################
 
 =head1 NAME
@@ -81,7 +80,7 @@ The following constructor is provided:
 
 =over
 
-=item new(%options): RETURNS Courier::Filter::Module::Header
+=item B<new(%options)>: RETURNS Courier::Filter::Module::Header
 
 Creates a new B<Header> filter module.
 
@@ -90,7 +89,7 @@ options:
 
 =over
 
-=item fields
+=item B<fields>
 
 REQUIRED.  A reference to a hash containing the message header field names and
 patterns (as key/value pairs) that messages are to be matched against.  Field
@@ -107,7 +106,7 @@ C<fields> option as follows:
         subject     => qr/duell?ing\s+banjoe?s?/i
     }
 
-=item response
+=item B<response>
 
 A string that is to be returned literally as the match result in case of a
 match.  Defaults to B<< "Prohibited header value detected: <field>: <value>" >>.

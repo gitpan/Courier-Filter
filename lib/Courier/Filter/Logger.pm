@@ -3,9 +3,8 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Logger.pm,v 1.5 2004/02/16 22:37:31 julian Exp $
+# $Id: Logger.pm,v 1.6 2004/02/17 13:32:13 julian Exp $
 #
-# $Log: Logger.pm,v $
 ##############################################################################
 
 =head1 NAME
@@ -93,7 +92,7 @@ The following constructor is provided and may be overridden:
 
 =over
 
-=item new(%options): RETURNS Courier::Filter::Logger (or derivative)
+=item B<new(%options)>: RETURNS Courier::Filter::Logger (or derivative)
 
 Creates a new logger using the %options given as a list of key/value pairs.
 Initializes the logger, by creating/opening I/O handles, connecting to
@@ -120,7 +119,7 @@ The following destructor is provided and may be overridden:
 
 =over
 
-=item destroy
+=item B<destroy>
 
 Uninitializes the logger, by closing I/O handles, disconnecting from databases,
 etc..
@@ -142,7 +141,7 @@ The following instance methods are provided and may be overridden:
 
 =over
 
-=item log_error($text)
+=item B<log_error($text)>
 
 Logs the error message given as $text (a string which may contain newlines).
 
@@ -155,7 +154,7 @@ sub log_error {
     return;
 }
 
-=item log_rejected_message($message, $reason)
+=item B<log_rejected_message($message, $reason)>
 
 Logs the B<Courier::Message> given as $message as having been rejected due to
 $reason (a string which may contain newlines).

@@ -3,9 +3,8 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: File.pm,v 1.3 2004/02/16 23:26:53 julian Exp $
+# $Id: File.pm,v 1.4 2004/02/17 13:34:14 julian Exp $
 #
-# $Log: File.pm,v $
 ##############################################################################
 
 =head1 NAME
@@ -85,7 +84,7 @@ The following constructor is provided:
 
 =over
 
-=item new(%options): RETURNS Courier::Filter::Logger::File; THROWS
+=item B<new(%options)>: RETURNS Courier::Filter::Logger::File; THROWS
 Courier::Error
 
 Creates a new logger that logs messages as lines to a file.  Opens the file for
@@ -96,11 +95,11 @@ options:
 
 =over
 
-=item file_name
+=item B<file_name>
 
 REQUIRED.  The name of the file to which log messages should be written.
 
-=item timestamp
+=item B<timestamp>
 
 A boolean value controlling whether every log message line should be prefixed
 with a timestamp (in local time, in ISO format).  Defaults to B<false>.
@@ -130,13 +129,13 @@ B<Courier::Filter::Logger::IOHandle>:
 
 =over
 
-=item log_error($text): THROWS Perl exceptions
+=item B<log_error($text)>: THROWS Perl exceptions
 
 Logs the error message given as C<$text> (a string which may contain newlines).
 Prefixes each line with a timestamp if the C<timestamp> option has been set
 through the constructor.
 
-=item log_rejected_message($message, $reason): THROWS Perl exceptions
+=item B<log_rejected_message($message, $reason)>: THROWS Perl exceptions
 
 Logs the B<Courier::Message> given as C<$message> as having been rejected due
 to C<$reason> (a string which may contain newlines).

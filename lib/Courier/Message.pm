@@ -3,9 +3,8 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Message.pm,v 1.8 2004/02/16 22:34:45 julian Exp $
+# $Id: Message.pm,v 1.9 2004/02/17 13:31:15 julian Exp $
 #
-# $Log: Message.pm,v $
 ##############################################################################
 
 =head1 NAME
@@ -135,7 +134,7 @@ The following constructor is provided:
 
 =over
 
-=item new(%options): RETURNS Courier::Message
+=item B<new(%options)>: RETURNS Courier::Message
 
 Creates a new C<Courier::Message> object from the given message file name and
 zero or more control file names.
@@ -145,11 +144,11 @@ options:
 
 =over
 
-=item file_name
+=item B<file_name>
 
 REQUIRED.  A scalar containing the absolute file name of the message file.
 
-=item control_file_names
+=item B<control_file_names>
 
 REQUIRED.  An arrayref containing the absolute file name(s) of zero or more
 control files belonging to the message.
@@ -174,7 +173,7 @@ The following file name accessors are provided:
 
 =over
 
-=item file_name: RETURNS SCALAR
+=item B<file_name>: RETURNS SCALAR
 
 Returns the absolute file name of the message file.
 
@@ -185,7 +184,7 @@ sub file_name {
     return $message->{file_name};
 }
 
-=item control_file_names: RETURNS LIST of SCALAR
+=item B<control_file_names>: RETURNS LIST of SCALAR
 
 Returns the absolute file names of the control files belonging to the message.
 
@@ -202,7 +201,7 @@ sub control_file_names {
 
 =over
 
-=item text: RETURNS SCALAR; THROWS Perl exceptions
+=item B<text>: RETURNS SCALAR; THROWS Perl exceptions
 
 Reads the message text from the message file into memory once.  Returns the raw
 message text as bytes (see L<bytes>, and L<PerlIO/"bytes">).  Throws a Perl
@@ -225,7 +224,7 @@ sub text {
 
 =begin comment
 
-=item parse: RETURNS Courier::Message
+=item B<parse>: RETURNS Courier::Message
 
 Parses the message text once by doing the following: splits the message text
 into header and body; tries to interpret the header as UTF-8, falling back to
@@ -279,9 +278,9 @@ sub parse {
     return $message;
 }
 
-=item header: RETURNS HASHREF
+=item B<header>: RETURNS HASHREF
 
-=item header($field): RETURNS LIST of SCALAR
+=item B<header($field)>: RETURNS LIST of SCALAR
 
 Parses the message header once by doing the following: tries to interpret the
 header as I<UTF-8>, falling back to the 8-bit legacy encoding I<Windows-1252>
@@ -307,7 +306,7 @@ sub header {
     }
 }
 
-=item body: RETURNS SCALAR
+=item B<body>: RETURNS SCALAR
 
 Returns the raw message body as bytes (see L<bytes>, and L<PerlIO/"bytes">).
 
@@ -320,7 +319,7 @@ sub body {
 
 =begin comment
 
-=item subject: RETURNS SCALAR
+=item B<subject>: RETURNS SCALAR
 
 Returns the decoded value of the message's "Subject" header field.
 
@@ -339,9 +338,9 @@ sub subject {
 
 =over
 
-=item control: RETURNS HASHREF; THROWS Perl exceptions
+=item B<control>: RETURNS HASHREF; THROWS Perl exceptions
 
-=item control($field): RETURNS LIST of SCALAR; THROWS Perl exceptions
+=item B<control($field)>: RETURNS LIST of SCALAR; THROWS Perl exceptions
 
 Reads and parses all of the message's control files once.  If a (case
 sensitive) field name (i.e. record type) is specified, returns a list of the
@@ -383,7 +382,7 @@ sub control {
 
 =begin comment
 
-=item control_parse_f
+=item B<control_parse_f>
 
 Parses the HELO string, the remote host, and the remote host name from the C<f>
 control record and stores them into the message object.
@@ -409,7 +408,7 @@ sub control_f {
     return @field ? $message->{$field[0]} : $message->control('f');
 }
 
-=item authenticated: RETURNS boolean
+=item B<authenticated>: RETURNS boolean
 
 Returns the authentication information (guaranteed to be a B<true> value) if
 the message has been submitted by an authenticated user.  Returns B<false>
@@ -446,7 +445,7 @@ sub authenticated {
     return $message->{authenticated};
 }
 
-=item trusted: RETURNS boolean
+=item B<trusted>: RETURNS boolean
 
 Returns a boolean value indicating whether the message is trusted.  Currently,
 trusted messages are defined to be messages directly submitted by an
@@ -460,7 +459,7 @@ sub trusted {
     return $message->authenticated ? TRUE : FALSE;
 }
 
-=item sender: RETURNS SCALAR
+=item B<sender>: RETURNS SCALAR
 
 Returns the message's envelope sender (from the "MAIL FROM:" SMTP command).
 
@@ -471,7 +470,7 @@ sub sender {
     return $message->control('s');
 }
 
-=item recipients: RETURNS LIST of SCALAR
+=item B<recipients>: RETURNS LIST of SCALAR
 
 Returns all of the message's envelope recipients (from the "RCPT TO:" SMTP
 commands).
@@ -483,7 +482,7 @@ sub recipients {
     return $message->control('r');
 }
 
-=item remote_host: RETURNS SCALAR
+=item B<remote_host>: RETURNS SCALAR
 
 Returns the IP address of the SMTP client that submitted the message.
 
@@ -494,7 +493,7 @@ sub remote_host {
     return $message->control_f('remote_host');
 }
 
-=item remote_host_name: RETURNS SCALAR
+=item B<remote_host_name>: RETURNS SCALAR
 
 Returns the host name (gained by Courier through a DNS reverse lookup) of the
 SMTP client that submitted the message, if available.
@@ -506,7 +505,7 @@ sub remote_host_name {
     return $message->control_f('remote_host_name');
 }
 
-=item remote_host_helo: RETURNS SCALAR
+=item B<remote_host_helo>: RETURNS SCALAR
 
 Returns the HELO string that the SMTP client specified, if available.
 

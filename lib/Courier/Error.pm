@@ -3,9 +3,8 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Error.pm,v 1.4 2004/02/16 22:17:42 julian Exp $
+# $Id: Error.pm,v 1.5 2004/02/17 13:29:15 julian Exp $
 #
-# $Log: Error.pm,v $
 ##############################################################################
 
 =head1 NAME

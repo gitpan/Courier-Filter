@@ -3,9 +3,8 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: MIMEParts.pm,v 1.6 2004/02/16 23:43:57 julian Exp $
+# $Id: MIMEParts.pm,v 1.7 2004/02/17 13:38:17 julian Exp $
 #
-# $Log: MIMEParts.pm,v $
 ##############################################################################
 
 =head1 NAME
@@ -101,7 +100,7 @@ The following constructor is provided:
 
 =over
 
-=item new(%options): RETURNS Courier::Filter::Module::MIMEParts
+=item B<new(%options)>: RETURNS Courier::Filter::Module::MIMEParts
 
 Creates a new B<MIMEParts> filter module.
 
@@ -110,7 +109,7 @@ options:
 
 =over
 
-=item max_size
+=item B<max_size>
 
 An integer value controlling the maximum size (in bytes) of the overall message
 text for a message to be processed by this filter module.  Messages larger than
@@ -122,7 +121,7 @@ module, you should definitely restrict the message size to some sensible value
 that easily fits in your server's memory.  1024**2 (1MB) should be appropriate
 for most uses of this filter module.
 
-=item signatures
+=item B<signatures>
 
 REQUIRED.  A reference to an array containing the list of I<signatures> against
 which messages' MIME parts are to be matched.  A signature in turn is a
@@ -139,19 +138,19 @@ An aspect can be any of the following:
 
 =over
 
-=item mime_type
+=item B<mime_type>
 
 The MIME type of the MIME part ('type/sub-type').
 
-=item file_name
+=item B<file_name>
 
 The file name of the MIME part.
 
-=item size
+=item B<size>
 
 The exact size (in bytes) of the decoded MIME part.
 
-=item digest_md5
+=item B<digest_md5>
 
 The MD5 digest of the decoded MIME part (32 hex digits, as printed by
 `md5sum`).

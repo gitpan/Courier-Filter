@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Courier-Filter
-version: 0.1
+version: 0.101
 license: perl
 distribution_type: module
 requires:
@@ -27,7 +27,7 @@ provides:
     version: 0.1
   Courier::Filter:
     file: lib/Courier/Filter.pm
-    version: 0.1
+    version: 0.101
   Courier::Filter::Logger:
     file: lib/Courier/Filter/Logger.pm
     version: 0.1

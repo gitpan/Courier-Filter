@@ -3,9 +3,8 @@
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Syslog.pm,v 1.1 2004/02/16 23:22:51 julian Exp $
+# $Id: Syslog.pm,v 1.2 2004/02/17 13:36:28 julian Exp $
 #
-# $Log: Syslog.pm,v $
 ##############################################################################
 
 =head1 NAME
@@ -77,7 +76,7 @@ The following constructor is provided:
 
 =over
 
-=item new(%options): RETURNS Courier::Filter::Logger::Syslog; THROWS
+=item B<new(%options)>: RETURNS Courier::Filter::Logger::Syslog; THROWS
 Courier::Error
 
 Creates a new logger that logs messages as lines to syslog.
@@ -87,7 +86,7 @@ options:
 
 =over
 
-=item timestamp
+=item B<timestamp>
 
 A boolean value controlling whether every log message line should be prefixed
 with a timestamp (in local time, in ISO format).  Defaults to B<false>.
@@ -114,13 +113,13 @@ B<Courier::Filter::Logger::IOHandle>:
 
 =over
 
-=item log_error($text): THROWS Perl exceptions
+=item B<log_error($text)>: THROWS Perl exceptions
 
 Logs the error message given as C<$text> (a string which may contain newlines).
 Prefixes each line with a timestamp if the C<timestamp> option has been set
 through the constructor.
 
-=item log_rejected_message($message, $reason): THROWS Perl exceptions
+=item B<log_rejected_message($message, $reason)>: THROWS Perl exceptions
 
 Logs the B<Courier::Message> given as C<$message> as having been rejected due
 to C<$reason> (a string which may contain newlines).

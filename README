@@ -1,5 +1,5 @@
 Courier::Filter 0.1
-A purely Perl‐based mail filter framework for the Courier MTA.
+A purely Perl-based mail filter framework for the Courier MTA.
 (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 <http://www.mehnle.net/software/courier-filter>
 ==============================================================================

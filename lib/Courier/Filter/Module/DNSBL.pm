@@ -3,9 +3,8 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: DNSBL.pm,v 1.4 2004/02/16 23:38:07 julian Exp $
+# $Id: DNSBL.pm,v 1.5 2004/02/17 13:37:30 julian Exp $
 #
-# $Log: DNSBL.pm,v $
 ##############################################################################
 
 =head1 NAME
@@ -89,7 +88,7 @@ The following constructor is provided:
 
 =over
 
-=item new(%options): RETURNS Courier::Filter::Module::DNSBL
+=item B<new(%options)>: RETURNS Courier::Filter::Module::DNSBL
 
 Creates a new B<DNSBL> filter module.
 
@@ -98,7 +97,7 @@ options:
 
 =over
 
-=item zones
+=item B<zones>
 
 REQUIRED.  A reference to an array containing the DNS zone names of the
 black-lists to be used.

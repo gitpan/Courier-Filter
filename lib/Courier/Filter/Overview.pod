@@ -3,9 +3,8 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id$
+# $Id: Overview.pod,v 1.2 2004/02/17 13:33:20 julian Exp $
 #
-# $Log$
 ##############################################################################
 
 =pod
@@ -14,30 +13,6 @@
 
 Courier::Filter::Overview - An architectural and administrative overview to
 Courier::Filter
-
-=head1 CONTENTS
-
-=over
-
-=item B<The Courier MTA's courierfilter interface>
-
-=item B<About Courier::Filter>
-
-=item B<Courier::Filter compared to other courierfilter implementations>
-
-=item B<Using Courier::Filter>
-
-=item B<How Courier::Filter modules work>
-
-=item B<A sample HeaderSimple filter module>
-
-=item B<Testing Courier::Filter modules>
-
-=item B<Bundled Courier::Filter modules>
-
-=item B<Bundled Courier::Filter loggers>
-
-=back
 
 =head1 DESCRIPTION
 
@@ -86,7 +61,7 @@ optimizing your filter for performance and resource consumption.  But
 regardless of which language you use, you will have to implement all the UNIX
 domain socket and connection handling and message and control file processing
 yourself.  And you don't get the modularity and module grouping capabilities
-either.
+for free either.
 
 =item I<courierperlfilter>
 
@@ -395,14 +370,10 @@ Literal and reg-ex matching of one or more message header fields
 
 Size and MD5 sum matching of message MIME parts
 
-=begin comment
-
 =item I<SPF>
 
-Senders Permitted From authorization checking of the calling MTA's IP address
-against the envelope sender domain
-
-=end comment
+SPF (Sender Policy Framework) authorization checking of the calling MTA's IP
+address against the envelope sender domain
 
 =back
 

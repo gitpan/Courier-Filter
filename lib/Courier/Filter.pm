@@ -4,9 +4,8 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Filter.pm,v 1.8 2004/02/16 22:26:45 julian Exp $
+# $Id: Filter.pm,v 1.9 2004/02/17 13:30:27 julian Exp $
 #
-# $Log: Filter.pm,v $
 ##############################################################################
 
 =head1 NAME
@@ -23,7 +22,7 @@ package Courier::Filter;
 
 =cut
 
-our $VERSION = 0.1;
+our $VERSION = 0.101;
 
 use v5.8;
 
@@ -118,7 +117,7 @@ The following constructor is provided:
 
 =over
 
-=item new(%options): RETURNS Courier::Filter; THROWS Courier::Error, Perl
+=item B<new(%options)>: RETURNS Courier::Filter; THROWS Courier::Error, Perl
 exceptions
 
 Creates a new C<Courier::Filter> object.  Also creates the courierfilter socket
@@ -129,12 +128,12 @@ options:
 
 =over
 
-=item name
+=item B<name>
 
 A scalar containing the name of the filter process.  Used to build the socket
 name.  Defaults to the base name of the process (C<$0>).
 
-=item mandatory
+=item B<mandatory>
 
 A boolean value controlling whether the filter process should act as a
 mandatory courierfilter.  If B<true>, users will not be able to bypass the
@@ -144,14 +143,14 @@ created in the C<allfilters> (B<true>) or the C<filters> (B<false>) directory
 in Courier's run-time state directory (see
 L<Courier::Config/"COURIER_RUNTIME_DIR">).  Defaults to B<true>.
 
-=item logger
+=item B<logger>
 
 A B<Courier::Filter::Logger> object that will be used for logging message
 rejections and error messages.  You may override this for individual filter
 modules for which you do not want the global logger to be used.  If no logger
 is specified, logging is disabled.
 
-=item modules
+=item B<modules>
 
 REQUIRED.  A so-called B<filter module group> structure.  A module group is a
 reference to an array that may contain filter module objects (i.e. instances of
@@ -212,7 +211,7 @@ Using nested groups of filter modules with normal or inverse polarity, it
 should be possible to implement sufficiently complex filtering policies to
 satisfy very most needs.
 
-=item trusting
+=item B<trusting>
 
 A boolean value controlling whether the I<whole> filter process should I<not>
 apply any filtering to trusted messages.  For details on how the trusted status
@@ -220,7 +219,7 @@ is determined, see the description of the C<trusted> property in
 Courier::Message.  In most configurations, this option can be used to
 white-list so-called outbound messages.  Defaults to B<false>.
 
-=item testing
+=item B<testing>
 
 A boolean value controlling whether the I<whole> filter process should run in
 "testing" mode.  In testing mode, planned message rejections will be logged as
@@ -239,7 +238,7 @@ to thoroughly test the correctness and performance of all installed filter
 modules, or even to gather stochastically indepent statistics on the hit/miss
 rates of your filter modules.
 
-=item debugging
+=item B<debugging>
 
 A boolean value controlling whether extra debugging information should be
 logged by Courier::Filter.  Defaults to B<false>.  You need to enable debugging
@@ -322,7 +321,7 @@ The following destructor is provided:
 
 =over
 
-=item destroy()
+=item B<destroy>
 
 Removes the courierfilter socket when the B<Courier::Filter> object is
 destroyed.  There is no need to call this explicitly.
@@ -351,7 +350,7 @@ sub destroy {
 
 =back
 
-=end commend
+=end comment
 
 =head2 Instance methods
 
@@ -359,7 +358,7 @@ The following instance methods are provided:
 
 =over
 
-=item run: THROWS Courier::Error, Perl exceptions
+=item B<run>: THROWS Courier::Error, Perl exceptions
 
 Runs the Courier::Filter.  Listens for connections from Courier on the
 courierfilter socket, asks the configured filter modules for consideration of
@@ -412,7 +411,7 @@ sub run {
 
 =begin comment
 
-=item handle_connection($connection): RETURNS SCALAR, SCALAR; THROWS Perl
+=item B<handle_connection($connection)>: RETURNS SCALAR, SCALAR; THROWS Perl
 exceptions
 
 Handles a single incoming connection to the courierfilter socket.  Reads the
@@ -486,7 +485,7 @@ sub handle_connection {
 
 =begin comment
 
-=item consult_modules
+=item B<consult_modules>
 
 Walks the given modules group structure in a recursive-descent, depth‐first
 order, and asks every filter module for consideration of the given message's
@@ -534,7 +533,7 @@ sub consult_modules {
     return undef;
 }
 
-=item name: RETURNS SCALAR
+=item B<name>: RETURNS SCALAR
 
 Returns a scalar containing the name of the filter process, as set through the
 constructor's C<name> option.
@@ -547,7 +546,7 @@ sub name {
     return $filter->{name};
 }
 
-=item mandatory: RETURNS boolean
+=item B<mandatory>: RETURNS boolean
 
 Returns a boolean value indicating whether the filter process is a mandatory
 courierfilter, as set through the constructor's C<mandatory> option.
@@ -560,9 +559,9 @@ sub mandatory {
     return $filter->{mandatory};
 }
 
-=item logger: RETURNS Courier::Filter::Logger
+=item B<logger>: RETURNS Courier::Filter::Logger
 
-=item logger($logger): RETURNS Courier::Filter::Logger
+=item B<logger($logger)>: RETURNS Courier::Filter::Logger
 
 If C<$logger> is specified, installs a new global logger.  Returns the current
 (new) global logger.
@@ -576,9 +575,9 @@ sub logger {
     return $filter->{logger};
 }
 
-=item modules: RETURNS ARRAYREF
+=item B<modules>: RETURNS ARRAYREF
 
-=item modules(\@modules): RETURNS ARRAYREF
+=item B<modules(\@modules)>: RETURNS ARRAYREF
 
 If C<\@modules> is specified, installs a new filter module group structure.
 Returns the current (new) filter modules group structure.
@@ -592,7 +591,7 @@ sub modules {
     return $filter->{modules};
 }
 
-=item trusting: RETURNS boolean
+=item B<trusting>: RETURNS boolean
 
 Returns a boolean value indicating the trusting mode, as set through the
 constructor's C<trusting> option.
@@ -605,7 +604,7 @@ sub trusting {
     return $filter->{trusting};
 }
 
-=item testing: RETURNS boolean
+=item B<testing>: RETURNS boolean
 
 Returns a boolean value indicating the global testing mode, as set through the
 constructor's C<testing> option.
@@ -618,9 +617,9 @@ sub testing {
     return $filter->{testing};
 }
 
-=item debugging: RETURNS boolean
+=item B<debugging>: RETURNS boolean
 
-=item debugging($debugging): RETURNS boolean
+=item B<debugging($debugging)>: RETURNS boolean
 
 If C<$debugging> is specified, sets the global debugging mode.  Returns a
 boolean value indicating the current (new) global debugging mode.

@@ -3,9 +3,8 @@
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: SPF.pm,v 1.1 2004/02/16 23:28:51 julian Exp $
+# $Id: SPF.pm,v 1.2 2004/02/17 13:38:50 julian Exp $
 #
-# $Log: SPF.pm,v $
 ##############################################################################
 
 =head1 NAME
@@ -79,7 +78,7 @@ my $IPV4_ADDRESS    = qr/$OCTECT_DECIMAL(?:\.$OCTECT_DECIMAL){3}/;
 This class is a filter module class for use with Courier::Filter.  It matches a
 message if the sending machine's IP address (currently IPv4 only) is I<not>
 authorized to send mail from the envelope sender's (MAIL FROM) domain according
-to that domain's DNS SPF record.
+to that domain's DNS SPF (Sender Policy Framework) record.
 
 =cut
 
@@ -96,7 +95,7 @@ The following constructor is provided:
 
 =over
 
-=item new(%options): RETURNS Courier::Filter::Module::MIMEParts
+=item B<new(%options)>: RETURNS Courier::Filter::Module::MIMEParts
 
 Creates a new B<SPF> filter module.
 
@@ -105,7 +104,7 @@ options:
 
 =over
 
-=item reject_on
+=item B<reject_on>
 
 A reference to an array containing the set of SPF result codes which should
 cause the filter module to match a message.  Possible result codes are C<pass>,
@@ -116,7 +115,7 @@ rejection, but only a I<temporary> one.  Defaults to B<['fail', 'softfail',
 'none', 'unknown', 'error']>, which complies with the long-term vision of SPF.
 For the time being, you should probably override this to B<['fail', 'error']>.
 
-=item trusted_forwarders
+=item B<trusted_forwarders>
 
 A boolean value controlling whether well-known but SPF ignorant forwarding
 services, as centrally specified by the DNS zone "spf.trusted-forwarder.org",
@@ -126,14 +125,14 @@ authorized to send from.  Enabling this reduces the probability of false
 positives somewhat, but increases the probability of false negatives
 significantly.  Defaults to B<false>.
 
-=item fallback_guess
+=item B<fallback_guess>
 
 A boolean value controlling whether a default "best guess" SPF record should be
 assumed for domains without an SPF record.  See
 L<Mail::SPF::Query/"best_guess()"> for the definition of the default best guess
 record.  Defaults to B<false>.
 
-=item default_response
+=item B<default_response>
 
 A string that is to be returned as the match result in case of a match, that is
 when a message fails the SPF check, if the (alleged) envelope sender domain
@@ -207,6 +206,16 @@ L<Courier::Filter::Module>, L<Courier::Filter::Overview>.
 
 For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
 L<Courier::Filter::Overview>.
+
+=head1 REFERENCES
+
+=over
+
+=item B<SPF> (Sender Policy Framework)
+
+L<http://spf.pobox.com>
+
+=back
 
 =head1 AUTHOR
 

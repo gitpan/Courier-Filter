@@ -3,9 +3,8 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Config.pm,v 1.5 2004/02/16 22:16:52 julian Exp $
+# $Id: Config.pm,v 1.6 2004/02/17 13:28:54 julian Exp $
 #
-# $Log: Config.pm,v $
 ##############################################################################
 
 =head1 NAME
@@ -59,7 +58,7 @@ The following Courier base configuration information is provided:
 
 =over 4
 
-=item COURIER_CONFIG_DIR
+=item B<COURIER_CONFIG_DIR>
 
 The base configuration directory of Courier.
 
@@ -67,7 +66,7 @@ The base configuration directory of Courier.
 
 use constant COURIER_CONFIG_DIR     => '/etc/courier';
 
-=item COURIER_RUNTIME_DIR
+=item B<COURIER_RUNTIME_DIR>
 
 The directory where Courier keeps the message queue (C<msgq>, C<msgs>, C<tmp>)
 and courierfilter sockets (C<filters>, C<allfilters>).
@@ -84,7 +83,7 @@ The following Courier::Filter configuration information is provided:
 
 =over 4
 
-=item COURIER_FILTER_CONF
+=item B<COURIER_FILTER_CONF>
 
 The absolute file name of the Courier::Filter pureperlfilter configuration
 file.

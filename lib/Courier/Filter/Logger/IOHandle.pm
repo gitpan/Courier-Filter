@@ -3,9 +3,8 @@
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: IOHandle.pm,v 1.2 2004/02/16 22:42:14 julian Exp $
+# $Id: IOHandle.pm,v 1.3 2004/02/17 13:35:01 julian Exp $
 #
-# $Log: IOHandle.pm,v $
 ##############################################################################
 
 =head1 NAME
@@ -83,7 +82,7 @@ The following constructor is provided:
 
 =over
 
-=item new(%options): RETURNS Courier::Filter::Logger::IOHandle
+=item B<new(%options)>: RETURNS Courier::Filter::Logger::IOHandle
 
 Creates a new logger that logs messages as lines to an I/O handle.
 
@@ -92,12 +91,12 @@ options:
 
 =over
 
-=item handle
+=item B<handle>
 
 REQUIRED.  The I/O handle or B<IO::Handle> object to which log messages should
 be written.
 
-=item timestamp
+=item B<timestamp>
 
 A boolean value controlling whether every log message line should be prefixed
 with a timestamp (in local time, in ISO format).  Defaults to B<false>.
@@ -128,7 +127,7 @@ The following instance methods are provided:
 
 =begin comment
 
-=item log($text): THROWS Perl exceptions
+=item B<log($text)>: THROWS Perl exceptions
 
 Logs the text given as C<$text> (a string which may contain newlines).
 Prefixes each line with a timestamp if the C<timestamp> option has been set
@@ -157,7 +156,7 @@ sub log {
     return;
 }
 
-=item log_error($text): THROWS Perl exceptions
+=item B<log_error($text)>: THROWS Perl exceptions
 
 Logs the error message given as C<$text> (a string which may contain newlines).
 Prefixes each line with a timestamp if the C<timestamp> option has been set
@@ -170,7 +169,7 @@ sub log_error {
     return $logger->log($text);
 }
 
-=item log_rejected_message($message, $reason): THROWS Perl exceptions
+=item B<log_rejected_message($message, $reason)>: THROWS Perl exceptions
 
 Logs the B<Courier::Message> given as C<$message> as having been rejected due
 to C<$reason> (a string which may contain newlines).
