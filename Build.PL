@@ -25,6 +25,9 @@ my $build = Module::Build->new(
     script_files    => [
         'bin/test-filter-module'
     ],
+    install_path    => {
+        lib                 => '/usr/share/courier-filter-perl/perl5'
+    },
     create_makefile_pl
                     => 'passthrough',
     sign            => 1
@@ -32,5 +35,5 @@ my $build = Module::Build->new(
 
 $build->create_build_script();
 
-# $Id: Build.PL,v 1.5 2004/10/04 22:48:58 julian Exp $
+# $Id: Build.PL,v 1.6 2004/10/30 01:07:36 julian Exp $
 # vim:tw=79

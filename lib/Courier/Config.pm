@@ -2,7 +2,7 @@
 # Courier::Config class
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Config.pm,v 1.11 2004/10/22 00:27:12 julian Exp $
+# $Id: Config.pm,v 1.12 2004/10/30 01:05:24 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Config;
 
 =head1 VERSION
 
-0.14
+0.15
 
 =cut
 
-our $VERSION = 0.14;
+our $VERSION = 0.15;
 
 =head1 SYNOPSIS
 

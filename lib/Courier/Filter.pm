@@ -3,7 +3,7 @@
 # a purely Perl-based filter framework for the Courier MTA.
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Filter.pm,v 1.16 2004/10/21 19:29:43 julian Exp $
+# $Id: Filter.pm,v 1.17 2004/10/30 01:05:24 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter;
 
 =head1 VERSION
 
-0.14
+0.15
 
 =cut
 
-our $VERSION = 0.14;
+our $VERSION = 0.15;
 
 use v5.8;
 

@@ -1,15 +1,13 @@
-Ignore: vim:tw=79
-Source: libcourier-filter-perl
+Source: courier-filter-perl
 Section: perl
 Priority: optional
 Maintainer: Julian Mehnle <julian@mehnle.net>
-Build-Depends: debhelper (>= 4.0.2), libmodule-build-perl, libtest-simple-perl
-Build-Depends-Indep: perl (>= 5.8.0-7)
+Build-Depends-Indep: debhelper (>= 4.0.2), perl (>= 5.8.0-7), libmodule-build-perl, libtest-simple-perl
 Standards-Version: 3.6.1
 
-Package: libcourier-filter-perl
+Package: courier-filter-perl
 Architecture: all
-Depends: courier-mta, ${perl:Depends}, ${misc:Depends}
+Depends: courier-mta, ${perl:Depends}, liberror-perl, ${misc:Depends}
 Recommends: libmail-spf-query-perl (>= 1.991), libmime-tools-perl (>= 5.400), libdigest-md5-perl
 Description: A purely Perl-based mail filter framework for the Courier MTA
  Courier::Filter implements the Courier MTA's courierfilter interface as a

@@ -5,7 +5,7 @@
 # the purely Perl-based filter framework for the Courier MTA.
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: pureperlfilter,v 1.10 2004/10/22 00:02:50 julian Exp $
+# $Id: pureperlfilter,v 1.11 2004/10/30 00:57:51 julian Exp $
 #
 ##############################################################################
 
@@ -15,7 +15,7 @@ pureperlfilter - A Courier::Filter-based filter for the Courier MTA
 
 =head1 VERSION
 
-0.14
+0.15
 
 =head1 SYNOPSIS
 
@@ -57,6 +57,8 @@ Julian Mehnle <julian@mehnle.net>
 use warnings;
 #use diagnostics;
 use strict;
+
+use lib '/usr/share/courier-filter-perl/perl5';
 
 use Courier::Config;
 use Courier::Filter;

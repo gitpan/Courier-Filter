@@ -2,7 +2,7 @@
 # Courier::Filter::Module::MIMEParts class
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: MIMEParts.pm,v 1.13 2004/10/22 00:27:12 julian Exp $
+# $Id: MIMEParts.pm,v 1.14 2004/10/30 01:05:29 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::MIMEParts;
 
 =head1 VERSION
 
-0.14
+0.15
 
 =cut
 
-our $VERSION = 0.14;
+our $VERSION = 0.15;
 
 use warnings;
 use strict;

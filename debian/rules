@@ -28,8 +28,12 @@ install-stamp: build-stamp
 	dh_testdir
 	dh_testroot
 	dh_clean -k
+	
 	$(BUILD) test
 	$(BUILD) install destdir=$(TMP)
+	
+	# Don't package the unofficial USM logger module:
+	rm -f $(TMP)/usr/share/courier-filter-perl/perl5/Courier/Filter/Logger/USM.pm
 	
 	# Special manpage handling for bin/pureperlfilter:
 	mkdir -p $(TMP)/usr/share/man/man8

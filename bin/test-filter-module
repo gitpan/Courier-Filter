@@ -4,7 +4,7 @@
 # A tester for Courier::Filter modules.
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: test-filter-module,v 1.7 2004/10/22 00:06:36 julian Exp $
+# $Id: test-filter-module,v 1.8 2004/10/30 00:57:51 julian Exp $
 #
 ##############################################################################
 
@@ -14,7 +14,7 @@ test-filter-module - A tester for Courier::Filter modules
 
 =head1 VERSION
 
-0.14
+0.15
 
 =head1 SYNOPSIS
 
@@ -61,6 +61,8 @@ Julian Mehnle <julian@mehnle.net>
 use warnings;
 #use diagnostics;
 use strict;
+
+use lib '/usr/share/courier-filter-perl/perl5';
 
 use IO::Handle;
 

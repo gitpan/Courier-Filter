@@ -1,3 +1,18 @@
+courier-filter-perl (0.15) unstable; urgency=low
+
+  * Courier::Filter is primarily a plug-in for the Courier MTA, not a library
+    of Perl modules intended to be used by other programs or modules.
+    - Renamed package to "courier-filter-perl".
+    - Install included Perl modules in the private path
+      /usr/share/courier-filter-perl/perl5 instead of the standard path
+      /usr/share/perl5.
+  * Added liberror-perl dependency.
+  * Made Build-Depends dependencies into Build-Depends-Indep (architecture
+    independent) dependencies.
+  * Various minor fixes.
+
+ -- Julian Mehnle <julian@mehnle.net>  Sat, 30 Oct 2004 02:52:47 +0200
+
 libcourier-filter-perl (0.14) unstable; urgency=low
 
   * Added documentation for the test-filter-module and pureperlfilter

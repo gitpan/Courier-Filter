@@ -1,4 +1,4 @@
-Courier::Filter 0.14
+Courier::Filter 0.15
 A purely Perl-based mail filter framework for the Courier MTA.
 (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 <http://www.mehnle.net/software/courier-filter>
@@ -29,11 +29,11 @@ concentrate on writing the actual filter logic without having to care about
 things that can easily be abstracted and can be performed by the framework.
 
 Courier::Filter allows multiple filter modules to be installed, and filter
-modules can be stacked and grouped hierarchically, and even a module’s polarity
+modules can be stacked and grouped hierarchically, and even a module's polarity
 can be reversed, so some modules can be used for explicitly accepting messages
 while others are used in the traditional way for rejecting messages.
 
-Getting Started
+Getting started
 ---------------
 
 Read the following perldocs in order to get started with Courier::Filter:
@@ -41,5 +41,21 @@ Read the following perldocs in order to get started with Courier::Filter:
 * Courier::Filter
 * Courier::Filter::Module
 
-# $Id: README,v 1.7 2004/10/22 00:27:05 julian Exp $
+Upgrading from versions prior to 0.15
+-------------------------------------
+
+Starting from version 0.15, the Courier::* Perl modules are no longer being
+installed in your Perl's configured "vendorlib" path, but in the private path
+'/usr/share/courier-filter-perl/perl5'.  (This is because Courier::Filter is
+primarily a plug-in for the Courier MTA, and not a library of Perl modules that
+are intended to be used by other programs or modules.  However some of the
+modules (e.g. Courier::Message) are indeed designed genericly, and should any
+other program or module actually make use of them in the future, I will split
+them off into a separate library package.)
+
+Due to this partial relocation, upgrading from a version prior to 0.15 is
+probably best achieved by removing the old version and doing a fresh install.
+You can of course keep your old configuration file(s).
+
+# $Id: README,v 1.8 2004/10/30 01:10:24 julian Exp $
 # vim:tw=79

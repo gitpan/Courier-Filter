@@ -4,6 +4,16 @@
 #   * = Fixed a bug
 #   + = Added a feature (in a backwards compatible way)
 
+--- 0.15 (2004-10-30 01:13)
+
+  x Courier::Filter is primarily a plug-in for the Courier MTA, not a library
+    of Perl modules intended to be used by other programs or modules.
+    x Renamed the Debian package to "courier-filter-perl".
+    x Install included Perl modules in the private path
+      /usr/share/courier-filter-perl/perl5 instead of Perl's configured
+      "vendorlib" path (/usr/share/perl5 in Debian).
+  * Various minor fixes.
+
 --- 0.14 (2004-10-22 00:10)
 
   + Added documentation for the test-filter-module and pureperlfilter
@@ -69,5 +79,5 @@
 
 --- 0.1 (initial release) (2004-02-16 23:00)
 
-# $Id: CHANGES,v 1.9 2004/10/22 00:15:40 julian Exp $
+# $Id: CHANGES,v 1.12 2004/10/30 01:28:42 julian Exp $
 # vim:tw=79
