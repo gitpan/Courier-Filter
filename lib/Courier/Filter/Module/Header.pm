@@ -3,7 +3,7 @@
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Header.pm,v 1.4 2004/02/22 22:29:20 julian Exp $
+# $Id: Header.pm,v 1.5 2004/02/24 23:19:59 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +18,11 @@ package Courier::Filter::Module::Header;
 
 =head1 VERSION
 
-0.11
+0.12
 
 =cut
 
-our $VERSION = 0.11;
+our $VERSION = 0.12;
 
 =head1 SYNOPSIS
 

@@ -4,7 +4,7 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Filter.pm,v 1.11 2004/02/22 22:27:00 julian Exp $
+# $Id: Filter.pm,v 1.13 2004/02/24 23:17:16 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +18,11 @@ package Courier::Filter;
 
 =head1 VERSION
 
-0.11
+0.12
 
 =cut
 
-our $VERSION = 0.11;
+our $VERSION = 0.12;
 
 use v5.8;
 
@@ -292,6 +292,9 @@ sub new {
     rename($socket_prename, $socket_name)
 	or  unlink($socket_prename),
 	    throw Courier::Error("Unable to rename socket $socket_prename to $socket_name");
+    
+    chmod(0660, $socket_name)
+        or  throw Courier::Error("Unable to chmod socket $socket_name");
     
     IO::File->new('<&=3')->close();
     

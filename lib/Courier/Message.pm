@@ -3,7 +3,7 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Message.pm,v 1.11 2004/02/22 22:27:00 julian Exp $
+# $Id: Message.pm,v 1.12 2004/02/24 23:16:07 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +18,11 @@ package Courier::Message;
 
 =head1 VERSION
 
-0.11
+0.12
 
 =cut
 
-our $VERSION = 0.11;
+our $VERSION = 0.12;
 
 use v5.8;
 

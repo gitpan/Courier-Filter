@@ -4,6 +4,14 @@
 #   * = Fixed a bug
 #   + = Added a feature (in a backwards compatible way)
 
+--- 0.12 (2004-02-25 01:00)
+
+  * chmod the courierfilter socket to 0660, so the Courier daemon system group
+    has write access to the socket.  This solves the "sendmail: Unable to
+    submit message" permissions problem.
+  * Make Module::Build automatically create a Makefile.PL to facilitate
+    auto-installation from the CPAN shell.
+
 --- 0.11 (2004-02-22 22:00)
 
   * Do not use the proprietary "boolean" pragma module, declare our own boolean
@@ -12,5 +20,5 @@
 
 --- 0.1 (initial release) (2004-02-16 23:00)
 
-# $Id: CHANGES,v 1.4 2004/02/22 22:22:54 julian Exp $
+# $Id: CHANGES,v 1.6 2004/02/24 23:13:59 julian Exp $
 # vim:tw=79

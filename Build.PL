@@ -25,10 +25,12 @@ my $build = Module::Build->new(
         'pureperlfilter',
         'test-filter-module'
     ],
+    create_makefile_pl
+                    => 'passthrough',
     sign            => 1
 );
 
 $build->create_build_script();
 
-# $Id: Build.PL,v 1.1 2004/02/16 22:11:45 julian Exp $
+# $Id: Build.PL,v 1.2 2004/02/24 00:54:52 julian Exp $
 # vim:tw=79

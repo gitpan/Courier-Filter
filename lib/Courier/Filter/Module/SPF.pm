@@ -3,7 +3,7 @@
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: SPF.pm,v 1.5 2004/02/22 22:29:20 julian Exp $
+# $Id: SPF.pm,v 1.8 2004/02/24 23:19:59 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +18,11 @@ package Courier::Filter::Module::SPF;
 
 =head1 VERSION
 
-0.11
+0.12
 
 =cut
 
-our $VERSION = 0.11;
+our $VERSION = 0.12;
 
 =head1 SYNOPSIS
 
@@ -188,6 +188,7 @@ sub match {
     my ($result, $smtp_comment, $header_comment, $spf_record) = $spf_query->result();
     
     $result = 'unknown' if $result =~ /^unknown/;
+    $smtp_comment =~ s/^SPF: //;
     
     my %reject_on;
     @reject_on{ @{$module->{reject_on}} } = ();
