@@ -2,8 +2,7 @@
 # Courier::Message class
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-#
-# $Id: Message.pm,v 1.12 2004/02/24 23:16:07 julian Exp $
+# $Id: Message.pm,v 1.14 2004/10/04 21:03:57 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +17,11 @@ package Courier::Message;
 
 =head1 VERSION
 
-0.12
+0.13
 
 =cut
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 use v5.8;
 
@@ -382,7 +381,7 @@ sub control {
 
 =begin comment
 
-=item B<control_parse_f>
+=item B<control_f>
 
 Parses the HELO string, the remote host, and the remote host name from the C<f>
 control record and stores them into the message object.

@@ -5,8 +5,7 @@
 # the purely Perl-based filter framework for the Courier MTA.
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-#
-# $Id: pureperlfilter,v 1.8 2004/02/22 22:06:38 julian Exp $
+# $Id: pureperlfilter,v 1.9 2004/10/02 17:22:19 julian Exp $
 #
 ##############################################################################
 

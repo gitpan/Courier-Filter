@@ -1,0 +1,2 @@
+etc/pureperlfilter.conf etc/courier/filters/
+bin/pureperlfilter usr/lib/

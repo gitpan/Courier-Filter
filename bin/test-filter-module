@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 
-# A tester for pureperlfilter modules.
+#
+# A tester for Courier::Filter modules.
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-#
-# $Id: test-filter-module,v 1.5 2004/02/22 22:08:07 julian Exp $
+# $Id: test-filter-module,v 1.6 2004/10/02 17:23:04 julian Exp $
 #
 ##############################################################################
 

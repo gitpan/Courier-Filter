@@ -2,8 +2,7 @@
 # Courier::Filter::Module::Header class
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
-#
-# $Id: Header.pm,v 1.5 2004/02/24 23:19:59 julian Exp $
+# $Id: Header.pm,v 1.8 2004/10/04 21:10:04 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +17,11 @@ package Courier::Filter::Module::Header;
 
 =head1 VERSION
 
-0.12
+0.13
 
 =cut
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 =head1 SYNOPSIS
 
@@ -134,17 +133,19 @@ sub match {
         my $pattern = $fields->{$field};
         my $matcher =
             UNIVERSAL::isa($pattern, 'Regexp') ?
-                sub { $_[0] =~ $pattern }
-            :   sub { $_[0] eq $pattern };
+                sub { defined($_[0]) and $_[0] =~ $pattern }
+            :   sub { defined($_[0]) and $_[0] eq $pattern };
         
         my @values = $message->header($field);
         
         foreach my $value (@values) {
             if ($matcher->($value)) {
+                my $field_human_readable = ucfirst(lc($field));
                 return
-                    $module->{response} ||
-                    'Prohibited header value detected: ' .
-                        ucfirst(lc($field)) . ': ' . $value;
+                    'Header: ' . (
+                        $module->{response} ||
+                        "Prohibited header value detected: $field_human_readable: $value"
+                    );
             }
         }
     }
@@ -154,7 +155,8 @@ sub match {
 
 =head1 SEE ALSO
 
-L<Courier::Filter::Module>, L<Courier::Filter::Overview>.
+L<Courier::Filter::Module::Envelope>, L<Courier::Filter::Module>,
+L<Courier::Filter::Overview>.
 
 For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
 L<Courier::Filter::Overview>.

@@ -2,8 +2,7 @@
 # Courier::Filter::Logger::File class
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-#
-# $Id: File.pm,v 1.6 2004/02/24 23:19:37 julian Exp $
+# $Id: File.pm,v 1.8 2004/10/04 21:07:00 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +17,11 @@ package Courier::Filter::Logger::File;
 
 =head1 VERSION
 
-0.12
+0.13
 
 =cut
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 =head1 SYNOPSIS
 

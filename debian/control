@@ -1,0 +1,31 @@
+Ignore: vim:tw=79
+Source: libcourier-filter-perl
+Section: perl
+Priority: optional
+Maintainer: Julian Mehnle <julian@mehnle.net>
+Build-Depends: debhelper (>= 4.0.2), libmodule-build-perl, libtest-simple-perl
+Build-Depends-Indep: perl (>= 5.8.0-7)
+Standards-Version: 3.6.1
+
+Package: libcourier-filter-perl
+Architecture: all
+Depends: courier-mta, ${perl:Depends}, ${misc:Depends}
+Recommends: libmail-spf-query-perl (>= 1.991), libmime-tools-perl (>= 5.400), libdigest-md5-perl
+Description: A purely Perl-based mail filter framework for the Courier MTA
+ Courier::Filter implements the Courier MTA's courierfilter interface as a
+ framework for mail filter modules.  Authors of filter modules can concentrate
+ on writing the actual filter logic without having to care about the usual
+ low-level details of the courierfilter interface.  Logging to various
+ facilities is also supported.
+ .
+ Courier::Filter allows multiple filter modules to be installed in stacked and
+ hierarchically grouped configurations.  Also, modules' polarity can be
+ reversed, so some modules can be used for explicitly accepting messages while
+ others are used in the traditional way for rejecting messages.
+ .
+ The following filter modules are included:
+   * DNSBL:     matching of calling MTA's IP address against DNS black-lists,
+   * SPF:       authentication of sender addresses,
+   * Envelope:  matching of RFC 2821 message envelope fields,
+   * Header:    matching of RFC 2822 message header fields,
+   * Parts:     matching of MIME parts and ZIP archive contents.

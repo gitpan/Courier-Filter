@@ -2,8 +2,7 @@
 # Courier::Filter::Logger::IOHandle class
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
-#
-# $Id: IOHandle.pm,v 1.5 2004/02/24 23:19:38 julian Exp $
+# $Id: IOHandle.pm,v 1.7 2004/10/04 21:07:17 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +17,11 @@ package Courier::Filter::Logger::IOHandle;
 
 =head1 VERSION
 
-0.12
+0.13
 
 =cut
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 =head1 SYNOPSIS
 

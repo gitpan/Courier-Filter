@@ -2,8 +2,7 @@
 # Courier::Filter::Overview
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-#
-# $Id: Overview.pod,v 1.3 2004/02/21 01:09:52 julian Exp $
+# $Id: Overview.pod,v 1.6 2004/10/04 21:06:36 julian Exp $
 #
 ##############################################################################
 
@@ -137,8 +136,8 @@ detailed explanation of supported configuration options and how filter modules
 can be grouped, even hierarchically, see L<Courier::Filter/"new()">.
 
 Third, you need to make Courier aware of Courier::Filter by installing a
-symlink pointing to C<pureperlfilter> (which is used for bootstrapping
-Courier::Filter) in C</etc/courier/filters/active/>:
+symlink in C</etc/courier/filters/active/> pointing to the C<pureperlfilter>
+executable (which is used for bootstrapping Courier::Filter):
 
     $ ln -s $PATH_TO/pureperlfilter /etc/courier/filters/active/
 
@@ -292,7 +291,7 @@ specifics on how Courier::Filter uses acceptability results.
 =head2 A sample HeaderSimple filter module
 
 Now let's see in practice how to write a simple filter module.  For instance,
-we will create a simple variant of the C<Header> module that exactly matches a
+we will create a simple variant of the C<Header> module that matches a
 specified message header field against a specified string.  Let's call it
 C<HeaderSimple>.
 
@@ -374,18 +373,24 @@ Courier::Filter:
 
 Checking of the calling MTA's IP address against one or more DNS black-lists
 
-=item I<Header>
-
-Literal and reg-ex matching of one or more message header fields
-
-=item I<MIMEParts>
-
-Size and MD5 sum matching of message MIME parts
-
 =item I<SPF>
 
 SPF (Sender Policy Framework) authorization checking of the calling MTA's IP
 address against the envelope sender domain
+
+=item I<Envelope>
+
+Literal and reg-ex matching of one or more RFC 2821 message envelope fields
+
+=item I<Header>
+
+Literal and reg-ex matching of one or more RFC 2822 message header fields
+
+=item I<Parts>
+
+=item I<MIMEParts> (DEPRECATED)
+
+Size and MD5 sum matching of message (MIME multipart and ZIP archive) parts
 
 =back
 

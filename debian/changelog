@@ -1,0 +1,63 @@
+libcourier-filter-perl (0.13) unstable; urgency=low
+
+  * Initial Debian release.
+  * Deprecated the MIMEParts filter module in favor of the new Parts filter
+    module, which is compatible bot a lot more powerful:
+    - Switched from completely-in-memory processing to using temporary files
+      in order to work around two nasty bugs in MIME::Parser and
+      Archive::Zip.
+    - Renamed the "max_size" constructor option to "max_message_size".
+      "max_size" is deprecated but still supported for now.
+    - The "max_size" constructor option now defaults to 1024**2 (1MB) instead
+      of undef.
+    - Added the "max_part_size" constructor option.
+    - Added "views" support (as constructor option and signature aspect),
+      supporting "raw" and "zip" views for now.
+    - Added the "encrypted" signature aspect.
+  * Added Envelope filter module.
+  * Added etc/pureperlfilter.conf as a default configuration file.
+  * Fixed the mysterious ``Can't call method "close" on an undefined value at
+    Filter.pm line 299´´ bug that caused Courier::Filter to fail starting up
+    on some platforms.  (File descriptor 3 must be opened in write mode, not
+    in read mode!)
+  * Fixed filter module group handling:
+    - Skip the rest of the current module group and treat it as an implicit
+      accept if a module in the group states an explicit accept.
+    - Log rejections just once, right after a module has stated a reject, i.e.
+      avoid logging the rejection for all higher recursion levels of the
+      module group structure that contains the rejecting module.
+    - Don't try extracting a logger from filter module groups, only from
+      atomic filter modules.
+  * Fixed the Header filter module:
+    - Fixed handling of undefined header fields.
+    - Prepend a "Header:" keyword to positive match results.
+  * Disabled timestamping for the Syslog logger module, as syslog does its own
+    timestamping.
+  * Reworked configuration file example.
+  * Refined Build.PL script.
+  * Lots of minor documentation fixes.
+
+ -- Julian Mehnle <julian@mehnle.net>  Tue,  4 Oct 2004 21:42:42 +0200
+
+libcourier-filter-perl (0.12) unstable; urgency=low
+
+  * chmod the courierfilter socket to 0660, so the Courier daemon system group
+    has write access to the socket.  This solves the "sendmail: Unable to
+    submit message" permissions problem that occurred on some platforms.
+  * Make Module::Build automatically create a Makefile.PL to facilitate
+    auto-installation through the CPAN interface.
+
+ -- Julian Mehnle <julian@mehnle.net>  Tue,  1 Oct 2004 21:42:42 +0200
+
+libcourier-filter-perl (0.11) unstable; urgency=low
+
+  * Lots of minor documentation fixes.
+
+ -- Julian Mehnle <julian@mehnle.net>  Tue,  1 Oct 2004 21:42:42 +0200
+
+libcourier-filter-perl (0.10) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Julian Mehnle <julian@mehnle.net>  Mon, 26 Feb 2004 23:00:00 +0200
+

@@ -4,13 +4,54 @@
 #   * = Fixed a bug
 #   + = Added a feature (in a backwards compatible way)
 
+--- 0.13 (2004-10-04 23:00)
+
+  + Added Debian package control files.
+
+  x Deprecated the MIMEParts filter module in favor of the new Parts filter
+    module, which is compatible bot a lot more powerful:
+    x Switched from completely-in-memory processing to using temporary files in
+      order to work around two nasty bugs in MIME::Parser and Archive::Zip.
+    x Renamed the "max_size" constructor option to "max_message_size".
+      "max_size" is deprecated but still supported for now.
+    x The "max_size" constructor option now defaults to 1024**2 (1MB) instead
+      of undef.
+    + Added the "max_part_size" constructor option.
+    + Added "views" support (as constructor option and signature aspect),
+      supporting "raw" and "zip" views for now.
+    + Added the "encrypted" signature aspect.
+
+  + Added Envelope filter module.
+  + Added etc/pureperlfilter.conf as a default configuration file.
+
+  * Fixed the mysterious ``Can't call method "close" on an undefined value at
+    Filter.pm line 299´´ bug that caused Courier::Filter to fail starting up on
+    some platforms.  (File descriptor 3 must be opened in write mode, not in
+    read mode!)
+  * Fixed filter module group handling:
+    * Skip the rest of the current module group and treat it as an implicit
+      accept if a module in the group states an explicit accept.
+    * Log rejections just once, right after a module has stated a reject,
+      i.e. avoid logging the rejection for all higher recursion levels of the
+      module group structure that contains the rejecting module.
+    * Don't try extracting a logger from filter module groups, only from atomic
+      filter modules.
+  * Fixed the Header filter module:
+    * Fixed handling of undefined header fields.
+    * Prepend a "Header:" keyword to positive match results.
+  * Disabled timestamping for the Syslog logger module, as syslog does its own
+    timestamping.
+  * Reworked configuration file example.
+  * Refined Build.PL script.
+  * Lots of minor documentation fixes.
+
 --- 0.12 (2004-02-25 01:00)
 
   * chmod the courierfilter socket to 0660, so the Courier daemon system group
     has write access to the socket.  This solves the "sendmail: Unable to
-    submit message" permissions problem.
+    submit message" permissions problem that occurred on some platforms..
   * Make Module::Build automatically create a Makefile.PL to facilitate
-    auto-installation from the CPAN shell.
+    auto-installation through the CPAN interface..
 
 --- 0.11 (2004-02-22 22:00)
 
@@ -20,5 +61,5 @@
 
 --- 0.1 (initial release) (2004-02-16 23:00)
 
-# $Id: CHANGES,v 1.6 2004/02/24 23:13:59 julian Exp $
+# $Id: CHANGES,v 1.8 2004/10/05 10:11:00 julian Exp $
 # vim:tw=79

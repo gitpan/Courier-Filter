@@ -3,8 +3,7 @@
 # a purely Perl-based filter framework for the Courier MTA.
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-#
-# $Id: Filter.pm,v 1.13 2004/02/24 23:17:16 julian Exp $
+# $Id: Filter.pm,v 1.15 2004/10/04 21:03:41 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +17,11 @@ package Courier::Filter;
 
 =head1 VERSION
 
-0.12
+0.13
 
 =cut
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 use v5.8;
 
@@ -185,7 +184,7 @@ next module in turn.
 
 If a module states an B<explicit accept>, Courier::Filter skips the rest of the
 current module group and proceeds to the next item in the superordinate module
-group, assuming the whole group to be an B<implicit mismatch>.
+group, assuming the whole group to be an implicit accept.
 
 =back
 
@@ -296,7 +295,7 @@ sub new {
     chmod(0660, $socket_name)
         or  throw Courier::Error("Unable to chmod socket $socket_name");
     
-    IO::File->new('<&=3')->close();
+    IO::Handle->new_from_fd(3, '>')->close();
     
     my $filter = {
 	name        => $name,
@@ -505,7 +504,6 @@ sub consult_modules {
         or  throw Courier::Error('Invalid modules group structure, array-ref expected');
 
     foreach my $module (@$modules) {
-        my $logger = $module->logger || $filter->logger;
         my ($result, @code);
         
         if (UNIVERSAL::isa($module, 'Courier::Filter::Module')) {
@@ -514,23 +512,28 @@ sub consult_modules {
             next if $module->trusting and $message->trusted;
                 # ...except when the module trusts the message.
             
+            my $logger = $module->logger || $filter->logger;
+
             ($result, @code) = eval { $module->consider($message) };
             if ($@) {
                 $logger->log_error(ref($module) . ': ' . $@) if $logger;
                 ($result, @code) = ('Mail filters temporarily unavailable.', 432);
             }
+            
+            # Log rejection:
+            $logger->log_rejected_message($message, $result)
+                if $result and $logger;
+
+            # Ignore result if module is in testing mode:
+            next if $module->testing;
         }
         else {
             # Something else, try to interpret it as a modules group:
             ($result, @code) = $filter->consult_modules($module, $message);
         }
         
-        # Log rejection:
-        $logger->log_rejected_message($message, $result)
-            if $result and $logger;
-        
         return $result ? ($result, @code) : undef
-            if defined($result) and not $module->testing;
+            if defined($result);
     }
 
     return undef;

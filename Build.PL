@@ -12,18 +12,18 @@ my $build = Module::Build->new(
         IO::File            => 0,
         IO::Socket::UNIX    => 0,
         IO::Select          => 0,
-        Error               => 0,
+        Error               => 0
     },
     recommends      => {
         # Filter module requirements:
         Net::RBLClient      => 0,
-        Digest::MD5         => 0,
+        Mail::SPF::Query    => '1.991',
         MIME::Tools         => '5.4',
-        Mail::SPF::Query    => '1.991'
+        Digest::MD5         => 0,
+        File::Spec          => 0
     },
     script_files    => [
-        'pureperlfilter',
-        'test-filter-module'
+        'bin/test-filter-module'
     ],
     create_makefile_pl
                     => 'passthrough',
@@ -32,5 +32,5 @@ my $build = Module::Build->new(
 
 $build->create_build_script();
 
-# $Id: Build.PL,v 1.2 2004/02/24 00:54:52 julian Exp $
+# $Id: Build.PL,v 1.5 2004/10/04 22:48:58 julian Exp $
 # vim:tw=79

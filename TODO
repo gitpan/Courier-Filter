@@ -1,0 +1,13 @@
+# Legend:
+# --- = A new release
+#   x = Change something significant, or remove a feature
+#   * = Fix a bug
+#   + = Add a feature (in a backwards compatible way)
+
+--- 0.20
+
+  * Add documentation to test-filter-module and pureperlfilter scripts.
+  * Make threads (Perl 5.8 ithreads) work.
+
+# $Id: TODO,v 1.2 2004/10/02 16:36:40 julian Exp $
+# vim:tw=79

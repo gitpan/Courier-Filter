@@ -2,8 +2,7 @@
 # Courier::Filter::Module::SPF class
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
-#
-# $Id: SPF.pm,v 1.8 2004/02/24 23:19:59 julian Exp $
+# $Id: SPF.pm,v 1.11 2004/10/04 21:10:22 julian Exp $
 #
 ##############################################################################
 
@@ -18,18 +17,18 @@ package Courier::Filter::Module::SPF;
 
 =head1 VERSION
 
-0.12
+0.13
 
 =cut
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 =head1 SYNOPSIS
 
     use Courier::Filter::Module::SPF;
 
     my $module = Courier::Filter::Module::SPF->new(
-        reject_on   => \@reject_on_result_codes,
+        reject_on           => \@reject_on_result_codes,
         trusted_forwarders  => 0,
         fallback_guess      => 0,
         default_response    => $default_response_text,

@@ -2,8 +2,7 @@
 # Courier::Filter::Logger::Syslog class
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
-#
-# $Id: Syslog.pm,v 1.4 2004/02/24 23:19:38 julian Exp $
+# $Id: Syslog.pm,v 1.6 2004/10/04 21:07:29 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +17,11 @@ package Courier::Filter::Logger::Syslog;
 
 =head1 VERSION
 
-0.12
+0.13
 
 =cut
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 =head1 SYNOPSIS
 
@@ -76,22 +75,10 @@ The following constructor is provided:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter::Logger::Syslog; THROWS
+=item B<new>: RETURNS Courier::Filter::Logger::Syslog; THROWS
 Courier::Error
 
-Creates a new logger that logs messages as lines to syslog.
-
-%options is a list of key/value pairs representing any of the following
-options:
-
-=over
-
-=item B<timestamp>
-
-A boolean value controlling whether every log message line should be prefixed
-with a timestamp (in local time, in ISO format).  Defaults to B<false>.
-
-=back
+Creates a new logger that logs messages to syslog.
 
 =cut
 
@@ -100,7 +87,8 @@ sub new {
     
     return $class->SUPER::new(
         %options,
-        handle  => \*STDERR
+        timestamp   => FALSE,
+        handle      => \*STDERR
     );
 }
 
@@ -116,8 +104,6 @@ B<Courier::Filter::Logger::IOHandle>:
 =item B<log_error($text)>: THROWS Perl exceptions
 
 Logs the error message given as C<$text> (a string which may contain newlines).
-Prefixes each line with a timestamp if the C<timestamp> option has been set
-through the constructor.
 
 =item B<log_rejected_message($message, $reason)>: THROWS Perl exceptions
 
