@@ -1,8 +1,8 @@
 #
 # Courier::Error class
 #
-# (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Error.pm,v 1.11 2004/10/30 01:05:24 julian Exp $
+# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
+# $Id: Error.pm,v 1.12 2005/01/17 17:29:56 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Error;
 
 =head1 VERSION
 
-0.15
+0.16
 
 =cut
 
-our $VERSION = 0.15;
+our $VERSION = '0.16';
 
 =head1 SYNOPSIS
 
@@ -53,7 +53,6 @@ MTA.  See L<Error> for detailed instructions on how to use it.
 =cut
 
 use warnings;
-#use diagnostics;
 use strict;
 
 use Error;
@@ -65,7 +64,7 @@ use constant FALSE  => not TRUE;
 
 =head1 SEE ALSO
 
-For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
+For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
 
 =head1 AUTHOR

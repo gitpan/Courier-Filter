@@ -1,8 +1,8 @@
 #
 # Courier::Filter::Logger::Syslog class
 #
-# (C) 2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Syslog.pm,v 1.8 2004/10/30 01:05:29 julian Exp $
+# (C) 2004-2005 Julian Mehnle <julian@mehnle.net>
+# $Id: Syslog.pm,v 1.9 2005/01/17 17:42:58 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Logger::Syslog;
 
 =head1 VERSION
 
-0.15
+0.16
 
 =cut
 
-our $VERSION = 0.15;
+our $VERSION = '0.16';
 
 =head1 SYNOPSIS
 
@@ -46,7 +46,6 @@ our $VERSION = 0.15;
 =cut
 
 use warnings;
-#use diagnostics;
 use strict;
 
 use base qw(Courier::Filter::Logger::IOHandle);
@@ -117,7 +116,7 @@ to C<$reason> (a string which may contain newlines).
 L<Courier::Filter::Logger::IOHandle>, L<Courier::Filter::Logger>,
 L<Courier::Filter::Overview>.
 
-For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
+For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
 
 =head1 AUTHOR

@@ -1,8 +1,8 @@
 #
 # Courier::Message class
 #
-# (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Message.pm,v 1.16 2004/10/30 01:05:24 julian Exp $
+# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
+# $Id: Message.pm,v 1.17 2005/01/17 17:31:19 julian Exp $
 #
 ##############################################################################
 
@@ -17,16 +17,15 @@ package Courier::Message;
 
 =head1 VERSION
 
-0.15
+0.16
 
 =cut
 
-our $VERSION = 0.15;
+our $VERSION = '0.16';
 
 use v5.8;
 
 use warnings;
-#use diagnostics;
 use strict;
 
 use overload
@@ -519,7 +518,7 @@ sub remote_host_helo {
 
 =head1 SEE ALSO
 
-For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
+For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
 
 =head1 AUTHOR
@@ -532,14 +531,13 @@ Julian Mehnle <julian@mehnle.net>
 #
 # MIME::Words replacement functions
 #
-# (C) 2004 Julian Mehnle <julian@mehnle.net>
+# (C) 2004-2005 Julian Mehnle <julian@mehnle.net>
 #
 ##############################################################################
 
 package MIME::Words::Better;
 
 use warnings;
-#use diagnostics;
 use strict;
 
 use base qw(Exporter);

@@ -1,10 +1,10 @@
-Courier::Filter 0.15
+Courier::Filter 0.16
 A purely Perl-based mail filter framework for the Courier MTA.
-(C) 2003-2004 Julian Mehnle <julian@mehnle.net>
+(C) 2003-2005 Julian Mehnle <julian@mehnle.net>
 <http://www.mehnle.net/software/courier-filter>
 ==============================================================================
 
-The Courier MTA’s courierfilter interface
+The Courier MTA's courierfilter interface
 -----------------------------------------
 
 The Courier MTA <http://www.courier-mta.org> offers an interface for
@@ -57,5 +57,5 @@ Due to this partial relocation, upgrading from a version prior to 0.15 is
 probably best achieved by removing the old version and doing a fresh install.
 You can of course keep your old configuration file(s).
 
-# $Id: README,v 1.8 2004/10/30 01:10:24 julian Exp $
+# $Id: README,v 1.10 2005/01/17 18:26:45 julian Exp $
 # vim:tw=79

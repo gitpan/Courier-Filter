@@ -1,8 +1,8 @@
 #
 # Courier::Filter::Module::DNSBL class
 #
-# (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: DNSBL.pm,v 1.11 2004/10/30 01:05:29 julian Exp $
+# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
+# $Id: DNSBL.pm,v 1.12 2005/01/17 17:47:01 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::DNSBL;
 
 =head1 VERSION
 
-0.15
+0.16
 
 =cut
 
-our $VERSION = 0.15;
+our $VERSION = '0.16';
 
 =head1 SYNOPSIS
 
@@ -46,7 +46,6 @@ our $VERSION = 0.15;
 =cut
 
 use warnings;
-#use diagnostics;
 use strict;
 
 use base qw(Courier::Filter::Module);
@@ -165,7 +164,7 @@ sub match {
 
 L<Courier::Filter::Module>, L<Courier::Filter::Overview>.
 
-For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
+For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
 
 =head1 AUTHOR

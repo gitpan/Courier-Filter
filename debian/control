@@ -7,9 +7,10 @@ Standards-Version: 3.6.1
 
 Package: courier-filter-perl
 Architecture: all
-Depends: courier-mta, ${perl:Depends}, liberror-perl, ${misc:Depends}
-Recommends: libmail-spf-query-perl (>= 1.991), libmime-tools-perl (>= 5.400), libdigest-md5-perl
-Description: A purely Perl-based mail filter framework for the Courier MTA
+Depends: courier-mta, perl (>= 5.8.0), liberror-perl
+Recommends: libmail-spf-query-perl (>= 1.991), libmime-tools-perl (>= 5.400), libdigest-md5-perl, libnet-dns-perl
+Suggests: libnet-rblclient-perl, libnet-address-ipv4-local-perl, libclamav-client-perl
+Description: purely Perl-based mail filter framework for the Courier MTA
  Courier::Filter implements the Courier MTA's courierfilter interface as a
  framework for mail filter modules.  Authors of filter modules can concentrate
  on writing the actual filter logic without having to care about the usual
@@ -23,7 +24,9 @@ Description: A purely Perl-based mail filter framework for the Courier MTA
  .
  The following filter modules are included:
    * DNSBL:     matching of calling MTA's IP address against DNS black-lists,
-   * SPF:       authentication of sender addresses,
+   * SPF:       authentication of sender addresses in inbound messages,
+   * SPFout:    authentication of sender addresses in outbound messages,
    * Envelope:  matching of RFC 2821 message envelope fields,
    * Header:    matching of RFC 2822 message header fields,
+   * ClamAVd:   scanning for malware using the ClamAV scanner,
    * Parts:     matching of MIME parts and ZIP archive contents.

@@ -20,7 +20,11 @@ my $build = Module::Build->new(
         Mail::SPF::Query    => '1.991',
         MIME::Tools         => '5.4',
         Digest::MD5         => 0,
-        File::Spec          => 0
+        ClamAV::Client      => 0,
+        File::Spec          => 0,
+        Net::DNS            => 0,
+        Net::Address::IPv4::Local
+                            => 0
     },
     script_files    => [
         'bin/test-filter-module'
@@ -35,5 +39,5 @@ my $build = Module::Build->new(
 
 $build->create_build_script();
 
-# $Id: Build.PL,v 1.6 2004/10/30 01:07:36 julian Exp $
+# $Id: Build.PL,v 1.7 2005/01/17 19:33:59 julian Exp $
 # vim:tw=79

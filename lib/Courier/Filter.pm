@@ -2,8 +2,8 @@
 # Courier::Filter,
 # a purely Perl-based filter framework for the Courier MTA.
 #
-# (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Filter.pm,v 1.17 2004/10/30 01:05:24 julian Exp $
+# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
+# $Id: Filter.pm,v 1.18 2005/01/17 17:30:40 julian Exp $
 #
 ##############################################################################
 
@@ -17,16 +17,15 @@ package Courier::Filter;
 
 =head1 VERSION
 
-0.15
+0.16
 
 =cut
 
-our $VERSION = 0.15;
+our $VERSION = '0.16';
 
 use v5.8;
 
 use warnings;
-#use diagnostics;
 use strict;
 #use threads;
 #BEGIN { require threads if ... }
@@ -246,7 +245,7 @@ A boolean value controlling whether the I<whole> filter process should run in
 usual, but no messages will actually be rejected.  Defaults to B<false>.
 
 NOTE:  You may also enable testing mode on individual filter module objects,
-see L<Courier::Filter::Module/"new()">.  Enabling testing mode globally is not
+see L<Courier::Filter::Module/"new">.  Enabling testing mode globally is not
 the same as individually enabling testing mode on all filter modules, though.
 When global testing mode is enabled, Courier::Filter only ignores the I<final>
 result, but still follows the rules of the normal consideration process, e.g.
@@ -689,7 +688,7 @@ no warnings;
 L<pureperlfilter>, L<Courier::Filter::Overview>, L<Courier::Filter::Module>,
 L<Courier::Filter::Logger>
 
-For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
+For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
 
 =head1 REFERENCES

@@ -1,8 +1,8 @@
 #
 # Courier::Filter::Module::Envelope class
 #
-# (C) 2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Envelope.pm,v 1.5 2004/10/30 01:05:29 julian Exp $
+# (C) 2004-2005 Julian Mehnle <julian@mehnle.net>
+# $Id: Envelope.pm,v 1.6 2005/01/17 17:47:45 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::Envelope;
 
 =head1 VERSION
 
-0.15
+0.16
 
 =cut
 
-our $VERSION = 0.15;
+our $VERSION = '0.16';
 
 =head1 SYNOPSIS
 
@@ -56,7 +56,6 @@ our $VERSION = 0.15;
 =cut
 
 use warnings;
-#use diagnostics;
 use strict;
 
 use base qw(Courier::Filter::Module);
@@ -202,7 +201,7 @@ sub match {
 L<Courier::Filter::Module::Header>, L<Courier::Filter::Module>,
 L<Courier::Filter::Overview>.
 
-For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
+For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
 
 =head1 AUTHOR

@@ -1,8 +1,8 @@
 #
 # Courier::Filter::Module::MIMEParts class
 #
-# (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: MIMEParts.pm,v 1.14 2004/10/30 01:05:29 julian Exp $
+# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
+# $Id: MIMEParts.pm,v 1.15 2005/01/17 17:49:12 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::MIMEParts;
 
 =head1 VERSION
 
-0.15
+0.16
 
 =cut
 
-our $VERSION = 0.15;
+our $VERSION = '0.16';
 
 use warnings;
 use strict;
@@ -47,7 +47,7 @@ L<Courier::Filter::Module::Parts> for the interface description.
 L<Courier::Filter::Module::Parts>, L<Courier::Filter::Module>,
 L<Courier::Filter::Overview>.
 
-For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
+For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
 
 =head1 AUTHOR

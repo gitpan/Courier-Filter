@@ -1,8 +1,8 @@
 #
 # Courier::Filter::Overview
 #
-# (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Overview.pod,v 1.6 2004/10/04 21:06:36 julian Exp $
+# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
+# $Id: Overview.pod,v 1.8 2005/01/17 19:51:09 julian Exp $
 #
 ##############################################################################
 
@@ -376,7 +376,12 @@ Checking of the calling MTA's IP address against one or more DNS black-lists
 =item I<SPF>
 
 SPF (Sender Policy Framework) authorization checking of the calling MTA's IP
-address against the envelope sender domain
+address against the envelope sender domain (classic inbound SPF checking)
+
+=item I<SPFout>
+
+SPF authorization checking of the local system's IP address against the
+envelope sender domain (so-called outbound SPF checking)
 
 =item I<Envelope>
 
@@ -385,6 +390,10 @@ Literal and reg-ex matching of one or more RFC 2821 message envelope fields
 =item I<Header>
 
 Literal and reg-ex matching of one or more RFC 2822 message header fields
+
+=item I<ClamAVd>
+
+Malware scanning using the ClamAV anti-virus scanner
 
 =item I<Parts>
 
@@ -415,24 +424,6 @@ Logging to files (based on the B<IOHandle> logger)
 
 =back
 
-=head1 AVAILABILITY and SUPPORT
-
-The latest version of Courier::Filter is available on CPAN and at
-L<http://www.mehnle.net/software/Courier::Filter>.
-
-Support is usually (but not guaranteed to be) given by the author, Julian
-Mehnle <julian@mehnle.net>, preferably through the Courier MTA's courier-users
-mailing list <courier-users@lists.sourceforge.net>, which is subscribable
-through L<http://lists.sourceforge.net/lists/listinfo/courier-users>.
-
-=head1 COPYRIGHT and LICENSE
-
-Courier::Filter is Copyright (C) 2003-2004 Julian Mehnle <julian@mehnle.net>.
-All rights reserved.
-
-Courier::Filter is free software.  You may use, modify, and distribute it under
-the same terms as Perl itself, i.e. under the GNU GPL or the Artistic License.
-
 =head1 SEE ALSO
 
 L<pureperlfilter>, L<test-filter-module>,
@@ -457,9 +448,23 @@ L<http://phantom.dragonsdawn.net/~gordon/courier-patches/courier-pythonfilter/>
 
 =back
 
-=head1 AUTHOR
+=head1 AVAILABILITY and SUPPORT
 
-Julian Mehnle <julian@mehnle.net>
+The latest version of Courier::Filter is available on CPAN and at
+L<http://www.mehnle.net/software/courier-filter>.
+
+Support is usually (but not guaranteed to be) given by the author, Julian
+Mehnle <julian@mehnle.net>, preferably through the Courier MTA's courier-users
+mailing list <courier-users@lists.sourceforge.net>, which is subscribable
+through L<http://lists.sourceforge.net/lists/listinfo/courier-users>.
+
+=head1 AUTHOR and LICENSE
+
+Courier::Filter is Copyright (C) 2003-2005 Julian Mehnle <julian@mehnle.net>.
+All rights reserved.
+
+Courier::Filter is free software.  You may use, modify, and distribute it under
+the same terms as Perl itself, i.e. under the GNU GPL or the Artistic License.
 
 =cut
 

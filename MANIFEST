@@ -18,12 +18,14 @@ lib/Courier/Filter/Logger/File.pm
 lib/Courier/Filter/Logger/IOHandle.pm
 lib/Courier/Filter/Logger/Syslog.pm
 lib/Courier/Filter/Module.pm
+lib/Courier/Filter/Module/ClamAVd.pm
 lib/Courier/Filter/Module/DNSBL.pm
 lib/Courier/Filter/Module/Envelope.pm
 lib/Courier/Filter/Module/Header.pm
 lib/Courier/Filter/Module/MIMEParts.pm
 lib/Courier/Filter/Module/Parts.pm
 lib/Courier/Filter/Module/SPF.pm
+lib/Courier/Filter/Module/SPFout.pm
 lib/Courier/Filter/Overview.pod
 lib/Courier/Message.pm
 Makefile.PL

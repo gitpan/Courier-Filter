@@ -1,3 +1,32 @@
+courier-filter-perl (0.16) unstable; urgency=low
+
+  Debian:
+  * Explicitly specify the dependency on Perl 5.8 so upgrades from Woody are
+    guaranteed to work smoothly and also to simplify backporting.
+                                                              (Closes: #289796)
+  * Recommend libnet-dns-perl.  Suggest libnet-rblclient-perl,
+    libnet-address-ipv4-local-perl, and libclamav-client-perl (all of which
+    are not yet packaged for Debian).
+
+  SPF filter module:
+  * Deprecated the "reject_on" option in favor of the new "match_on" option.
+  * Removed "none" from the default set of result codes to match on.
+  * Changed the documentation to recommend also rejecting on "unknown" results.
+  * Added a reference in the documentation to the spf-draft-200406
+    specification, to which this module complies.
+
+  SPFout filter module:
+  * Added for outbound SPF filtering.
+
+  ClamAVd filter module:
+  * Added for malware filtering using a ClamAV `clamd` dameon.
+
+  Miscellaneous:
+  * Updated the sample configuration file.
+  * Minor documentation fixes.
+
+ -- Julian Mehnle <julian@mehnle.net>  Mon, 17 Jan 2005 20:15:13 +0100
+
 courier-filter-perl (0.15) unstable; urgency=low
 
   * Courier::Filter is primarily a plug-in for the Courier MTA, not a library

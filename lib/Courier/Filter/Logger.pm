@@ -1,8 +1,8 @@
 #
 # Courier::Filter::Logger abstract base class
 #
-# (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Logger.pm,v 1.12 2004/10/30 01:05:29 julian Exp $
+# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
+# $Id: Logger.pm,v 1.13 2005/01/17 17:32:18 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Logger;
 
 =head1 VERSION
 
-0.15
+0.16
 
 =cut
 
-our $VERSION = 0.15;
+our $VERSION = '0.16';
 
 =head1 SYNOPSIS
 
@@ -53,7 +53,6 @@ our $VERSION = 0.15;
 =cut
 
 use warnings;
-#use diagnostics;
 use strict;
 
 use Error qw(:try);
@@ -182,7 +181,7 @@ L<Courier::Filter>, L<Courier::Filter::Module>.
 For a list of prepared loggers that come with Courier::Filter, see
 L<Courier::Filter::Overview/"Bundled Courier::Filter loggers">.
 
-For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
+For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
 
 =head1 AUTHOR

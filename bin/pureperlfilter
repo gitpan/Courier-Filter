@@ -4,8 +4,8 @@
 # Bootstrapping module for Courier::Filter,
 # the purely Perl-based filter framework for the Courier MTA.
 #
-# (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: pureperlfilter,v 1.11 2004/10/30 00:57:51 julian Exp $
+# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
+# $Id: pureperlfilter,v 1.12 2005/01/17 18:27:25 julian Exp $
 #
 ##############################################################################
 
@@ -15,7 +15,7 @@ pureperlfilter - A Courier::Filter-based filter for the Courier MTA
 
 =head1 VERSION
 
-0.15
+0.16
 
 =head1 SYNOPSIS
 
@@ -45,7 +45,7 @@ L<Courier::Filter::Overview> for its format.
 
 L<Courier::Filter::Overview>, L<Courier::Filter>
 
-For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
+For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
 
 =head1 AUTHOR

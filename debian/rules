@@ -53,7 +53,7 @@ binary-indep: build install
 	dh_compress
 	dh_fixperms
 	dh_installdeb
-	dh_perl
+	dh_perl /usr/bin /usr/lib /usr/share/courier-filter-perl/perl5
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb

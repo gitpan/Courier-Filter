@@ -3,8 +3,8 @@
 #
 # A tester for Courier::Filter modules.
 #
-# (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: test-filter-module,v 1.8 2004/10/30 00:57:51 julian Exp $
+# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
+# $Id: test-filter-module,v 1.9 2005/01/17 18:27:47 julian Exp $
 #
 ##############################################################################
 
@@ -14,7 +14,7 @@ test-filter-module - A tester for Courier::Filter modules
 
 =head1 VERSION
 
-0.15
+0.16
 
 =head1 SYNOPSIS
 
@@ -49,7 +49,7 @@ C<bl.foo.org> and C<bl.bar.org>.
 
 L<Courier::Filter::Overview>, L<Courier::Filter>
 
-For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
+For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
 
 =head1 AUTHOR

@@ -4,6 +4,33 @@
 #   * = Fixed a bug
 #   + = Added a feature (in a backwards compatible way)
 
+--- 0.16 (2005-01-17 19:11)
+
+  Debian:
+  * Explicitly specify the dependency on Perl 5.8 so upgrades from Woody are
+    guaranteed to work smoothly and also to simplify backporting.  This deals
+    with Debian bug #289796.
+  x Recommend libnet-dns-perl.  Suggest libnet-rblclient-perl,
+    libnet-address-ipv4-local-perl, and libclamav-client-perl (all of which are
+    not yet packaged for Debian).
+
+  SPF filter module:
+  x Deprecated the "reject_on" option in favor of the new "match_on" option.
+  x Removed "none" from the default set of result codes to match on.
+  x Changed the documentation to recommend also rejecting on "unknown" results.
+  + Added a reference in the documentation to the spf-draft-200406
+    specification, to which this module complies.
+
+  SPFout filter module:
+  + Added for outbound SPF filtering.
+
+  ClamAVd filter module:
+  + Added for malware filtering using a ClamAV `clamd` dameon.
+
+  Miscellaneous:
+  * Updated the sample configuration file.
+  * Minor documentation fixes.
+
 --- 0.15 (2004-10-30 01:13)
 
   x Courier::Filter is primarily a plug-in for the Courier MTA, not a library
@@ -79,5 +106,5 @@
 
 --- 0.1 (initial release) (2004-02-16 23:00)
 
-# $Id: CHANGES,v 1.12 2004/10/30 01:28:42 julian Exp $
+# $Id: CHANGES,v 1.14 2005/01/17 19:56:59 julian Exp $
 # vim:tw=79

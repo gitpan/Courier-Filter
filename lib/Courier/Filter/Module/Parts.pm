@@ -1,8 +1,8 @@
 #
 # Courier::Filter::Module::Parts class
 #
-# (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
-# $Id: Parts.pm,v 1.3 2004/10/30 01:05:29 julian Exp $
+# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
+# $Id: Parts.pm,v 1.5 2005/01/17 17:49:48 julian Exp $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::Parts;
 
 =head1 VERSION
 
-0.15
+0.16
 
 =cut
 
-our $VERSION = 0.15;
+our $VERSION = '0.16';
 
 =head1 SYNOPSIS
 
@@ -64,12 +64,14 @@ our $VERSION = 0.15;
 =cut
 
 use warnings;
-#use diagnostics;
 use strict;
 
 use base qw(Courier::Filter::Module);
 
 use MIME::Parser 5.4;
+    # Require either MIME::Parser 5.413 or lower, or a fixed IO::InnerFile
+    # (probably higher than 2.109, where IO::InnerFile::seek() properly returns
+    # TRUE when appropriate).
 use Digest::MD5;
 use File::Spec;
     # In-memory processing doesn't work, see comments in match_mime_part().
@@ -385,8 +387,7 @@ sub match_mime_part {
             # by alternatively creating a Perl 5.8 style in-memory file
             # object...
             #   my $body_as_string = $body->as_string;
-            #   my $handle = IO::File->new();
-            #   open($handle, '+<', \$body_as_string);
+            #   open(my $handle, '+<', \$body_as_string);
             # ...doesn't work either because Archive::Zip::_isSeekable() is
             # broken (erroneously considers Perl 5.8 style in-memory IO::File
             # objects not to be seekable,
@@ -554,7 +555,7 @@ sub compile_signature {
 
 L<Courier::Filter::Module>, L<Courier::Filter::Overview>.
 
-For AVAILABILITY, SUPPORT, COPYRIGHT, and LICENSE information, see
+For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
 
 =head1 AUTHOR
