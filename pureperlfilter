@@ -6,9 +6,8 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: pureperlfilter,v 1.6 2004/01/11 15:56:56 julian Exp $
+# $Id: pureperlfilter,v 1.7 2004/02/21 01:02:29 julian Exp $
 #
-# $Log: pureperlfilter,v $
 ##############################################################################
 
 use warnings;

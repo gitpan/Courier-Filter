@@ -4,7 +4,7 @@
 #
 # (C) 2003-2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: Filter.pm,v 1.9 2004/02/17 13:30:27 julian Exp $
+# $Id: Filter.pm,v 1.10 2004/02/21 01:05:00 julian Exp $
 #
 ##############################################################################
 
@@ -18,11 +18,11 @@ package Courier::Filter;
 
 =head1 VERSION
 
-0.1
+0.102
 
 =cut
 
-our $VERSION = 0.101;
+our $VERSION = 0.102;
 
 use v5.8;
 

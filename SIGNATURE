@@ -17,12 +17,12 @@ Hash: SHA1
 SHA1 87ba8940448baa88dacd0dd1f38c2021eb59c952 Build.PL
 SHA1 b9254ab71f8751d5664a24d3af9e0832282a433d CHANGES
 SHA1 0f392cbc6cf5a93f7cead713424bd0f4b7a20b27 MANIFEST
-SHA1 d3a06cdc82e4d1b955370eae7379802256f6bf61 META.yml
-SHA1 dc96a1c7836242db6843aae8c76c17682c62118b README
+SHA1 5eb2a930a18bada3cb6b66820b7d4ed43f56e98a META.yml
+SHA1 69c17baf91a729ec12ce6b9069d4438f026db8fa README
 SHA1 3c3143faaa28baa18c0e38925fffd2e515ff453c examples/pureperlfilter.conf
 SHA1 70c1bfa8b205bdba87bd54e499573ff34aea3a5e lib/Courier/Config.pm
 SHA1 e0ae2c6ed3981172670700fff547225493da2313 lib/Courier/Error.pm
-SHA1 6f552cf36b67fdaf08c5d2bb958075568abc1255 lib/Courier/Filter.pm
+SHA1 a08ca3d93487628b05cca02e58fdc60529c053fc lib/Courier/Filter.pm
 SHA1 71189514341ff1a47f584cf1385600bba7d81525 lib/Courier/Filter/Logger.pm
 SHA1 0a7df6fee9a9e1f8f2016f952d91706f0e03b088 lib/Courier/Filter/Logger/File.pm
 SHA1 a395f83a2181db3c632584a5a9e887801b3b9f99 lib/Courier/Filter/Logger/IOHandle.pm
@@ -31,15 +31,15 @@ SHA1 6f95100fb08267e92e994a6c00953486438a9a26 lib/Courier/Filter/Module.pm
 SHA1 6c07cb755b8f684049a4a83f6ff8f3d3f933756f lib/Courier/Filter/Module/DNSBL.pm
 SHA1 ad3e1ac333429ecf68922f2efa6bdcfbc3077ba1 lib/Courier/Filter/Module/Header.pm
 SHA1 6535e18abb1714e9c9fad26407b73ba1715e0f16 lib/Courier/Filter/Module/MIMEParts.pm
-SHA1 1f8ccfb5adb6c06c8a52b16791ba87c67e5c31b4 lib/Courier/Filter/Module/SPF.pm
-SHA1 4ec244cdb94ea7d77851615003a7ecef8542c348 lib/Courier/Filter/Overview.pod
+SHA1 f99009106303bff52c7954c23ec0e424c0265aa7 lib/Courier/Filter/Module/SPF.pm
+SHA1 524c8c8b15f68cfabc22b062ed3a5e5a3964ae1b lib/Courier/Filter/Overview.pod
 SHA1 e623821bc0f50ebb5c48821051f4c3adda779b9f lib/Courier/Message.pm
-SHA1 9ba792abf636a24e4722934ee1658bc39389ad49 pureperlfilter
+SHA1 c96401f5086ba3802a9b02c21134ba727761bb0b pureperlfilter
 SHA1 9a9c2428df64f0840cbc26cc7c22b90746f24184 test-filter-module
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.2.4 (GNU/Linux)
 
-iD8DBQFAMhtpaWlsL2XXXh8RApHDAJ0UlhuwFisugw7iVi1p1mv7QzQjdwCdEu2M
-kzLO0gYeQyq+MAqlJSnOEAg=
-=CYEY
+iD8DBQFANrM2aWlsL2XXXh8RAtNqAJsEpOySQ+cfBi600udsF9/1tNxSYwCeM7Mr
+PraRVLAZFwx1IbfX0EX3KIE=
+=iutw
 -----END PGP SIGNATURE-----

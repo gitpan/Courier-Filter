@@ -3,7 +3,7 @@
 #
 # (C) 2004 Julian Mehnle <julian@mehnle.net>
 #
-# $Id: SPF.pm,v 1.2 2004/02/17 13:38:50 julian Exp $
+# $Id: SPF.pm,v 1.3 2004/02/21 01:23:19 julian Exp $
 #
 ##############################################################################
 
@@ -95,7 +95,7 @@ The following constructor is provided:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter::Module::MIMEParts
+=item B<new(%options)>: RETURNS Courier::Filter::Module::SPF
 
 Creates a new B<SPF> filter module.
 
@@ -113,7 +113,8 @@ SPF specification for details on the meaning of those.  Even if C<error> is
 listed, an C<error> result will by definition never cause a I<permanent>
 rejection, but only a I<temporary> one.  Defaults to B<['fail', 'softfail',
 'none', 'unknown', 'error']>, which complies with the long-term vision of SPF.
-For the time being, you should probably override this to B<['fail', 'error']>.
+For the time being, you should probably override this to B<['fail', 'softfail',
+'error']> or just B<['fail', 'error']>.
 
 =item B<trusted_forwarders>
 
@@ -137,8 +138,8 @@ record.  Defaults to B<false>.
 A string that is to be returned as the match result in case of a match, that is
 when a message fails the SPF check, if the (alleged) envelope sender domain
 does not provide a specific response.  SPF macro substitution is performed on
-the default response, just like on provided responses.  If B<undef>, the
-hard-coded default response of Mail::SPF::Query will be used; see
+the default response, just like on responses provided by domain owners.  If
+B<undef>, the hard-coded default response of Mail::SPF::Query will be used; see
 L<Mail::SPF::Query/"new()"> for the definition of that.  Defaults to B<undef>.
 
 =back
@@ -192,8 +193,8 @@ sub match {
     @reject_on{ @{$module->{reject_on}} } = ();
     
     return
-        "result=\"$result\"" . ($message->trusted ? " (but trusted)" : "") . "; " .
-        "record=\"$spf_record\"; " .
+#        "result=\"$result\"" . ($message->trusted ? " (but trusted)" : "") . "; " .
+#        ($spf_record ? "record=\"$spf_record\"; " : '') .
         $smtp_comment, ($result eq 'error' ? 451 : ())
         if exists($reject_on{$result});
     
