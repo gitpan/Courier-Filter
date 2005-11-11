@@ -2,7 +2,7 @@
 # Courier::Filter::Module::SPFout class
 #
 # (C) 2005 Julian Mehnle <julian@mehnle.net>
-# $Id: SPFout.pm,v 1.3 2005/01/17 18:57:46 julian Exp $
+# $Id: SPFout.pm 199 2005-11-10 22:16:37Z julian $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::SPFout;
 
 =head1 VERSION
 
-0.16
+0.17
 
 =cut
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 =head1 SYNOPSIS
 
@@ -176,34 +176,21 @@ sub match {
     my ($module, $message) = @_;
     my $class = ref($module);
     
-    return if not $message->trusted;
-        # This filter module applies to trusted (authenticated) messages only.
-    #STDERR->print("SPFout: hello. message is trusted.\n");
+    $message->trusted
+        or return;  # This filter module applies to trusted (authenticated) messages only.
     
-    $message->remote_host =~ /^::ffff:($IPV4_ADDRESS)$/
+    $message->remote_host =~ /^(?:::ffff:)?($IPV4_ADDRESS)$/i
         or return;  # Ignore IPv6 senders for now, as M:S:Q doesn't support it.
-    #STDERR->print("SPFout: sender has IPv4 address\n");
     
     my $remote_host_ipv4 = $1;
     
-    my ($sender_domain) = $message->sender =~ /\@([^@]*)$/;
-    $sender_domain ||= $message->remote_host_helo;
-    #STDERR->print("SPFout: sender domain is \"$sender_domain\"\n");
-    
     my $outbound_address_ipv4;
     try {
-        # Just try the domain's first MX as the remote host:
-        my ($mx) = Net::DNS::mx($sender_domain);
-        #STDERR->print("SPFout: sender MX is \"", $mx->exchange, "\"\n");
         # Discover local outbound IP address:
-        $outbound_address_ipv4 =
-            defined($mx) ?
-                Net::Address::IPv4::Local->connected_to($mx->exchange)
-            :   Net::Address::IPv4::Local->public;
+        $outbound_address_ipv4 = Net::Address::IPv4::Local->public;
     };
     throw Courier::Error('Could not determine local outbound IP address')
         if not defined($outbound_address_ipv4);
-    #STDERR->print("SPFout: local outbound IP address is \"$outbound_address_ipv4\"\n");
     
     my $spf_query = Mail::SPF::Query->new(
         ip          => $outbound_address_ipv4,
@@ -216,7 +203,6 @@ sub match {
     my ($result_code, $response, $header_comment, $spf_record) = $spf_query->result();
     $result_code = 'unknown' if $result_code =~ /^unknown/;
     $response =~ s/^SPF: //;
-    #STDERR->print("SPFout: SPF result is \"$result_code\"\n");
     
     my %match_on;
     @match_on{ @{$module->{match_on}} } = ();

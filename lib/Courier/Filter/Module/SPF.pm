@@ -2,7 +2,7 @@
 # Courier::Filter::Module::SPF class
 #
 # (C) 2004-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: SPF.pm,v 1.16 2005/01/17 18:57:46 julian Exp $
+# $Id: SPF.pm 199 2005-11-10 22:16:37Z julian $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::SPF;
 
 =head1 VERSION
 
-0.16
+0.17
 
 =cut
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 =head1 SYNOPSIS
 
@@ -172,7 +172,7 @@ sub match {
     my ($module, $message) = @_;
     my $class = ref($module);
     
-    $message->remote_host =~ /^::ffff:($IPV4_ADDRESS)$/
+    $message->remote_host =~ /^(?:::ffff:)?($IPV4_ADDRESS)$/i
         or return; # Ignore IPv6 senders for now, as M:S:Q doesn't support it.
     
     my $remote_host_ipv4 = $1;

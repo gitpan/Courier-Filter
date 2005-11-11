@@ -2,7 +2,7 @@
 # Courier::Filter::Overview
 #
 # (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Overview.pod,v 1.8 2005/01/17 19:51:09 julian Exp $
+# $Id: Overview.pod 199 2005-11-10 22:16:37Z julian $
 #
 ##############################################################################
 
@@ -77,8 +77,8 @@ control file parsing features are missing.
 
 B<pythonfilter> by Gordon Messmer is a purely Python-based, modular, threaded
 courierfilter framework, similar to Courier::Filter.  If you primarily speak
-Python, this is clearly your choice.  As of version 0.5, there is some control
-file parsing, but no message parsing infrastructure.
+Python, this is clearly your choice.  As of version 0.8, there is some control
+file parsing and management, but no message parsing infrastructure.
 
 =back
 
@@ -90,8 +90,8 @@ include path (see the last lines of `perl -V`).  You may also need to adjust
 the B<Courier::Config> class (in C<Courier/Config.pm>) to reflect your system's
 paths.  As for the filter modules, you can either use prepared ones (see
 L</"Bundled Courier::Filter modules"> for a list of modules that come with
-Courier::Filter), or you can write your own (see L</"How Courier::Filter
-modules work">).
+Courier::Filter), or you can write your own (see L</"How filter modules
+work">).
 
 Second, you need to create a configuration file for Courier::Filter.
 Courier::Filter usually seeks for it at
@@ -156,7 +156,7 @@ any Perl error messages in syslog, and I<reject> incoming mail messages with a
 I<temporary> status code, so as not to enable attackers to circumvent the
 configured Courier::Filter mail filtering.
 
-=head2 How Courier::Filter modules work
+=head2 How filter modules work
 
 Filter modules are Perl classes that are derived from the class
 B<Courier::Filter::Module>.  See L<perlobj> for an explanation of Perl's object
@@ -172,7 +172,7 @@ Every module tries to match its filter criteria against the current message,
 yielding a so-called I<match result>, which can be either an B<explicit match>,
 an B<implicit mismatch>, or an B<explicit mismatch>.  (Filter modules usually
 never return an I<explicit> mismatch, but only an I<implicit> one; see
-L</"Writing Courier::Filter modules"> if you want to know why.)
+L</"Writing filter modules"> if you want to know why.)
 
 According to the filter module's polarity, the match result is then translated
 into a so-called I<acceptability result>, which can be either an B<explicit
@@ -226,7 +226,7 @@ sense of logic.  That is, there are no dedicated "accepting" and "rejecting"
 modules, but only "matching" modules.  (E.g. there are no "HeaderAccept" and
 "HeaderReject" modules, but only a "Header" module.)
 
-=head2 Writing Courier::Filter modules
+=head2 Writing filter modules
 
 The main objective of Courier::Filter is to make it very easy to write new
 filter modules, so while the previous section described how filter modules work
@@ -254,7 +254,8 @@ from the message object (see L<Courier::Message>).
 If a filter module wants to call external commands using C<system()>, or
 functions from Perl modules that directly operate on files, it can efficiently
 bypass the message and control files processing features of Courier::Message by
-using the message object's C<control_file_names> and C<file_name> properties.
+using the message object's C<control_file_names> and C<file_name> properties
+only.
 
 Finally, after the message has been examined, C<match()> must return a I<match
 result> of...
@@ -279,7 +280,7 @@ if the module wants to state an B<explicit mismatch>.
 =back
 
 C<consider()> then translates the I<match result> into a I<acceptability
-result> as described in L</"How Courier::Filter modules work">.
+result> as described in L</"How filter modules work">.
 
 C<match()> should usually never return an I<explicit> mismatch (B<false>), but
 an I<implicit> one (B<undef>) instead for the message to pass I<this filter
@@ -393,7 +394,11 @@ Literal and reg-ex matching of one or more RFC 2822 message header fields
 
 =item I<ClamAVd>
 
-Malware scanning using the ClamAV anti-virus scanner
+Malware detection using the ClamAV anti-virus scanner
+
+=item I<SpamAssassin>
+
+Spam detection using SpamAssassin
 
 =item I<Parts>
 

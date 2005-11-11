@@ -4,7 +4,7 @@
 # A tester for Courier::Filter modules.
 #
 # (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: test-filter-module,v 1.9 2005/01/17 18:27:47 julian Exp $
+# $Id: test-filter-module 199 2005-11-10 22:16:37Z julian $
 #
 ##############################################################################
 
@@ -14,7 +14,7 @@ test-filter-module - A tester for Courier::Filter modules
 
 =head1 VERSION
 
-0.16
+0.17
 
 =head1 SYNOPSIS
 

@@ -10,6 +10,7 @@ debian/install
 debian/rules
 etc/pureperlfilter.conf
 examples/pureperlfilter.conf
+INSTALL
 lib/Courier/Config.pm
 lib/Courier/Error.pm
 lib/Courier/Filter.pm
@@ -24,6 +25,7 @@ lib/Courier/Filter/Module/Envelope.pm
 lib/Courier/Filter/Module/Header.pm
 lib/Courier/Filter/Module/MIMEParts.pm
 lib/Courier/Filter/Module/Parts.pm
+lib/Courier/Filter/Module/SpamAssassin.pm
 lib/Courier/Filter/Module/SPF.pm
 lib/Courier/Filter/Module/SPFout.pm
 lib/Courier/Filter/Overview.pod

@@ -3,7 +3,7 @@
 # a purely Perl-based filter framework for the Courier MTA.
 #
 # (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Filter.pm,v 1.18 2005/01/17 17:30:40 julian Exp $
+# $Id: Filter.pm 199 2005-11-10 22:16:37Z julian $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter;
 
 =head1 VERSION
 
-0.16
+0.17
 
 =cut
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 use v5.8;
 
@@ -296,8 +296,20 @@ sub new {
     my $socket_prename_unused   = "$socket_dir_unused/.$name";
     my $socket_name_unused      = "$socket_dir_unused/$name";
     
-    not -e $socket_name
-	or  throw Courier::Error("Socket $socket_name already exists");
+    if (-e $socket_name) {
+        -S $socket_name
+	    or  throw Courier::Error("$socket_name already exists but is not a socket");
+        
+        # Try to connect to socket to see if it is alive or
+        # if it is left over from a crashed Courier::Filter:
+        my $test_socket = IO::Socket::UNIX->new( Peer => $socket_name );
+        
+        not defined($test_socket)
+            or  throw Courier::Error("Live socket $socket_name found -- is Courier::Filter already running?");
+        
+        # Socket exists but is dead. Remove it:
+        unlink($socket_name);
+    }
     
     unlink($socket_prename);
     unlink($socket_prename_unused);
@@ -470,14 +482,24 @@ sub handle_connection {
 	}
     }
     
+    return
+        if not defined($message_file_name);
+    
     my $message = Courier::Message->new(
-        file_name   => $message_file_name,
-        control_file_names
-                    => \@control_file_names,
-        filter      => $filter
+        file_name           => $message_file_name,
+        control_file_names  => \@control_file_names,
+        filter              => $filter
     );
     
     my ($result, $code);
+    
+    # BEGIN XXX
+    #STDERR->print(
+    #    "DEBUG: authenticated_user = '" .
+    #    ($message->authenticated_user || '(undef)') .
+    #    "'\n"
+    #);
+    # END XXX
     
     ($result, $code) = $filter->consult_modules($filter->modules, $message)
         if $filter->testing

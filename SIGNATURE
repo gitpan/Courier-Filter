@@ -1,12 +1,12 @@
 This file contains message digests of all files listed in MANIFEST,
-signed via the Module::Signature module, version 0.35.
+signed via the Module::Signature module, version 0.44.
 
 To verify the content in this distribution, first make sure you have
 Module::Signature installed, then type:
 
     % cpansign -v
 
-It would check each file's integrity, as well as the signature's
+It will check each file's integrity, as well as the signature's
 validity.  If "==> Signature verified OK! <==" is not displayed,
 the distribution may already have been compromised, and you should
 not run its Makefile.PL or Build.PL.
@@ -14,45 +14,47 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 4bd61c615998f8adfbbb33319ed2b27c7b3a267d Build.PL
-SHA1 da9e42da50639350871632146acc2ee5bb108c67 CHANGES
-SHA1 19aa0ee8eb4a7325ff87eedbe2a3a036e134806a MANIFEST
-SHA1 880cfc69cb325258929df5924fdff424ead4c301 META.yml
+SHA1 ae79dbe5e7cb472c9165d014277d32a849541ce6 Build.PL
+SHA1 fe8ce6e6b96e444ab4fe57d2435595ac1bb1e801 CHANGES
+SHA1 c0a0d0590a407354bcc1d8b775b71b2cb1fd4c2a INSTALL
+SHA1 cf0cd808e16573abb308ed03b534123795deb88f MANIFEST
+SHA1 2bf1ddb4d2f198fb2842a09176828d5582cb2118 META.yml
 SHA1 a359d4072690a21ce63e4b393bdbc19d72b6be5a Makefile.PL
-SHA1 d79f09c586ed3c44598b74a30bc4522b9e5e297d README
-SHA1 e4fa48ef7493cb923375c59d368f988c3fe61917 TODO
-SHA1 8e0c8cfbc7f6fe87f55b9d5d842c55df2c009f97 bin/pureperlfilter
-SHA1 e18e0cff9b60ff5c942fd4fd1a50a2710ac2f169 bin/test-filter-module
-SHA1 4f50ce3ba4bd00bdd4e20b4d73892c772f17ed03 debian/changelog
+SHA1 c6b6771fe757f3d7df633f9b44576e65e1af2ea1 README
+SHA1 dfd1766f81633f497ad6e87e4892aa2e65d08541 TODO
+SHA1 2a7c7f37f399f4c8bd1d5789450ca01d46fab68e bin/pureperlfilter
+SHA1 46cff524d475e4389ef713d74ea1fc29b0db184a bin/test-filter-module
+SHA1 39d115651a1363d8982afd616659a713a6873f3d debian/changelog
 SHA1 9c6b057a2b9d96a4067a749ee3b3b0158d390cf1 debian/compat
-SHA1 63ab8a8709e127b1f2d7b2a3da53dff7370d9b70 debian/control
-SHA1 99f2452d050a65f0096ca56950fb389117690e8f debian/copyright
+SHA1 60b5a6b21079f93930135d35eccdd751540e9d40 debian/control
+SHA1 d7fd5285c41b435c1796d4ca83982d8927786c3f debian/copyright
 SHA1 41cef66e3314350d9e024fe5eec99af58725895a debian/install
 SHA1 a907059e97c491996c667aeae43ab3bfda09b07a debian/rules
 SHA1 cae18946e2a8b8c3a1946c19515e11a8c5ab39ca etc/pureperlfilter.conf
-SHA1 0e7267da48a72dc55dade8e2cb253184ac1128e2 examples/pureperlfilter.conf
-SHA1 b997d50398745bce0ee4be3b1cd868fda60416b7 lib/Courier/Config.pm
-SHA1 1d7f756fb5b2cff43fde4b72f5b9346a4b39d0db lib/Courier/Error.pm
-SHA1 458091407d1d86abb8bd1c822aa31e1ac8fc1647 lib/Courier/Filter.pm
-SHA1 b82dad2657390a0e695985fcdb95e5a479d040f4 lib/Courier/Filter/Logger.pm
-SHA1 36cde5526d1b3a27fb00d2301dd68d2a4da6fd94 lib/Courier/Filter/Logger/File.pm
-SHA1 cd6719500a86fb657e6a86dd7a22fda3248bad46 lib/Courier/Filter/Logger/IOHandle.pm
-SHA1 993c8dfafa9fad4662609507e1cf808ec4931528 lib/Courier/Filter/Logger/Syslog.pm
-SHA1 0b34508a66b41bc22fbe4b81253f7aea11e8be38 lib/Courier/Filter/Module.pm
-SHA1 e6186b4e7eae89263717cd4307fc8bb05562d9df lib/Courier/Filter/Module/ClamAVd.pm
-SHA1 6873985e1b285f73ebe8fa7bfb3c4f19f87278e9 lib/Courier/Filter/Module/DNSBL.pm
-SHA1 fe7944418427b0d63b49ff112f8c0eff84fbc5b9 lib/Courier/Filter/Module/Envelope.pm
-SHA1 18721e68e2e02321848e816152b5ca50283eb776 lib/Courier/Filter/Module/Header.pm
-SHA1 cc03b181542d1ad5b670e36245da87a3d0d08795 lib/Courier/Filter/Module/MIMEParts.pm
-SHA1 29f834d3ef4658804cbd293a63ea2177549878cd lib/Courier/Filter/Module/Parts.pm
-SHA1 aa65a9842643d8ea735c6ed7d561e943da2cadf8 lib/Courier/Filter/Module/SPF.pm
-SHA1 d9bc7db0e8354e57458298cbacc7e9f7f16e8b0a lib/Courier/Filter/Module/SPFout.pm
-SHA1 1e924c0855f5996821e0f59940a4a1cf7957ff6e lib/Courier/Filter/Overview.pod
-SHA1 e5cf32493b16fc2f0f315e994f170aa4bda093bc lib/Courier/Message.pm
+SHA1 6faae3816bb1333ea23526596b62f89c6d49aa9f examples/pureperlfilter.conf
+SHA1 8e477f425e96a49df1b13f249aa554f8c5fb1958 lib/Courier/Config.pm
+SHA1 e57f5707a9bb61dcb27e2c55b72d2d7dba7d7c9f lib/Courier/Error.pm
+SHA1 0d9f0c5202e642a4cf3a53c883f1d3861a68481e lib/Courier/Filter.pm
+SHA1 61e044bd7ae59598857a14a10672ca45cad0a331 lib/Courier/Filter/Logger.pm
+SHA1 0483ec1d11a78f4ddef1ec8cf01bb7fc0865f52b lib/Courier/Filter/Logger/File.pm
+SHA1 a36fa35d03e40e077db11f3f4a5b7d8d30259295 lib/Courier/Filter/Logger/IOHandle.pm
+SHA1 143a8d9d96cc26c1eb33a6443c69574618d43151 lib/Courier/Filter/Logger/Syslog.pm
+SHA1 150144cb0b1157a201acb98a3f87cca932844bfc lib/Courier/Filter/Module.pm
+SHA1 0961881a42cb83fe117b953d6f9124ecab0a7c66 lib/Courier/Filter/Module/ClamAVd.pm
+SHA1 d60954f16ed7cf340f285f110dfc2a2f82ba0a10 lib/Courier/Filter/Module/DNSBL.pm
+SHA1 794f9b9b182648ab293d571cfcb3fdaa22966530 lib/Courier/Filter/Module/Envelope.pm
+SHA1 6061acff7f3c62cf46d8bebba7b42ff2f55253e7 lib/Courier/Filter/Module/Header.pm
+SHA1 bad746e9b4bce6bc70be2087d2d915bbfb688f38 lib/Courier/Filter/Module/MIMEParts.pm
+SHA1 5ef08e373a7b1d7c274e45d5ba5fffc953f3dfec lib/Courier/Filter/Module/Parts.pm
+SHA1 4f466d95c6f7f57e78fd0bc196d4a64077cd11d4 lib/Courier/Filter/Module/SPF.pm
+SHA1 d2f18065993083b1f5088f6bf09928f48912f8b5 lib/Courier/Filter/Module/SPFout.pm
+SHA1 ae4c3d09de8f1b83fae07e4f689d57ce6104b6d3 lib/Courier/Filter/Module/SpamAssassin.pm
+SHA1 c8e0704ed8774570a9d926c580c860013c2c190e lib/Courier/Filter/Overview.pod
+SHA1 95346c482b69e97dbe6fed435c5f92065aeb61e5 lib/Courier/Message.pm
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.4 (GNU/Linux)
+Version: GnuPG v1.4.1 (GNU/Linux)
 
-iD8DBQFB7BjAaWlsL2XXXh8RAj4pAJ9VPeXwbvCJjDtTL7fe2pASnEzJFwCaAyL4
-NZFc2AYONAXtsIPfq2CV2zA=
-=e878
+iD4DBQFDdAYsaWlsL2XXXh8RAr4HAJ9eBr2YRSWzojQHRGy4WUsomV197QCXQdDI
+n8LwhyduqQN5TW4jksR/1A==
+=r3jf
 -----END PGP SIGNATURE-----

@@ -2,7 +2,7 @@
 # Courier::Filter::Module::MIMEParts class
 #
 # (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: MIMEParts.pm,v 1.15 2005/01/17 17:49:12 julian Exp $
+# $Id: MIMEParts.pm 199 2005-11-10 22:16:37Z julian $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::MIMEParts;
 
 =head1 VERSION
 
-0.16
+0.17
 
 =cut
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 use warnings;
 use strict;
@@ -41,6 +41,12 @@ what will be created is really nothing more than B<Parts> modules.  See
 L<Courier::Filter::Module::Parts> for the interface description.
 
 =cut
+
+sub new {
+    my ($class, %options) = @_;
+    STDERR->print("Warning: The MIMEParts filter module is deprecated. Use the Parts module instead.\n");
+    return $class->SUPER::new(%options);
+}
 
 =head1 SEE ALSO
 

@@ -1,7 +1,7 @@
 This is the Debian package for the Courier-Filter CPAN distribution, which is
 available from <http://search.cpan.org/dist/Courier-Filter>.
 
-(C) 2003-2004 Julian Mehnle <julian@mehnle.net>.  Julian Mehnle is the upstream
+(C) 2003-2005 Julian Mehnle <julian@mehnle.net>.  Julian Mehnle is the upstream
 author as well as the maintainer of the Debian package.
 
 This is free software; you can redistribute it and/or modify it under the same

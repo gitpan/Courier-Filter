@@ -2,7 +2,7 @@
 # Courier::Filter::Module abstract base class
 #
 # (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Module.pm,v 1.13 2005/01/17 17:32:51 julian Exp $
+# $Id: Module.pm 199 2005-11-10 22:16:37Z julian $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module;
 
 =head1 VERSION
 
-0.16
+0.17
 
 =cut
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 =head1 SYNOPSIS
 
@@ -124,8 +124,7 @@ inverse polarity (B<true>) as opposed to normal polarity (B<false>).  Under
 inverse polarity, the result of the C<match> method is negated by the
 C<consider> method before returning it.  For details on how Courier::Filter
 translates I<match results> into I<acceptability results>, see
-L<Courier::Filter::Overview/"How Courier::Filter modules work">.  Defaults to
-B<false>.
+L<Courier::Filter::Overview/"How filter modules work">.  Defaults to B<false>.
 
 =item B<trusting>
 
@@ -214,9 +213,8 @@ sub consider {
 Examines the B<Courier::Message> object given as $message.  Returns a so-called
 I<match result> consisting of an SMTP status response I<text>, and an optional
 numerical SMTP status response I<code>.  For details about how I<match results>
-are used by Courier::Filter, see L<Courier::Filter::Overview/"How
-Courier::Filter modules work"> and L<Courier::Filter::Overview/"Writing
-Courier::Filter modules">.
+are used by Courier::Filter, see L<Courier::Filter::Overview/"How filter
+modules work"> and L<Courier::Filter::Overview/"Writing filter modules">.
 
 C<Courier::Filter::Module::match()> does nothing and returns B<undef>.
 

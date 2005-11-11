@@ -2,7 +2,7 @@
 # Courier::Filter::Module::Parts class
 #
 # (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Parts.pm,v 1.5 2005/01/17 17:49:48 julian Exp $
+# $Id: Parts.pm 195 2005-06-11 19:47:59Z julian $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::Parts;
 
 =head1 VERSION
 
-0.16
+0.17
 
 =cut
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 =head1 SYNOPSIS
 
@@ -69,9 +69,9 @@ use strict;
 use base qw(Courier::Filter::Module);
 
 use MIME::Parser 5.4;
-    # Require either MIME::Parser 5.413 or lower, or a fixed IO::InnerFile
-    # (probably higher than 2.109, where IO::InnerFile::seek() properly returns
-    # TRUE when appropriate).
+use IO::InnerFile 2.110;
+    # Require either MIME::Parser 5.413 or lower, or IO::InnerFile 2.110+
+    # (where IO::InnerFile::seek() properly returns TRUE when appropriate).
 use Digest::MD5;
 use File::Spec;
     # In-memory processing doesn't work, see comments in match_mime_part().

@@ -2,7 +2,7 @@
 # Courier::Error class
 #
 # (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Error.pm,v 1.12 2005/01/17 17:29:56 julian Exp $
+# $Id: Error.pm 199 2005-11-10 22:16:37Z julian $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Error;
 
 =head1 VERSION
 
-0.16
+0.17
 
 =cut
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 =head1 SYNOPSIS
 

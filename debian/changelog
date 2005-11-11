@@ -1,3 +1,53 @@
+courier-filter-perl (0.17) unstable; urgency=low
+
+  Debian:
+  * Recommends: libmime-perl, not libmime-tools-perl.         (Closes: #297730)
+  * Recommends: libio-stringy-perl (>= 2.110), libmail-spamassassin-perl,
+    libarchive-zip-perl.
+
+  Courier::Filter:
+  * If socket already exists, check whether it is dead or alive.  If it is
+    dead, remove it and start up normally.  If it is alive, die like before.
+                                                              (Closes: #326785)
+  * Ignore connections that don't send any data.
+
+  Courier::Message:
+  * Decode header text as "UTF-8" encoded, not as "utf8" encoded.  Starting
+    with Perl 5.8.7, this does make a difference.  "utf8" allows invalid
+    Unicode codepoints (such as UTF-16 surrogates), while "UTF-8" (the official
+    standard UTF-8) doesn't.  We want to avoid invalid codepoints because they
+    tend to cause trouble later.
+  * Don't die on invalid characters in encoded-word chunks.  If an encoded-word
+    cannot be decoded, retain it undecoded.
+  * "authenticated" property: refined parsing of "Received:" header and "AUTH:"
+    authentication information.
+  * Added "authenticated_user" property.
+  * Corrected documentation of "header" property.
+
+  SPFout filter module:
+  * Don't be pedantic about what our "public" IPv4 address is vis-à-vis the
+    various recipient MXes.  Assume we just have a single public address that
+    applies to all recipient MXes.  (Let's see if anyone out there actually has
+    a more complex setup...)
+
+  Parts filter module:
+  * Requires libio-stringy-perl (>= 2.110), libarchive-zip-perl.
+
+  SpamAssassin filter module:
+  * Added for SpamAssassin-based spam detection.
+  * Requires libmail-spamassassin-perl.
+
+  Miscellaneous:
+  * Relaxed sender IPv4 address matching in DNSBL, SPF, and SPFout filter
+    modules, making the "::ffff:" IPv6 prefix optional and thus supporting
+    IPv6-disabled versions of Courier.
+  * Courier::Filter::Overview: Updated mention of pythonfilter from version 0.5
+    to 0.8.
+  * README: Added license statement.
+  * Minor documentation fixes.
+
+ -- Julian Mehnle <julian@mehnle.net>  Fri, 11 Nov 2005 03:00:00 +0000
+
 courier-filter-perl (0.16) unstable; urgency=low
 
   Debian:

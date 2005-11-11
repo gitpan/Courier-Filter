@@ -2,7 +2,7 @@
 # Courier::Filter::Module::Envelope class
 #
 # (C) 2004-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Envelope.pm,v 1.6 2005/01/17 17:47:45 julian Exp $
+# $Id: Envelope.pm 199 2005-11-10 22:16:37Z julian $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::Envelope;
 
 =head1 VERSION
 
-0.16
+0.17
 
 =cut
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 =head1 SYNOPSIS
 

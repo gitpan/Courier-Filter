@@ -8,7 +8,7 @@ Standards-Version: 3.6.1
 Package: courier-filter-perl
 Architecture: all
 Depends: courier-mta, perl (>= 5.8.0), liberror-perl
-Recommends: libmail-spf-query-perl (>= 1.991), libmime-tools-perl (>= 5.400), libdigest-md5-perl, libnet-dns-perl
+Recommends: libmail-spf-query-perl (>= 1.991), libmime-perl (>= 5.400), libio-stringy-perl (>= 2.110), libdigest-md5-perl, libmail-spamassassin-perl, libarchive-zip-perl, libnet-dns-perl
 Suggests: libnet-rblclient-perl, libnet-address-ipv4-local-perl, libclamav-client-perl
 Description: purely Perl-based mail filter framework for the Courier MTA
  Courier::Filter implements the Courier MTA's courierfilter interface as a

@@ -18,13 +18,20 @@ my $build = Module::Build->new(
         # Filter module requirements:
         Net::RBLClient      => 0,
         Mail::SPF::Query    => '1.991',
+        Net::Address::IPv4::Local
+                            => 0,
         MIME::Tools         => '5.4',
+        IO::InnerFile       => '2.110',
         Digest::MD5         => 0,
         ClamAV::Client      => 0,
         File::Spec          => 0,
-        Net::DNS            => 0,
-        Net::Address::IPv4::Local
-                            => 0
+        Mail::SpamAssassin  => 0,
+        Archive::Zip        => 0,
+        Net::DNS            => 0
+    },
+    build_requires  => {
+        # Build requirements:
+        Test::Simple        => 0
     },
     script_files    => [
         'bin/test-filter-module'
@@ -39,5 +46,5 @@ my $build = Module::Build->new(
 
 $build->create_build_script();
 
-# $Id: Build.PL,v 1.7 2005/01/17 19:33:59 julian Exp $
+# $Id: Build.PL 200 2005-11-11 02:46:35Z julian $
 # vim:tw=79

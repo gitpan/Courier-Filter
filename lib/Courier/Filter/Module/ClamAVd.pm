@@ -2,7 +2,7 @@
 # Courier::Filter::Module::ClamAVd class
 #
 # (C) 2004-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: ClamAVd.pm,v 1.3 2005/01/17 18:37:03 julian Exp $
+# $Id: ClamAVd.pm 199 2005-11-10 22:16:37Z julian $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Filter::Module::ClamAVd;
 
 =head1 VERSION
 
-0.16
+0.17
 
 =cut
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 =head1 SYNOPSIS
 

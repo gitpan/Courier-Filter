@@ -2,7 +2,7 @@
 # Courier::Message class
 #
 # (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Message.pm,v 1.17 2005/01/17 17:31:19 julian Exp $
+# $Id: Message.pm 199 2005-11-10 22:16:37Z julian $
 #
 ##############################################################################
 
@@ -17,11 +17,11 @@ package Courier::Message;
 
 =head1 VERSION
 
-0.16
+0.17
 
 =cut
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 use v5.8;
 
@@ -70,6 +70,7 @@ use constant FALLBACK_8BIT_CHAR_ENCODING => 'windows-1252';
     # Control properties:
     my $control_hash        = $message->control;
     my $is_authenticated    = $message->authenticated;
+    my $authenticated_user  = $message->authenticated_user;
     my $is_trusted          = $message->trusted;
     my $sender              = $message->sender;
     my @recipients          = $message->recipients;
@@ -111,6 +112,7 @@ sub body;
 
 sub control;
 sub authenticated;
+sub authenticated_user;
 sub trusted;
 #sub relay_authorized;
 #sub trusted_source;
@@ -248,7 +250,9 @@ sub parse {
         # UTF-8-ify the header text,
         # trying to interpret it as UTF-8 first,
         # falling back to the preset 8-bit character encoding if unsuccessful:
-        my $header_text_utf8 = Encode::decode_utf8($header_text);
+        my $header_text_utf8 = Encode::decode('UTF-8', $header_text);
+            # We explicitly use the strict form of UTF-8 introduced in Perl 5.8.7
+            # in order to sanitize input data and prevent invalid UTF-8 code.
         if (defined($header_text_utf8)) {
             $header_text = $header_text_utf8;
         }
@@ -284,10 +288,11 @@ Parses the message header once by doing the following: tries to interpret the
 header as I<UTF-8>, falling back to the 8-bit legacy encoding I<Windows-1252>
 (a proper superset of I<ISO-8859-1>) and decoding that to I<UTF-8>; parses
 header fields from the header; and decodes any MIME encoded words in field
-values.  If a (case I<in>sensitive) field name is specified, returns a list of
-the values of all header fields of that name, in the order they occurred in the
-message header.  If no field name is specified, returns a hashref containing
-all header fields and arrayrefs of their values.
+values.  If a (case I<in>sensitive) field name is specified, in list context
+returns a list of the values of all header fields of that name, in the order
+they occurred in the message header, or in scalar context returns the first
+header field of that name.  If no field name is specified, returns a hashref
+containing all header fields and arrayrefs of their values.
 
 =cut
 
@@ -425,22 +430,55 @@ change in the future.
 sub authenticated {
     my ($message) = @_;
     
-    if (not defined($message->{authenticated})) {
+    return $message->{authenticated}
+        if defined($message->{authenticated});
+    
+    TRY: {
+        # Get first "Received" header (and only the first!):
         my $received = $message->header('received');
-        if (
-            defined($received) and
-            $received =~ /^from\s+\S+\s+\(.*?\)\s+\(.*?\bauth:\s+([^,\)]*).*?\)\s+by/i
-        ) {
+        
+        last TRY if not defined($received);
+        last TRY if not $received =~ /^from\s+\S+\s+\(.*?\)\s+\((.*?)\)\s+by/i;
+                                     # from   HELO  (HOST+IP)  (PARAMS)   by ...
+        my %params = map(
+            /^([\w-]+):\s*(.*)$/ ? (lc($1) => $2) : (),
+            split(/,\s+/, $1)
+        );
+        
+        return $message->{authenticated} = $params{auth}
             # Authenticated!
-            $message->{authenticated} = $1 || ' ';
-        }
-        else {
-            # Not authenticated
-            $message->{authenticated} = '';
-        }
+            if defined($params{auth});
     }
     
-    return $message->{authenticated};
+    return $message->{authenticated} = '';
+        # Not authenticated.
+}
+
+=item B<authenticated_user>: RETURNS SCALAR
+
+Returns the user name that was used for authentication during submission of the
+message.  Returns B<undef> if no authentication took place.
+
+=cut
+
+sub authenticated_user {
+    my ($message) = @_;
+    
+    return $message->{authenticated_user}
+        if defined($message->{authenticated_user});
+    
+    my $authenticated = $message->authenticated;
+    
+    if (
+        defined($message->authenticated) and
+        $message->authenticated =~ /^\S+\s+(\S+)$/
+                                 # METHOD IDENTITY
+    ) {
+        return $message->{authenticated_user} = $1;
+    }
+    else {
+        return $message->{authenticated_user} = undef;
+    }
 }
 
 =item B<trusted>: RETURNS boolean
@@ -548,6 +586,8 @@ use Encode ();
 use MIME::Base64 ();
 use MIME::QuotedPrint ();
 
+use Error qw(:try);
+
 use constant TRUE   => (0 == 0);
 use constant FALSE  => not TRUE;
 
@@ -565,25 +605,34 @@ sub decode_mimewords {
     # Drop whitespace between two encoded words:
     $text =~ s/($ENCODED_WORD)\s+($ENCODED_WORD)/$1$6/;
     
-    $text =~ s[$ENCODED_WORD] {
-        my ($char_enc, $xfer_enc, $chunk) = ($1, lc($3), $4);
+    $text =~ s[($ENCODED_WORD)] {
+        my ($encoded_word, $char_enc, $xfer_enc, $chunk) = ($1, $2, lc($4), $5);
+        my $decoded_word;
         
         $char_enc =
             Encode::resolve_alias($char_enc) ||
             $fallback_char_encoding ||
             FALLBACK_CHAR_ENCODING;
-
-        if ($xfer_enc eq 'b') {
-            # Base 64!
-            $chunk = MIME::Base64::decode($chunk);
-        }
-        elsif ($xfer_enc eq 'q') {
-            # Quoted Printable!
-            $chunk =~ tr/_/\x{20}/;
-            $chunk = MIME::QuotedPrint::decode($chunk);
-        }
         
-        Encode::decode($char_enc, $chunk);
+        try {
+            if ($xfer_enc eq 'b') {
+                # Base 64!
+                $chunk = MIME::Base64::decode($chunk);
+            }
+            elsif ($xfer_enc eq 'q') {
+                # Quoted Printable!
+                $chunk =~ tr/_/\x{20}/;
+                $chunk = MIME::QuotedPrint::decode($chunk);
+            }
+            
+            $decoded_word = Encode::decode($char_enc, $chunk);
+        }
+        except {
+            # The chunk contains invalid characters, leave the encoded word as is:
+            $decoded_word = $encoded_word;
+        };
+        
+        $decoded_word;
     }eg;
     
     return $text;
