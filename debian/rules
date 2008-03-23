@@ -20,7 +20,7 @@ build-stamp:
 clean:
 	dh_testdir
 	dh_testroot
-	-$(BUILD) distclean
+	[ ! -f $(BUILD) ] || $(BUILD) distclean
 	dh_clean build-stamp install-stamp
 
 install: install-stamp
@@ -30,14 +30,14 @@ install-stamp: build-stamp
 	dh_clean -k
 	
 	$(BUILD) test
-	$(BUILD) install destdir=$(TMP)
+	$(BUILD) install destdir=$(TMP) create_packlist=0
 	
 	# Don't package the unofficial USM logger module:
 	rm -f $(TMP)/usr/share/courier-filter-perl/perl5/Courier/Filter/Logger/USM.pm
 	
-	# Special manpage handling for bin/pureperlfilter:
+	# Special manpage handling for bin/courier-filter-perl:
 	mkdir -p $(TMP)/usr/share/man/man8
-	pod2man -s8p bin/pureperlfilter $(TMP)/usr/share/man/man8/pureperlfilter.8p
+	pod2man -s8p bin/courier-filter-perl $(TMP)/usr/share/man/man8/courier-filter-perl.8p
 	
 	touch install-stamp
 
@@ -50,6 +50,7 @@ binary-indep: build install
 	dh_installexamples -XCVS examples/*
 	#dh_installman
 	dh_install
+	#dh_link
 	dh_compress
 	dh_fixperms
 	dh_installdeb

@@ -1,6 +1,6 @@
-Courier::Filter 0.17
+Courier::Filter 0.200
 A purely Perl-based mail filter framework for the Courier MTA.
-(C) 2003-2005 Julian Mehnle <julian@mehnle.net>
+(C) 2003-2008 Julian Mehnle <julian@mehnle.net>
 <http://www.mehnle.net/software/courier-filter>
 ==============================================================================
 
@@ -37,9 +37,10 @@ Getting started
 ---------------
 
 Read the following perldocs in order to get started with Courier::Filter:
-* Courier::Filter::Overview
-* Courier::Filter
-* Courier::Filter::Module
+
+  * Courier::Filter::Overview
+  * Courier::Filter
+  * Courier::Filter::Module
 
 Upgrading from versions prior to 0.15
 -------------------------------------
@@ -57,12 +58,20 @@ Due to this partial relocation, upgrading from a version prior to 0.15 is
 probably best achieved by removing the old version and doing a fresh install.
 You can of course keep your old configuration file(s).
 
+Reporting Bugs
+--------------
+
+Please report bugs in Courier::Filter and its documentation to the CPAN bug
+tracker:
+
+    http://rt.cpan.org/Public/Dist/Display.html?Name=Courier-Filter
+
 License
 -------
 
 Courier::Filter is free software.  You may use, modify, and distribute it under
 the same terms as Perl itself, i.e. under the GNU GPL (version 2 or later) or
-the Artistic License.
+the Artistic License.  See LICENSE for the license texts.
 
-# $Id: README 199 2005-11-10 22:16:37Z julian $
+# $Id: README 210 2008-03-21 19:30:31Z julian $
 # vim:tw=79

@@ -1,27 +1,29 @@
 #
 # Courier::Filter::Logger::IOHandle class
 #
-# (C) 2004-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: IOHandle.pm 199 2005-11-10 22:16:37Z julian $
+# (C) 2004-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: IOHandle.pm 210 2008-03-21 19:30:31Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter::Logger::IOHandle - An I/O handle logger for the
-Courier::Filter framework
+Courier::Filter::Logger::IOHandle - I/O handle logger for the Courier::Filter
+framework
 
 =cut
 
 package Courier::Filter::Logger::IOHandle;
 
-=head1 VERSION
+use warnings;
+use strict;
 
-0.17
+use base 'Courier::Filter::Logger';
 
-=cut
+use IO::Handle;
 
-our $VERSION = '0.17';
+use constant TRUE   => (0 == 0);
+use constant FALSE  => not TRUE;
 
 =head1 SYNOPSIS
 
@@ -45,21 +47,6 @@ our $VERSION = '0.17';
         ...
     );
 
-=cut
-
-use warnings;
-use strict;
-
-use base qw(Courier::Filter::Logger);
-
-use IO::Handle;
-
-use constant TRUE   => (0 == 0);
-use constant FALSE  => not TRUE;
-
-# Interface:
-##############################################################################
-
 =head1 DESCRIPTION
 
 This class is an I/O handle logger class for use with Courier::Filter and its
@@ -67,12 +54,8 @@ filter modules.
 
 =cut
 
-sub new;
-sub log_error;
-sub log_rejected_message;
-
 # Implementation:
-##############################################################################
+###############################################################################
 
 =head2 Constructor
 
@@ -80,7 +63,7 @@ The following constructor is provided:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter::Logger::IOHandle
+=item B<new(%options)>: returns I<Courier::Filter::Logger::IOHandle>
 
 Creates a new logger that logs messages as lines to an I/O handle.
 
@@ -91,8 +74,8 @@ options:
 
 =item B<handle>
 
-REQUIRED.  The I/O handle or B<IO::Handle> object to which log messages should
-be written.
+I<Required>.  The I/O handle or B<IO::Handle> object to which log messages
+should be written.
 
 =item B<timestamp>
 
@@ -106,13 +89,13 @@ with a timestamp (in local time, in ISO format).  Defaults to B<false>.
 sub new {
     my ($class, %options) = @_;
     
-    my $logger = $class->SUPER::new(%options);
+    my $self = $class->SUPER::new(%options);
     
-    $logger->{autoflush} = TRUE
-        if not defined $logger->{autoflush};
-    $logger->{handle}->autoflush($logger->{autoflush});
+    $self->{autoflush} = TRUE
+        if not defined($self->{autoflush});
+    $self->{handle}->autoflush($self->{autoflush});
     
-    return $logger;
+    return $self;
 }
 
 =back
@@ -125,7 +108,7 @@ The following instance methods are provided:
 
 =begin comment
 
-=item B<log($text)>: THROWS Perl exceptions
+=item B<log($text)>: throws Perl exceptions
 
 Logs the text given as C<$text> (a string which may contain newlines).
 Prefixes each line with a timestamp if the C<timestamp> option has been set
@@ -136,10 +119,10 @@ through the constructor.
 =cut
 
 sub log {
-    my ($logger, $text) = @_;
+    my ($self, $text) = @_;
     
     my $timestamp = '';
-    if ($logger->{timestamp}) {
+    if ($self->{timestamp}) {
         my ($y, $m, $d, $h, $n, $s) = (localtime)[5,4,3,2,1,0];
         $timestamp = sprintf(
             "%04d-%02d-%02d %02d:%02d:%02d ",
@@ -148,13 +131,13 @@ sub log {
     }
     
     my @lines = split(/\n/, $text);
-    $logger->{handle}->print("$timestamp$_\n")
+    $self->{handle}->print("$timestamp$_\n")
         foreach @lines;
     
     return;
 }
 
-=item B<log_error($text)>: THROWS Perl exceptions
+=item B<log_error($text)>: throws Perl exceptions
 
 Logs the error message given as C<$text> (a string which may contain newlines).
 Prefixes each line with a timestamp if the C<timestamp> option has been set
@@ -163,11 +146,11 @@ through the constructor.
 =cut
 
 sub log_error {
-    my ($logger, $text) = @_;
-    return $logger->log($text);
+    my ($self, $text) = @_;
+    return $self->log($text);
 }
 
-=item B<log_rejected_message($message, $reason)>: THROWS Perl exceptions
+=item B<log_rejected_message($message, $reason)>: throws Perl exceptions
 
 Logs the B<Courier::Message> given as C<$message> as having been rejected due
 to C<$reason> (a string which may contain newlines).
@@ -175,7 +158,7 @@ to C<$reason> (a string which may contain newlines).
 =cut
 
 sub log_rejected_message {
-    my ($logger, $message, $reason) = @_;
+    my ($self, $message, $reason) = @_;
     
     $reason =~ s/^/Reason: /gm;
     
@@ -190,7 +173,7 @@ sub log_rejected_message {
         ),
         $reason
     );
-    return $logger->log($text);
+    return $self->log($text);
 }
 
 =back
@@ -209,5 +192,3 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 TRUE;
-
-# vim:tw=79

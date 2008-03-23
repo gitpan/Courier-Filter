@@ -1,27 +1,29 @@
 #
 # Courier::Filter::Logger abstract base class
 #
-# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Logger.pm 199 2005-11-10 22:16:37Z julian $
+# (C) 2003-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: Logger.pm 210 2008-03-21 19:30:31Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter::Logger - An abstract Perl base class for loggers used by the
+Courier::Filter::Logger - Abstract base class for loggers used by the
 Courier::Filter framework
 
 =cut
 
 package Courier::Filter::Logger;
 
-=head1 VERSION
+use warnings;
+use strict;
 
-0.17
+use Error ':try';
 
-=cut
+use Courier::Error;
 
-our $VERSION = '0.17';
+use constant TRUE   => (0 == 0);
+use constant FALSE  => not TRUE;
 
 =head1 SYNOPSIS
 
@@ -50,21 +52,6 @@ our $VERSION = '0.17';
     package Courier::Filter::Logger::My;
     use base qw(Courier::Filter::Logger);
 
-=cut
-
-use warnings;
-use strict;
-
-use Error qw(:try);
-
-use Courier::Error;
-
-use constant TRUE   => (0 == 0);
-use constant FALSE  => not TRUE;
-
-# Interface:
-##############################################################################
-
 =head1 DESCRIPTION
 
 Sub-classes of B<Courier::Filter::Logger> are used by the B<Courier::Filter>
@@ -76,13 +63,8 @@ inherited method from your overridden method.
 
 =cut
 
-sub new;
-sub destroy;
-sub log_error;
-sub log_rejected_message;
-
 # Implementation:
-##############################################################################
+###############################################################################
 
 =head2 Constructor
 
@@ -90,23 +72,23 @@ The following constructor is provided and may be overridden:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter::Logger (or derivative)
+=item B<new(%options)>: returns I<Courier::Filter::Logger>
 
 Creates a new logger using the %options given as a list of key/value pairs.
 Initializes the logger, by creating/opening I/O handles, connecting to
 databases, etc..
 
-C<Courier::Filter::Logger::new()> creates a hashref as an object of the invoked
-class, and stores the %options in it, but does nothing else.
+C<Courier::Filter::Logger::new()> creates a hash-ref as an object of the
+invoked class, and stores the %options in it, but does nothing else.
 
 =cut
 
 sub new {
     my ($class, %options) = @_;
     $class ne __PACKAGE__
-        or  throw Courier::Error('Unable to instantiate abstract ' . __PACKAGE__ . ' class');
-    my $logger = { %options };
-    return bless($logger, $class);
+        or throw Courier::Error('Unable to instantiate abstract ' . __PACKAGE__ . ' class');
+    my $self = { %options };
+    return bless($self, $class);
 }
 
 =back
@@ -122,12 +104,13 @@ The following destructor is provided and may be overridden:
 Uninitializes the logger, by closing I/O handles, disconnecting from databases,
 etc..
 
-C<Courier::Filter::Logger::destroy()> does nothing.
+C<Courier::Filter::Logger::destroy()> does nothing.  Sub-classes may override
+this method and define clean-up behavior.
 
 =cut
 
 sub destroy {
-    my ($object) = @_;
+    my ($self) = @_;
     return;
 }
 
@@ -148,7 +131,7 @@ C<Courier::Filter::Logger::log_error()> does nothing and should be overridden.
 =cut
 
 sub log_error {
-    my ($logger, $text) = @_;
+    my ($self, $text) = @_;
     return;
 }
 
@@ -163,7 +146,7 @@ overridden.
 =cut
 
 sub log_rejected_message {
-    my ($object, $message, $reason) = @_;
+    my ($self, $message, $reason) = @_;
     return;
 }
 
@@ -171,8 +154,10 @@ sub log_rejected_message {
 
 =cut
 
-no warnings;
-*DESTROY = \&destroy;
+BEGIN {
+    no warnings 'once';
+    *DESTROY = \&destroy;
+}
 
 =head1 SEE ALSO
 
@@ -191,5 +176,3 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 TRUE;
-
-# vim:tw=79

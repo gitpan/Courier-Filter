@@ -1,7 +1,7 @@
 This is the Debian package for the Courier-Filter CPAN distribution, which is
 available from <http://search.cpan.org/dist/Courier-Filter>.
 
-(C) 2003-2005 Julian Mehnle <julian@mehnle.net>.  Julian Mehnle is the upstream
+© 2003-2008 Julian Mehnle <julian@mehnle.net>.  Julian Mehnle is the upstream
 author as well as the maintainer of the Debian package.
 
 This is free software; you can redistribute it and/or modify it under the same
@@ -10,5 +10,5 @@ General Public License (version 2 or later) or the Artistic License.
 
 On Debian GNU/Linux systems, the complete text of these licenses can be found
 in these files:
-  /usr/share/common-licenses/GPL
+  /usr/share/common-licenses/GPL-2
   /usr/share/common-licenses/Artistic

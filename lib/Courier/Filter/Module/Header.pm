@@ -1,27 +1,27 @@
 #
 # Courier::Filter::Module::Header class
 #
-# (C) 2004-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Header.pm 199 2005-11-10 22:16:37Z julian $
+# (C) 2004-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: Header.pm 210 2008-03-21 19:30:31Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter::Module::Header - A message header filter module for the
+Courier::Filter::Module::Header - Message header filter module for the
 Courier::Filter framework
 
 =cut
 
 package Courier::Filter::Module::Header;
 
-=head1 VERSION
+use warnings;
+use strict;
 
-0.17
+use base 'Courier::Filter::Module';
 
-=cut
-
-our $VERSION = '0.17';
+use constant TRUE   => (0 == 0);
+use constant FALSE  => not TRUE;
 
 =head1 SYNOPSIS
 
@@ -44,22 +44,6 @@ our $VERSION = '0.17';
         ...
     );
 
-=cut
-
-use warnings;
-use strict;
-
-use base qw(Courier::Filter::Module);
-
-# Constants:
-##############################################################################
-
-use constant TRUE   => (0 == 0);
-use constant FALSE  => not TRUE;
-
-# Interface:
-##############################################################################
-
 =head1 DESCRIPTION
 
 This class is a filter module class for use with Courier::Filter.  It matches a
@@ -67,10 +51,8 @@ message if one of the message's header fields matches the configured criteria.
 
 =cut
 
-sub match;
-
 # Implementation:
-##############################################################################
+###############################################################################
 
 =head2 Constructor
 
@@ -78,7 +60,7 @@ The following constructor is provided:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter::Module::Header
+=item B<new(%options)>: returns I<Courier::Filter::Module::Header>
 
 Creates a new B<Header> filter module.
 
@@ -89,11 +71,11 @@ options:
 
 =item B<fields>
 
-REQUIRED.  A reference to a hash containing the message header field names and
-patterns (as key/value pairs) that messages are to be matched against.  Field
-names are matched case-insensitively.  Patterns may either be simple strings
-(for exact, case-sensitive matches) or regular expression objects created by
-the C<qr//> operator (for inexact, partial matches).
+I<Required>.  A reference to a hash containing the message header field names
+and patterns (as key/value pairs) that messages are to be matched against.
+Field names are matched case-insensitively.  Patterns may either be simple
+strings (for exact, case-sensitive matches) or regular expression objects
+created by the C<qr//> operator (for inexact, partial matches).
 
 So for instance, to match any message from the "debian-devel" mailing list with
 the subject containing something about 'duelling banjoes', you could set the
@@ -124,10 +106,9 @@ provided instance methods.
 =cut
 
 sub match {
-    my ($module, $message) = @_;
-    my $class = ref($module);
+    my ($self, $message) = @_;
     
-    my $fields = $module->{fields};
+    my $fields = $self->{fields};
     foreach my $field (keys(%$fields)) {
         my $pattern = $fields->{$field};
         my $matcher =
@@ -142,7 +123,7 @@ sub match {
                 my $field_human_readable = ucfirst(lc($field));
                 return
                     'Header: ' . (
-                        $module->{response} ||
+                        $self->{response} ||
                         "Prohibited header value detected: $field_human_readable: $value"
                     );
             }
@@ -167,5 +148,3 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 TRUE;
-
-# vim:tw=79

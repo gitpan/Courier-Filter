@@ -1,32 +1,24 @@
 #
 # Courier::Filter::Module::MIMEParts class
 #
-# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: MIMEParts.pm 199 2005-11-10 22:16:37Z julian $
+# (C) 2003-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: MIMEParts.pm 210 2008-03-21 19:30:31Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter::Module::MIMEParts - A message (MIME multipart and ZIP archive)
+Courier::Filter::Module::MIMEParts - Message (MIME multipart and ZIP archive)
 parts filter module for the Courier::Filter framework
 
 =cut
 
 package Courier::Filter::Module::MIMEParts;
 
-=head1 VERSION
-
-0.17
-
-=cut
-
-our $VERSION = '0.17';
-
 use warnings;
 use strict;
 
-use base qw(Courier::Filter::Module::Parts);
+use base 'Courier::Filter::Module::Parts';
 
 use constant TRUE   => (0 == 0);
 use constant FALSE  => not TRUE;
@@ -63,5 +55,3 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 TRUE;
-
-# vim:tw=79

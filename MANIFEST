@@ -1,4 +1,4 @@
-bin/pureperlfilter
+bin/courier-filter-perl
 bin/test-filter-module
 Build.PL
 CHANGES
@@ -7,9 +7,13 @@ debian/compat
 debian/control
 debian/copyright
 debian/install
+debian/postinst
+debian/postrm
+debian/preinst
+debian/prerm
 debian/rules
-etc/pureperlfilter.conf
-examples/pureperlfilter.conf
+examples/courier-filter-perl.conf.bare
+examples/courier-filter-perl.conf.full
 INSTALL
 lib/Courier/Config.pm
 lib/Courier/Error.pm
@@ -19,17 +23,22 @@ lib/Courier/Filter/Logger/File.pm
 lib/Courier/Filter/Logger/IOHandle.pm
 lib/Courier/Filter/Logger/Syslog.pm
 lib/Courier/Filter/Module.pm
+lib/Courier/Filter/Module/BlankBody.pm
 lib/Courier/Filter/Module/ClamAVd.pm
 lib/Courier/Filter/Module/DNSBL.pm
 lib/Courier/Filter/Module/Envelope.pm
+lib/Courier/Filter/Module/FakeDate.pm
 lib/Courier/Filter/Module/Header.pm
 lib/Courier/Filter/Module/MIMEParts.pm
 lib/Courier/Filter/Module/Parts.pm
+lib/Courier/Filter/Module/SendCopy.pm
 lib/Courier/Filter/Module/SpamAssassin.pm
 lib/Courier/Filter/Module/SPF.pm
 lib/Courier/Filter/Module/SPFout.pm
 lib/Courier/Filter/Overview.pod
+lib/Courier/Filter/Util.pm
 lib/Courier/Message.pm
+LICENSE
 Makefile.PL
 MANIFEST			This list of files
 META.yml

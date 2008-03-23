@@ -1,3 +1,117 @@
+courier-filter-perl (0.200) unstable; urgency=low
+
+  Debian:
+  + New upstream version.                                     (Closes: #344173)
+  + Automatically start and stop courier-filter-perl using Courier's
+    `filterctl` post-installation and pre-removal, respectively.
+  ! "courier-filter-perl.conf" (previously "pureperlfilter.conf") config file
+    is no longer a conffile managed by dpkg.  Migrate seamlessly.
+  ! Install courier-filter-perl executable into /usr/lib/courier/filters/
+    rather than /usr/lib/.
+  > control:
+    * Section: mail (was: perl)
+    * Standards-Version: 3.7.3
+    * Raised debhelper compat level to 5 / Build-Depends: debhelper (>= 5)
+    * Build-Depends: debhelper (was: Build-Depends-Indep:)
+    * Removed Build-Depends-Indep: libtest-simple-perl (now provided by
+      perl-modules)
+    * Recommends: libmail-spf-perl (was: libmail-spf-query-perl)
+    * Recommends: libnet-rblclient-perl, libclamav-client-perl (was: Suggests:)
+    * Removed Recommends: libdigest-md5-perl (now provided by perl)
+    * Removed Recommends: libnet-dns-perl (unused)
+    * Suggests: libnet-address-ip-local-perl
+      (was: libnet-address-ipv4-local-perl)
+  > rules:
+    * Run `$(BUILD) distclean` only if $(BUILD) actually exists.
+
+  Courier::Filter:
+  ! Config file has been renamed to "courier-filter-perl.conf" from
+    "pureperlfilter.conf".
+
+  Courier::Message:
+  * Fixed a bug that caused crashes when encountering invalid (e.g., non-ASCII)
+    characters in raw MIME encoded words.
+  * Fixed fallback decoding of raw message headers from non-ASCII, non-UTF-8
+    encodings such as ISO-8859-1.  Previously, any non-UTF-8 byte sequences
+    would be decoded as the "�" Unicode substitution character.  Now this
+    case properly falls back to reinterpreting the entire header as Windows-
+    1252.
+    Note:  In the absence of the experimental "UTF8SMTP" SMTP extension,
+    non-ASCII characters are formally illegal in raw message headers, so this
+    really only affects exceptional cases.
+  * Eliminated some corner case "Use of uninitialized value" warnings.
+
+  Courier::Config:
+  * Lower-cased and slightly adjusted constant/method names.  Compatibility
+    aliases for the old names are provided.
+  + Added courier_executable() and courier_version() methods.  See man-page.
+
+  Courier::Util:
+  + Added as a utility module for use by other modules of the Courier::Filter
+    framework.
+
+  Courier::Filter::Module:
+  + Added warn() method for writing warning messages to syslog.
+
+  DNSBL filter module:
+  * Ignore messages received via IPv4/IPv6 loopback addresses (i.e., self
+    submissions).
+
+  SPF filter module:
+  * Use Mail::SPF instead of the old Mail::SPF::Query.  Added new "spf_options"
+    option with options for Mail::SPF::Server.
+  + The switch to Mail::SPF brings IPv6 support!
+  + Support both MAIL FROM and HELO checks separately.
+  ! Deprecated "fallback_guess" and "trusted_forwarders" options in favor of
+    the "default_policy" and "tfwl" keys to the "spf_options" option.  The old
+    options induce a warning when specified but are still supported for now.
+    Due to the move from the obsolete Mail::SPF::Query module to the Mail::SPF,
+    the (yet unreleased) Mail::SPF::BlackMagic extension module is now required
+    when using these non-standard options.
+  ! Deprecated the "unknown" and "error" SPF result codes in favor of the new
+    "permerror" and "temperror" ones defined in RFC 4408.  The old result codes
+    induce a warning when specified in the "match_on" option but are still
+    supported for now.
+  * Ignore messages with an empty identity of the configured scope (esp. empty
+    MAIL FROM, i.e., bounces) or with an identity in the form of an IP address
+    literal ("[<ip-address>]").
+
+  SPFout filter module:
+  * Use Mail::SPF instead of the old Mail::SPF::Query.  Added new "spf_options"
+    option with options for Mail::SPF::Server.
+  * Use the IPv6-supporting Net::Address::IP::Local rather than the IPv4-only
+    Net::Address::IPv4::Local module for auto-discovery of the local system's
+    outbound IP addresses.  Note that auto-discovery does not work from behind
+    NATs, in which case outbound IP addresses must be configured manually using
+    the "outbound_ip_addresses" option.
+  + The switch to Mail::SPF and Net::Address::IP::Local brings IPv6 support!
+  ! Deprecated the "unknown" and "error" SPF result codes in favor of the new
+    "permerror" and "temperror" ones defined in RFC 4408.  The old result codes
+    induce a warning when specified in the "match_on" option but are still
+    supported for now.
+  * Ignore messages with an empty identity of the configured scope (esp. empty
+    MAIL FROM, i.e., bounces) or with an identity in the form of an IP address
+    literal ("[<ip-address>]").
+
+  SpamAssassin filter module:
+  + Added a "prefs_file" option for easy configuration of Courier::Filter
+    specific SpamAssassin preferences.  SpamAssassin now will not read any
+    preferences besides its default configuration files unless this option is
+    specified.
+  * Eliminated memory leak by properly cleaning up Mail::SpamAssassin::Message
+    objects.
+
+  BlankBody filter module:
+  + Added for matching blank message bodies (a stupid spammer symptom).
+
+  FakeDate filter module:
+  + Added for matching implausible and malformed date header fields.
+
+  SendCopy filter module:
+  + Added for sending message copies to additional recipients.
+
+ -- Julian Mehnle <julian@mehnle.net>  Sun, 23 Mar 2008 00:36:39 +0000
+
 courier-filter-perl (0.17) unstable; urgency=low
 
   Debian:

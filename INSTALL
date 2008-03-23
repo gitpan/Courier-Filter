@@ -7,34 +7,27 @@ The following Perl version and packages are required for...
 
   Perl 5.8
   Module-Build
-  Test-Simple (*)
 
 ...running Courier::Filter:
 
   Perl 5.8
-  Encode (*)
-  IO (*)
   Error
 
 Some filter modules require additional Perl packages:
 
   DNSBL:    Net-RBLClient
-  SPF:      Mail-SPF-Query 1.991
-  SPFout:   Net-DNS
-            Net-Address-IPv4-Local
-  Parts:    Digest-MD5 (*)
-            MIME-tools 5.4
+  SPF:      Mail-SPF
+  SPFout:   Mail-SPF
+            Net-Address-IP-Local
+  FakeDate: DateTime
+            DateTime-Format-Mail
+  Parts:    MIME-tools 5.400
             IO-stringy 2.110
-            File-Spec
             Archive-Zip
-  ClamAVd:  MIME-tools 5.4
+  ClamAVd:  MIME-tools 5.400
             ClamAV-Client
-            File-Spec
   SpamAssassin:
             Mail-SpamAssassin
-
-Packages marked with (*) are included in the Perl 5.8 source distribution, but
-may be distributed as separate packages by your operating system.
 
 Building and Installing
 -----------------------

@@ -1,27 +1,19 @@
 #
 # Courier::Filter::Logger::Syslog class
 #
-# (C) 2004-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Syslog.pm 199 2005-11-10 22:16:37Z julian $
+# (C) 2004-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: Syslog.pm 210 2008-03-21 19:30:31Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter::Logger::Syslog - A syslog logger for the Courier::Filter
+Courier::Filter::Logger::Syslog - Syslog logger for the Courier::Filter
 framework
 
 =cut
 
 package Courier::Filter::Logger::Syslog;
-
-=head1 VERSION
-
-0.17
-
-=cut
-
-our $VERSION = '0.17';
 
 =head1 SYNOPSIS
 
@@ -48,13 +40,10 @@ our $VERSION = '0.17';
 use warnings;
 use strict;
 
-use base qw(Courier::Filter::Logger::IOHandle);
+use base 'Courier::Filter::Logger::IOHandle';
 
 use constant TRUE   => (0 == 0);
 use constant FALSE  => not TRUE;
-
-# Interface:
-##############################################################################
 
 =head1 DESCRIPTION
 
@@ -63,10 +52,8 @@ modules.  It is derived from B<Courier::Filter::Logger::IOHandle>.
 
 =cut
 
-sub new;
-
 # Implementation:
-##############################################################################
+###############################################################################
 
 =head2 Constructor
 
@@ -74,8 +61,8 @@ The following constructor is provided:
 
 =over
 
-=item B<new>: RETURNS Courier::Filter::Logger::Syslog; THROWS
-Courier::Error
+=item B<new>: returns I<Courier::Filter::Logger::Syslog>; throws
+I<Courier::Error>
 
 Creates a new logger that logs messages to syslog.
 
@@ -100,11 +87,11 @@ B<Courier::Filter::Logger::IOHandle>:
 
 =over
 
-=item B<log_error($text)>: THROWS Perl exceptions
+=item B<log_error($text)>: throws Perl exceptions
 
 Logs the error message given as C<$text> (a string which may contain newlines).
 
-=item B<log_rejected_message($message, $reason)>: THROWS Perl exceptions
+=item B<log_rejected_message($message, $reason)>: throws Perl exceptions
 
 Logs the B<Courier::Message> given as C<$message> as having been rejected due
 to C<$reason> (a string which may contain newlines).

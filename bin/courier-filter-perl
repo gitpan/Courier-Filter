@@ -4,27 +4,27 @@
 # Bootstrapping module for Courier::Filter,
 # the purely Perl-based filter framework for the Courier MTA.
 #
-# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: pureperlfilter 199 2005-11-10 22:16:37Z julian $
+# (C) 2003-2006 Julian Mehnle <julian@mehnle.net>
+# $Id: courier-filter-perl 205 2006-07-13 00:03:58Z julian $
 #
 ##############################################################################
 
 =head1 NAME
 
-pureperlfilter - A Courier::Filter-based filter for the Courier MTA
+courier-filter-perl - A Courier::Filter-based filter for the Courier MTA
 
 =head1 VERSION
 
-0.17
+0.18
 
 =head1 SYNOPSIS
 
-B<filterctl> [ B<start> | B<stop> ] [ B<pureperlfilter> ]
+B<filterctl> [ B<start> | B<stop> ] [ B<courier-filter-perl> ]
 
 =head1 DESCRIPTION
 
-The B<pureperlfilter> executable is a global mail filter for the Courier MTA
-and acts as glue between Courier's B<courierfilter> interface and the
+The B<courier-filter-perl> executable is a global mail filter for the Courier
+MTA and acts as glue between Courier's B<courierfilter> interface and the
 B<Courier::Filter> module framework.
 
 For an architectural and administrative overview of the B<Courier::Filter>
@@ -34,10 +34,10 @@ framework, see L<Courier::Filter::Overview>.
 
 =over
 
-=item F</etc/courier/filters/pureperlfilter.conf>
+=item F</etc/courier/filters/courier-filter-perl.conf>
 
-This is the configuration file for pureperlfilter and Courier::Filter.  See
-L<Courier::Filter::Overview> for its format.
+This is the configuration file for C<courier-filter-perl> and Courier::Filter.
+See L<Courier::Filter::Overview> for its format.
 
 =back
 
@@ -55,7 +55,6 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 use warnings;
-#use diagnostics;
 use strict;
 
 use lib '/usr/share/courier-filter-perl/perl5';

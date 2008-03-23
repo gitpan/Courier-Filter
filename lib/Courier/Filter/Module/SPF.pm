@@ -1,93 +1,78 @@
 #
 # Courier::Filter::Module::SPF class
 #
-# (C) 2004-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: SPF.pm 199 2005-11-10 22:16:37Z julian $
+# (C) 2004-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: SPF.pm 211 2008-03-23 01:25:20Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter::Module::SPF - An SPF filter module for the Courier::Filter
+Courier::Filter::Module::SPF - SPF filter module for the Courier::Filter
 framework
 
 =cut
 
 package Courier::Filter::Module::SPF;
 
-=head1 VERSION
+use warnings;
+use strict;
 
-0.17
+use base 'Courier::Filter::Module';
 
-=cut
+use Courier::Filter::Util qw(
+    ipv4_address_pattern
+    ipv6_address_pattern
+    loopback_address_pattern
+);
 
-our $VERSION = '0.17';
+use Mail::SPF;
+
+use constant TRUE   => (0 == 0);
+use constant FALSE  => not TRUE;
+
+use constant match_on_default => ['fail', 'permerror', 'temperror'];
 
 =head1 SYNOPSIS
 
     use Courier::Filter::Module::SPF;
-
+    
     my $module = Courier::Filter::Module::SPF->new(
-        match_on            => \@match_on_result_codes,
-        trusted_forwarders  => 0,
-        fallback_guess      => 0,
+        scope               => 'mfrom' || 'helo',
+        match_on            => ['fail', 'permerror', 'temperror'],
         default_response    => $default_response_text,
-
+        spf_options         => {
+            # any Mail::SPF::Server options
+        },
+        
         logger      => $logger,
         inverse     => 0,
         trusting    => 0,
         testing     => 0,
         debugging   => 0
     );
-
+    
     my $filter = Courier::Filter->new(
         ...
         modules     => [ $module ],
         ...
     );
 
-=cut
-
-use warnings;
-use strict;
-
-use base qw(Courier::Filter::Module);
-
-use Mail::SPF::Query 1.991;
-
-# Constants:
-##############################################################################
-
-use constant TRUE   => (0 == 0);
-use constant FALSE  => not TRUE;
-
-use constant DEFAULT_MATCH_ON   => ['fail', 'softfail', 'unknown', 'error'];
-
-my $OCTECT_DECIMAL  = qr/\d|\d\d|[01]\d\d|2[0-4]\d|25[0-5]/;
-my $IPV4_ADDRESS    = qr/$OCTECT_DECIMAL(?:\.$OCTECT_DECIMAL){3}/;
-
-# Interface:
-##############################################################################
-
 =head1 DESCRIPTION
 
-This class is a filter module class for use with Courier::Filter.  It matches a
-message if the sending machine's IP address (currently IPv4 only) is I<not>
-authorized to send mail from the envelope sender's (MAIL FROM) domain according
-to that domain's DNS SPF (Sender Policy Framework) record.  This is classic
-I<inbound> SPF checking.
+This class is a filter module class for use with Courier::Filter.  By default,
+it matches a message if the sending machine's IP address is I<not> authorized
+to send mail from the envelope sender's (MAIL FROM) domain according to that
+domain's SPF (Sender Policy Framework) DNS record.  This is classic I<inbound>
+SPF checking.
 
 The point of inbound SPF checking is for receivers to protect I<themselves>
 against forged envelope sender addresses in messages sent by others.
 
 =cut
 
-sub new;
-
-sub match;
-
 # Implementation:
-##############################################################################
+###############################################################################
 
 =head2 Constructor
 
@@ -95,7 +80,7 @@ The following constructor is provided:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter::Module::SPF
+=item B<new(%options)>: returns I<Courier::Filter::Module::SPF>
 
 Creates a new B<SPF> filter module.
 
@@ -104,97 +89,166 @@ options:
 
 =over
 
-=item B<match_on>
+=item B<scope>
 
-=item B<reject_on> (DEPRECATED)
+A string denoting the authorization scope, i.e., identity, on which the SPF
+check is to be performed.  Defaults to C<'mfrom'>.
+See L<Mail::SPF::Request/scope> for a detailed explanation.
+
+=item B<match_on>
 
 A reference to an array containing the set of SPF result codes which should
 cause the filter module to match a message.  Possible result codes are C<pass>,
-C<neutral>, C<softfail>, C<fail>, C<none>, C<unknown>, and C<error>.  See the
-SPF specification for details on the meaning of those.  Even if C<error> is
-listed, an C<error> result will by definition never cause a I<permanent>
-rejection, but only a I<temporary> one.  Defaults to B<['fail', 'softfail',
-'unknown', 'error']>, which complies with the long-term vision of SPF.  For the
-time being, you should probably override this to B<['fail', 'unknown',
-'error']>.
+C<fail>, C<softfail>, C<neutral>, C<none>, C<permerror>, and C<temperror>.  See
+the SPF specification for details on the meaning of those.  If C<temperror> is
+listed, a C<temperror> result will by definition never cause a I<permanent>
+rejection, but only a I<temporary> one.  Defaults to B<['fail', 'permerror',
+'temperror']>.
 
-=item B<trusted_forwarders>
-
-A boolean value controlling whether well-known but SPF ignorant forwarding
-services, as centrally specified by the DNS zone "spf.trusted-forwarder.org",
-should be generally trusted to be legitimate senders, even if they send
-messages with enveloper sender domains they do not control and are not
-authorized to send from.  Enabling this reduces the probability of false
-positives somewhat, but increases the probability of false negatives
-significantly.  Defaults to B<false>.
-
-=item B<fallback_guess>
-
-A boolean value controlling whether a default "best guess" SPF record should be
-assumed for domains without an SPF record.  See
-L<Mail::SPF::Query/"best_guess"> for the definition of the default best guess
-record.  Defaults to B<false>.
+I<Note>:  With early SPF specification drafts as well as the obsolete
+Mail::SPF::Query module, the C<permerror> and C<temperror> result codes were
+known as C<unknown> and C<error>, respectively; the old codes are now
+deprecated but still supported for the time being.
 
 =item B<default_response>
 
-A string that is to be returned as the match result in case of a match, that is
-when a message fails the SPF check, if the (alleged) envelope sender domain
-does not provide an explicit response.  SPF macro substitution is performed on
-the default response, just like on responses provided by domain owners.  If
-B<undef>, the hard-coded default response of Mail::SPF::Query will be used; see
-L<Mail::SPF::Query/"new"> for the definition of that.  Defaults to B<undef>.
+A string that is to be returned as the module's match result in case of a
+match, that is when the C<match_on> option includes the result code of the SPF
+check (by default when a message fails the SPF check).  However, this default
+response is used only if the (claimed) MAIL FROM or HELO domain does not
+provide a result explanation of its own.
+See L<Mail::SPF::Server/default_authority_explanation> for more information.
+
+SPF macro substitution is performed on the default response, just like on
+explanations provided by domain owners.  If B<undef>,
+L<Mail::SPF's default explanation|Mail::SPF::Server/default_authority_explanation>
+will be used.  Defaults to B<undef>.
+
+=item B<spf_options>
+
+A hash-ref specifying options for the Mail::SPF server object used by this
+filter module.  See L<Mail::SPF::Server/new> for the supported options.  If any
+of L<Mail::SPF::BlackMagic's additional options|Mail::SPF::Server/new>, such as
+C<default_policy> (best-guess) or C<tfwl> (C<trusted-forwarder.org>
+accreditation checking), are specified, a black-magic SPF server object will be
+created instead.
+
+=item B<fallback_guess>
+
+=item B<trusted_forwarders>
+
+I<Deprecated>.  These options should now be specified as C<default_policy> and
+C<tfwl> keys of the L</spf_options> option instead, although these legacy
+options will continue to work for the time being.  Furthermore, due to the move
+from the obsolete L<Mail::SPF::Query> module to the L<Mail::SPF> reference
+implementation, the L<Mail::SPF::BlackMagic> extension module is now required
+when using these non-standard options.
 
 =back
 
 All options of the B<Courier::Filter::Module> constructor are also supported.
-Please see L<Courier::Filter::Module/"new"> for their descriptions.
+Please see L<Courier::Filter::Module/new> for their descriptions.
 
 =cut
 
 sub new {
     my ($class, %options) = @_;
     
-    $options{match_on} ||= $options{reject_on} || DEFAULT_MATCH_ON;
+    $options{scope}         ||= 'mfrom';
     
-    return $class->SUPER::new(%options);
+    if (defined($options{reject_on})) {
+        $class->warn('"reject_on" option is deprecated! Use "match_on" option instead.');
+        $options{match_on}  ||= $options{reject_on};
+    }
+    $options{match_on}      ||= $class->match_on_default;
+    
+    my $spf_options = $options{spf_options} || {};
+    
+    if (defined($options{fallback_guess})) {
+        $class->warn('"fallback_guess" option is deprecated! Use "default_policy" key in "spf_options" option instead.');
+        $spf_options->{default_policy} ||= $options{fallback_guess};
+    }
+    
+    if (defined($options{trusted_forwarders})) {
+        $class->warn('"trusted_forwarders" option is deprecated! Use "tfwl" key in "spf_options" option instead.');
+        $spf_options->{tfwl} ||= $options{trusted_forwarders};
+    }
+    
+    my $spf_server_class = 'Mail::SPF::Server';
+    foreach my $spf_option (keys(%$spf_options)) {
+        if (not Mail::SPF->can($spf_option)) {
+            $spf_server_class = 'Mail::SPF::BlackMagic::Server';
+            eval { require Mail::SPF::BlackMagic };
+            if ($@) {
+                $class->warn("Mail::SPF::BlackMagic not installed. Ignoring unsupported \"$spf_option\" SPF option.");
+            }
+            elsif (not $spf_server_class->can($spf_option)) {
+                $class->warn("Ignoring unsupported \"$spf_option\" SPF option. Perhaps newer Mail::SPF or Mail::SPF::BlackMagic required?");
+            }
+        }
+    }
+    
+    my $spf_server = $spf_server_class->new(
+        default_authority_explanation => $options{default_response},
+        %$spf_options
+    );
+    
+    my $self = $class->SUPER::new(
+        %options,
+        spf_server => $spf_server
+    );
+    return $self;
 }
 
 =back
 
 =head2 Instance methods
 
-See L<Courier::Filter::Module/"Instance methods"> for a description of the
+See L<Courier::Filter::Module/Instance methods> for a description of the
 provided instance methods.
 
 =cut
 
 sub match {
-    my ($module, $message) = @_;
-    my $class = ref($module);
+    my ($self, $message) = @_;
     
-    $message->remote_host =~ /^(?:::ffff:)?($IPV4_ADDRESS)$/i
-        or return; # Ignore IPv6 senders for now, as M:S:Q doesn't support it.
+    return undef
+        if $message->remote_host =~ / ^ ${\loopback_address_pattern} $ /x;
+        # Exempt IPv4/IPv6 loopback addresses.
     
-    my $remote_host_ipv4 = $1;
+    my $scope       = $self->{scope};
+    my $identities  = {
+        helo    => $message->remote_host_helo,
+        mfrom   => $message->sender
+    };
+    my $identity    = $identities->{$scope};
     
-    my $spf_query = Mail::SPF::Query->new(
-        ip          => $remote_host_ipv4,
-        helo        => $message->remote_host_helo,
-        sender      => $message->sender,
-        trusted     => $module->{trusted_forwarders},
-        guess       => $module->{fallback_guess},
-        default_explanation
-                    => $module->{default_response}
+    return undef
+        if $identity eq '';
+        # Exempt empty identities (esp. empty MAIL FROM, i.e., bounces).
+    
+    return undef
+        if $identity =~ / ^ \[ (?: ${\ipv4_address_pattern} | ${\ipv6_address_pattern} ) \] $ /x;
+        # Exempt IP address literals ("[<ip-address>]").
+    
+    my $request     = Mail::SPF::Request->new(
+        scope           => $scope,
+        identity        => $identity,
+        ip_address      => $message->remote_host,
+        helo_identity   => $message->remote_host_helo
     );
     
-    my ($result_code, $response, $header_comment, $spf_record) = $spf_query->result();
-    $result_code = 'unknown' if $result_code =~ /^unknown/;
-    $response =~ s/^SPF: //;
+    my $result      = $self->{spf_server}->process($request);
+    my $result_code = $result->code;
+    my $response    =
+        $result->can('authority_explanation') ?
+            $result->authority_explanation
+        :   $result->local_explanation;
     
     my %match_on;
-    @match_on{ @{$module->{match_on}} } = ();
+    @match_on{ @{$self->{match_on}} } = ();  # Hash-ify match-on result codes list.
     
-    return "SPF: $response", ($result_code eq 'error' ? 451 : ())
+    return "SPF: $response", ($result_code eq 'temperror' ? 451 : ())
         if exists($match_on{$result_code});
     
     return undef;
@@ -202,7 +256,7 @@ sub match {
 
 =head1 SEE ALSO
 
-L<Courier::Filter::Module>, L<Courier::Filter::Overview>, L<Mail::SPF::Query>.
+L<Courier::Filter::Module>, L<Courier::Filter::Overview>, L<Mail::SPF>.
 
 For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
@@ -213,11 +267,11 @@ L<Courier::Filter::Overview>.
 
 =item B<SPF website> (Sender Policy Framework)
 
-L<http://spf.pobox.com>
+L<http://www.openspf.org>
 
 =item B<SPF specification>
 
-L<http://spf.pobox.com/spf-draft-200406.txt>
+L<http://www.openspf.org/Specifications>
 
 =back
 
@@ -228,5 +282,3 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 TRUE;
-
-# vim:tw=79

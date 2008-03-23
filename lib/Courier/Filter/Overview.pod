@@ -1,8 +1,8 @@
 #
 # Courier::Filter::Overview
 #
-# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Overview.pod 199 2005-11-10 22:16:37Z julian $
+# (C) 2003-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: Overview.pod 210 2008-03-21 19:30:31Z julian $
 #
 ##############################################################################
 
@@ -10,7 +10,7 @@
 
 =head1 NAME
 
-Courier::Filter::Overview - An architectural and administrative overview to
+Courier::Filter::Overview - Architectural and administrative overview of
 Courier::Filter
 
 =head1 DESCRIPTION
@@ -77,8 +77,11 @@ control file parsing features are missing.
 
 B<pythonfilter> by Gordon Messmer is a purely Python-based, modular, threaded
 courierfilter framework, similar to Courier::Filter.  If you primarily speak
-Python, this is clearly your choice.  As of version 0.8, there is some control
-file parsing and management, but no message parsing infrastructure.
+Python, this is clearly your choice.  pythonfilter also provides infrastructure
+to filter modules for modifying messages, even with versions of Courier prior
+to 0.57.1, which did not directly allow global mail filters to modify messages.
+As of version 1.1, pythonfilter supports only a linear topology in the
+configuration of its filter modules.
 
 =back
 
@@ -95,8 +98,8 @@ work">).
 
 Second, you need to create a configuration file for Courier::Filter.
 Courier::Filter usually seeks for it at
-C</etc/courier/filters/pureperlfilter.conf> (see L<Courier::Config> on how to
-configure that).  This file is a Perl snippet that must C<use> the filter
+C</etc/courier/filters/courier-filter-perl.conf> (see L<Courier::Config> on how
+to configure that).  This file is a Perl snippet that must C<use> the filter
 modules you want to use, and then fill in the C<$options> global variable with
 the desired configuration options, instantiating filter modules and loggers as
 required.
@@ -117,7 +120,7 @@ For example, this is how a simple configuration file could look like:
     
     $options = {
         logger      => Courier::Filter::Logger::File->new(
-            file_name   => '/var/log/courier-pureperlfilter.log',
+            file_name   => '/var/log/courier-filter-perl.log',
             timestamp   => 1
         },
         
@@ -136,19 +139,20 @@ detailed explanation of supported configuration options and how filter modules
 can be grouped, even hierarchically, see L<Courier::Filter/"new()">.
 
 Third, you need to make Courier aware of Courier::Filter by installing a
-symlink in C</etc/courier/filters/active/> pointing to the C<pureperlfilter>
-executable (which is used for bootstrapping Courier::Filter):
+symlink in C</etc/courier/filters/active/> pointing to the
+C<courier-filter-perl> executable (which is used for bootstrapping
+Courier::Filter):
 
-    $ ln -s $PATH_TO/pureperlfilter /etc/courier/filters/active/
+    $ ln -s $PATH_TO/courier-filter-perl /etc/courier/filters/active/
 
 Finally, you may start (or restart) Courier::Filter (including any other
 installed courierfilters; Courier must of course already be running):
 
-    $ sudo courierfilter stop && sudo courierfilter start
+    $ sudo courierfilter restart
 
 In syslog, you should see the following message and no further error messages:
 
-    Jan 24 01:42:15 yourhost courierfilter: Starting pureperlfilter
+    Jan 24 01:42:15 yourhost courierfilter: Starting courier-filter-perl
 
 Any errors occurring while Courier::Filter is running will appear in syslog as
 well.  A broken filter module will not crash Courier::Filter, but will record
@@ -162,7 +166,7 @@ Filter modules are Perl classes that are derived from the class
 B<Courier::Filter::Module>.  See L<perlobj> for an explanation of Perl's object
 orientation features.
 
-Filter modules are to be instantiated in the C<pureperlfilter.conf>
+Filter modules are to be instantiated in the C<courier-filter-perl.conf>
 configuration file, with either B<normal polarity> (the default) or B<inverse
 polarity>.  Then, for every incoming mail message, Courier::Filter asks each
 configured filter module in turn for consideration of the message's
@@ -370,41 +374,53 @@ Courier::Filter:
 
 =over
 
-=item I<DNSBL>
+=item L<I<BlankBody>|Courier::Filter::Module::BlankBody>
+
+Detection of messages with blank bodies (symptom of stupid spammers)
+
+=item L<I<DNSBL>|Courier::Filter::Module::DNSBL>
 
 Checking of the calling MTA's IP address against one or more DNS black-lists
 
-=item I<SPF>
+=item L<I<SPF>|Courier::Filter::Module::SPF>
 
 SPF (Sender Policy Framework) authorization checking of the calling MTA's IP
 address against the envelope sender domain (classic inbound SPF checking)
 
-=item I<SPFout>
+=item L<I<SPFout>|Courier::Filter::Module::SPFout>
 
 SPF authorization checking of the local system's IP address against the
 envelope sender domain (so-called outbound SPF checking)
 
-=item I<Envelope>
+=item L<I<Envelope>|Courier::Filter::Module::Envelope>
 
-Literal and reg-ex matching of one or more RFC 2821 message envelope fields
+Literal and reg-exp matching of one or more RFC 2821 message envelope fields
 
-=item I<Header>
+=item L<I<Header>|Courier::Filter::Module::Header>
 
-Literal and reg-ex matching of one or more RFC 2822 message header fields
+Literal and reg-exp matching of one or more RFC 2822 message header fields
 
-=item I<ClamAVd>
+=item L<I<FakeDate>|Courier::Filter::Module::FakeDate>
+
+Detection of implausible and malformed "Date" and "Resent-Date" header fields
+
+=item L<I<ClamAVd>|Courier::Filter::Module::ClamAVd>
 
 Malware detection using the ClamAV anti-virus scanner
 
-=item I<SpamAssassin>
+=item L<I<SpamAssassin>|Courier::Filter::Module::SpamAssassin>
 
 Spam detection using SpamAssassin
 
-=item I<Parts>
+=item L<I<Parts>|Courier::Filter::Module::Parts>
 
 =item I<MIMEParts> (DEPRECATED)
 
 Size and MD5 sum matching of message (MIME multipart and ZIP archive) parts
+
+=item L<I<SendCopy>|Courier::Filter::Module::SendCopy>
+
+Pseudo-filter for sending message copies to additional recipients
 
 =back
 
@@ -415,15 +431,15 @@ Courier::Filter:
 
 =over
 
-=item I<IOHandle>
+=item L<I<IOHandle>|Courier::Filter::Logger::IOHandle>
 
 Logging to I/O handles
 
-=item I<Syslog>
+=item L<I<Syslog>|Courier::Filter::Logger::Syslog>
 
 Logging to syslog (based on the B<IOHandle> logger)
 
-=item I<File>
+=item L<I<File>|Courier::Filter::Logger::File>
 
 Logging to files (based on the B<IOHandle> logger)
 
@@ -431,7 +447,7 @@ Logging to files (based on the B<IOHandle> logger)
 
 =head1 SEE ALSO
 
-L<pureperlfilter>, L<test-filter-module>,
+L<courier-filter-perl>, L<test-filter-module>,
 L<Courier::Filter>, L<Courier::Filter::Module>, L<Courier::Message>,
 L<Courier::Config>
 
@@ -465,7 +481,7 @@ through L<http://lists.sourceforge.net/lists/listinfo/courier-users>.
 
 =head1 AUTHOR and LICENSE
 
-Courier::Filter is Copyright (C) 2003-2005 Julian Mehnle <julian@mehnle.net>.
+Courier::Filter is Copyright (C) 2003-2008 Julian Mehnle <julian@mehnle.net>.
 All rights reserved.
 
 Courier::Filter is free software.  You may use, modify, and distribute it under

@@ -3,8 +3,8 @@
 #
 # A tester for Courier::Filter modules.
 #
-# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: test-filter-module 199 2005-11-10 22:16:37Z julian $
+# (C) 2003-2006 Julian Mehnle <julian@mehnle.net>
+# $Id: test-filter-module 210 2008-03-21 19:30:31Z julian $
 #
 ##############################################################################
 
@@ -14,7 +14,7 @@ test-filter-module - A tester for Courier::Filter modules
 
 =head1 VERSION
 
-0.17
+0.18
 
 =head1 SYNOPSIS
 
@@ -59,7 +59,6 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 use warnings;
-#use diagnostics;
 use strict;
 
 use lib '/usr/share/courier-filter-perl/perl5';
@@ -159,5 +158,3 @@ foreach my $message (@messages) {
     print($message->file_name . ": $code-$_\n") foreach @lines;
     print($message->file_name . ": $code $last_line\n");
 }
-
-# vim:tw=79

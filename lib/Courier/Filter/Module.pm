@@ -1,27 +1,29 @@
 #
 # Courier::Filter::Module abstract base class
 #
-# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Module.pm 199 2005-11-10 22:16:37Z julian $
+# (C) 2003-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: Module.pm 210 2008-03-21 19:30:31Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter::Module - An abstract Perl base class for filter modules used
-by the Courier::Filter framework
+Courier::Filter::Module - Abstract Perl base class for filter modules used by
+the Courier::Filter framework
 
 =cut
 
 package Courier::Filter::Module;
 
-=head1 VERSION
+use warnings;
+use strict;
 
-0.17
+use Error ':try';
 
-=cut
+use Courier::Error;
 
-our $VERSION = '0.17';
+use constant TRUE   => (0 == 0);
+use constant FALSE  => not TRUE;
 
 =head1 SYNOPSIS
 
@@ -48,21 +50,6 @@ our $VERSION = '0.17';
     package Courier::Filter::Module::My;
     use base qw(Courier::Filter::Module);
 
-=cut
-
-use warnings;
-use strict;
-
-use Error qw(:try);
-
-use Courier::Error;
-
-use constant TRUE   => (0 == 0);
-use constant FALSE  => not TRUE;
-
-# Interface:
-##############################################################################
-
 =head1 DESCRIPTION
 
 Sub-classes of B<Courier::Filter::Module> are used by the B<Courier::Filter>
@@ -75,24 +62,8 @@ inherited method from your overridden method.
 
 =cut
 
-# Actors:
-########################################
-
-sub new;
-sub consider;
-sub match;
-
-# Accessors:
-########################################
-
-sub logger;
-sub inverse;
-sub trusting;
-sub testing;
-sub debugging;
-
 # Implementation:
-##############################################################################
+###############################################################################
 
 =head2 Constructor
 
@@ -100,7 +71,7 @@ The following constructor is provided and may be overridden:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter::Module (or derivative)
+=item B<new(%options)>: returns I<Courier::Filter::Module>
 
 Creates a new filter module using the %options.  Initializes the filter module,
 by opening I/O handles, connecting to databases, creating temporary files,
@@ -129,10 +100,10 @@ L<Courier::Filter::Overview/"How filter modules work">.  Defaults to B<false>.
 =item B<trusting>
 
 A boolean value controlling whether the filter module should I<not> be applied
-to trusted messages.  For details on how the authenticated status is
-determined, see the description of the C<trusted> property in
-L<Courier::Message>.  In most configurations, this option can be used to
-white-list so-called I<outbound> messages.  Defaults to B<false>.
+to trusted messages.  For details on how the trusted status is determined, see
+the description of the C<trusted> property in L<Courier::Message>.  In most
+configurations, this option can be used to white-list so-called I<outbound>
+messages.  Defaults to B<false>.
 
 =item B<testing>
 
@@ -157,9 +128,9 @@ class, and stores the %options in it, but does nothing else.
 sub new {
     my ($class, %options) = @_;
     $class ne __PACKAGE__
-        or  throw Courier::Error('Unable to instantiate abstract ' . __PACKAGE__ . ' class');
-    my $module = { %options };
-    return bless($module, $class);
+        or throw Courier::Error('Unable to instantiate abstract ' . __PACKAGE__ . ' class');
+    my $self = { %options };
+    return bless($self, $class);
 }
 
 =back
@@ -175,12 +146,35 @@ The following destructor is provided and may be overridden:
 Uninitializes the filter module, by closing I/O handles, disconnecting from
 databases, deleting temporary files, uninitializing parser libraries, etc..
 
-C<Courier::Filter::Module::destroy()> does nothing.
+C<Courier::Filter::Module::destroy()> does nothing.  Sub-classes may override
+this method and define clean-up behavior.
 
 =cut
 
 sub destroy {
     my ($object) = @_;
+    return;
+}
+
+=back
+
+=head2 Class methods
+
+The following class methods are provided and may be overridden:
+
+=over
+
+=item B<warn($text)>
+
+Writes a warning message to syslog.  This method may also be used as an
+instance method.
+
+=cut
+
+sub warn {
+    my ($self, $text) = @_;
+    my $class = ref($self) || $self;
+    STDERR->printf("%s: Warning: %s\n", $class, $text);
     return;
 }
 
@@ -192,7 +186,7 @@ The following instance methods are provided and may be overridden:
 
 =over
 
-=item B<consider($message)>: RETURNS SCALAR, [SCALAR]; THROWS Perl exceptions
+=item B<consider($message)>: returns I<string>, [I<string>]; throws Perl exceptions
 
 Calls the C<match> method, passing it the $message object.  Returns the result
 of C<match>, negating it beforehand if the filter module has inverse polarity.
@@ -201,14 +195,14 @@ There is usually no need at all to override this method.
 =cut
 
 sub consider {
-    my ($module, $message) = @_;
-    my ($result, @code) = $module->match($message);
+    my ($self, $message) = @_;
+    my ($result, @code) = $self->match($message);
     ($result, @code) = ($result ? '' : undef)
-        if $module->inverse;
+        if $self->inverse;
     return ($result, @code);
 }
 
-=item B<match($message)>: RETURNS SCALAR, [SCALAR]; THROWS Perl exceptions
+=item B<match($message)>: returns I<string>, [I<string>]; throws Perl exceptions
 
 Examines the B<Courier::Message> object given as $message.  Returns a so-called
 I<match result> consisting of an SMTP status response I<text>, and an optional
@@ -217,17 +211,18 @@ are used by Courier::Filter, see L<Courier::Filter::Overview/"How filter
 modules work"> and L<Courier::Filter::Overview/"Writing filter modules">.
 
 C<Courier::Filter::Module::match()> does nothing and returns B<undef>.
+Sub-classes should override this method and define their own matching rule.
 
 =cut
 
 sub match {
-    my ($module, $message) = @_;
+    my ($self, $message) = @_;
     return undef;
 }
 
-=item B<logger>: RETURNS Courier::Filter::Logger
+=item B<logger>: returns I<Courier::Filter::Logger>
 
-=item B<logger($logger)>: RETURNS Courier::Filter::Logger
+=item B<logger($logger)>: returns I<Courier::Filter::Logger>
 
 If C<$logger> is specified, installs a new logger for this individual filter
 module.  Returns the current (new) logger.
@@ -235,13 +230,13 @@ module.  Returns the current (new) logger.
 =cut
 
 sub logger {
-    my ($module, @logger) = @_;
-    $module->{logger} = $logger[0]
+    my ($self, @logger) = @_;
+    $self->{logger} = $logger[0]
         if @logger;
-    return $module->{logger};
+    return $self->{logger};
 }
 
-=item B<inverse>: RETURNS boolean
+=item B<inverse>: returns I<boolean>
 
 Returns a boolean value indicating whether the filter module is operating with
 inverse polarity, as set through the constructor's C<inverse> option.
@@ -249,12 +244,12 @@ inverse polarity, as set through the constructor's C<inverse> option.
 =cut
 
 sub inverse {
-    my ($module) = @_;
+    my ($self) = @_;
     # Read-only!
-    return ($module->{inverse});
+    return ($self->{inverse});
 }
 
-=item B<trusting>: RETURNS boolean
+=item B<trusting>: returns I<boolean>
 
 Returns a boolean value indicating whether the filter module does I<not> apply
 to trusted messages, as set through the constructor's C<trusting> option.
@@ -262,12 +257,12 @@ to trusted messages, as set through the constructor's C<trusting> option.
 =cut
 
 sub trusting {
-    my ($module) = @_;
+    my ($self) = @_;
     # Read-only!
-    return $module->{trusting};
+    return $self->{trusting};
 }
 
-=item B<testing>: RETURNS boolean
+=item B<testing>: returns I<boolean>
 
 Returns a boolean value indicating whether the filter module is in testing
 mode, as set through the constructor's C<testing> option.
@@ -275,33 +270,35 @@ mode, as set through the constructor's C<testing> option.
 =cut
 
 sub testing {
-    my ($module) = @_;
+    my ($self) = @_;
     # Read-only!
-    return $module->{testing};
+    return $self->{testing};
 }
 
-=item B<debugging>: RETURNS boolean
+=item B<debugging>: returns I<boolean>
 
-=item B<debugging($debugging)>: RETURNS boolean
+=item B<debugging($debugging)>: returns I<boolean>
 
 If C<$debugging> is specified, sets the debugging mode for this individual
-filter module.  Returns the current (new) debugging mode.
+filter module.  Returns the (newly) configured debugging mode.
 
 =cut
 
 sub debugging {
-    my ($module, @debugging) = @_;
-    $module->{debugging} = $debugging[0]
+    my ($self, @debugging) = @_;
+    $self->{debugging} = $debugging[0]
         if @debugging;
-    return $module->{debugging};
+    return $self->{debugging};
 }
 
 =back
 
 =cut
 
-no warnings;
-*DESTROY = \&destroy;
+BEGIN {
+    no warnings 'once';
+    *DESTROY = \&destroy;
+}
 
 =head1 SEE ALSO
 
@@ -320,5 +317,3 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 TRUE;
-
-# vim:tw=79

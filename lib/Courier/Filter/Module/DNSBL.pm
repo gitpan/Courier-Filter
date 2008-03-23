@@ -1,27 +1,35 @@
 #
 # Courier::Filter::Module::DNSBL class
 #
-# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: DNSBL.pm 199 2005-11-10 22:16:37Z julian $
+# (C) 2003-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: DNSBL.pm 210 2008-03-21 19:30:31Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter::Module::DNSBL - A DNS black-list filter module for the
+Courier::Filter::Module::DNSBL - DNS black-list filter module for the
 Courier::Filter framework
 
 =cut
 
 package Courier::Filter::Module::DNSBL;
 
-=head1 VERSION
+use warnings;
+use strict;
 
-0.17
+use base 'Courier::Filter::Module';
 
-=cut
+use IO::File;
+use Net::RBLClient;
 
-our $VERSION = '0.17';
+use Courier::Filter::Util qw(
+    ipv4_address_pattern
+    loopback_address_pattern
+);
+
+use constant TRUE   => (0 == 0);
+use constant FALSE  => not TRUE;
 
 =head1 SYNOPSIS
 
@@ -43,28 +51,6 @@ our $VERSION = '0.17';
         ...
     );
 
-=cut
-
-use warnings;
-use strict;
-
-use base qw(Courier::Filter::Module);
-
-use IO::File;
-use Net::RBLClient;
-
-# Constants:
-##############################################################################
-
-use constant TRUE   => (0 == 0);
-use constant FALSE  => not TRUE;
-
-my $OCTECT_DECIMAL  = qr/\d|\d\d|[01]\d\d|2[0-4]\d|25[0-5]/;
-my $IPV4_ADDRESS    = qr/$OCTECT_DECIMAL(?:\.$OCTECT_DECIMAL){3}/;
-
-# Interface:
-##############################################################################
-
 =head1 DESCRIPTION
 
 This class is a filter module class for use with Courier::Filter.  It matches a
@@ -73,12 +59,8 @@ one of the configured DNS black-lists.
 
 =cut
 
-sub new;
-
-sub match;
-
 # Implementation:
-##############################################################################
+###############################################################################
 
 =head2 Constructor
 
@@ -86,7 +68,7 @@ The following constructor is provided:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter::Module::DNSBL
+=item B<new(%options)>: returns I<Courier::Filter::Module::DNSBL>
 
 Creates a new B<DNSBL> filter module.
 
@@ -97,7 +79,7 @@ options:
 
 =item B<zones>
 
-REQUIRED.  A reference to an array containing the DNS zone names of the
+I<Required>.  A reference to an array containing the DNS zone names of the
 black-lists to be used.
 
 =back
@@ -117,7 +99,7 @@ sub new {
     );
     
     return $class->SUPER::new(
-	%options,
+        %options,
         dnsbl_client => $dnsbl_client
     );
 }
@@ -132,20 +114,23 @@ provided instance methods.
 =cut
 
 sub match {
-    my ($module, $message) = @_;
-    my $class = ref($module);
+    my ($self, $message) = @_;
     
-    $message->remote_host =~ /^(?:::ffff:)?($IPV4_ADDRESS)$/i
-        or return; # Ignore IPv6 senders for now, as Net::RBLClient doesn't support it.
+    return undef
+        if $message->remote_host !~ / ^ (?: ::ffff: )? ( ${\ipv4_address_pattern} ) $ /ix;
+        # Ignore IPv6 senders for now, as Net::RBLClient doesn't support it.
     
     my $remote_host_ipv4 = $1;
     
-    my $dnsbl_client = $module->{dnsbl_client};
+    return undef
+        if $message->remote_host =~ / ^ ${\loopback_address_pattern} $ /x;
+        # Exempt IPv4/IPv6 loopback addresses, i.e., self submissions.
+    
+    my $dnsbl_client = $self->{dnsbl_client};
     
     $dnsbl_client->lookup($remote_host_ipv4);
     
     my $result;
-    
     my $results = $dnsbl_client->txt_hash();
     if (keys(%$results)) {
         $result = join(
@@ -174,5 +159,3 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 TRUE;
-
-# vim:tw=79

@@ -1,15 +1,15 @@
 #
-# Courier::Filter,
-# a purely Perl-based filter framework for the Courier MTA.
+# Courier::Filter
+# A purely Perl-based filter framework for the Courier MTA.
 #
-# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Filter.pm 199 2005-11-10 22:16:37Z julian $
+# (C) 2003-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: Filter.pm 210 2008-03-21 19:30:31Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter - A purely Perl-based mail filter framework for the Courier MTA
+Courier::Filter - Purely Perl-based mail filter framework for the Courier MTA
 
 =cut
 
@@ -17,20 +17,18 @@ package Courier::Filter;
 
 =head1 VERSION
 
-0.17
+0.200
 
 =cut
 
-our $VERSION = '0.17';
-
-use v5.8;
+use version; our $VERSION = qv('0.200');
 
 use warnings;
 use strict;
 #use threads;
 #BEGIN { require threads if ... }
 
-use Error qw(:try);
+use Error ':try';
 
 use IO::Handle;
 use IO::Socket::UNIX;
@@ -42,9 +40,6 @@ use Courier::Error;
 
 use constant TRUE   => (0 == 0);
 use constant FALSE  => not TRUE;
-
-# Interface:
-##############################################################################
 
 =head1 SYNOPSIS
 
@@ -87,28 +82,8 @@ Courier.
 
 =cut
 
-# Actors:
-########################################
-
-sub new;
-sub destroy;
-sub run;
-sub handle_connection;
-sub consult_modules;
-
-# Accessors:
-########################################
-
-sub name;
-sub mandatory;
-sub logger;
-sub modules;
-
-sub testing;
-sub debugging;
-
 # Implementation:
-##############################################################################
+###############################################################################
 
 =head2 Constructor
 
@@ -116,8 +91,8 @@ The following constructor is provided:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter; THROWS Courier::Error, Perl
-exceptions
+=item B<new(%options)>: returns I<Courier::Filter>; throws I<Courier::Error>,
+Perl exceptions
 
 Creates a new C<Courier::Filter> object.  Also creates the courierfilter socket
 in the right place in a safe manner.
@@ -129,8 +104,8 @@ options:
 
 =item B<name>
 
-A scalar containing the name of the filter process.  Used to build the socket
-name.  Defaults to the base name of the process (C<$0>).
+The name of the filter process.  Used to build the socket name.  Defaults to
+the base name of the process (C<$0>).
 
 =item B<mandatory>
 
@@ -139,26 +114,25 @@ mandatory courierfilter.  If B<true>, users will not be able to bypass the
 filter modules in this filter process from their individual B<localmailfilter>
 filters.  Technically, this controls whether the courierfilter socket will be
 created in the C<allfilters> (B<true>) or the C<filters> (B<false>) directory
-in Courier's run-time state directory (see
-L<Courier::Config/"COURIER_RUNTIME_DIR">).  Defaults to B<true>.
+in Courier's run-time state directory (see L<Courier::Config/"runtime_dir">).
+Defaults to B<true>.
 
 =begin comment
 
 =item B<threads>
 
-A scalar containing the number of worker threads that should be employed for
-considering messages.  If B<undef> or B<0>, no multi-threading will be used and
-everything (socket connection handling, message consideration, and logging)
-will be done in a single thread.  The unthreaded mode is is the most
-memory-conserving mode and is generally the best choice for single-processor
-systems.  Otherwise, i.e. if set to B<a positive number>, a pool of an
-according number of worker threads will be employed for considering messages.
-The worker threads are created during the startup of Courier::Filter and
-process messages that are dispatched to them by the main thread.  Logging is
-also done in a single separate thread.  The multi-threaded mode requires a
-certain amount of memory for each thread but is a viable way to distribute work
-on multi-processor systems.  No more than two threads per processor are
-recommended.  Defaults to B<undef>.
+The number of worker threads that should be employed for considering messages.
+If B<undef> or B<0>, no multi-threading will be used and everything (socket
+connection handling, message consideration, and logging) will be done in a
+single thread.  The unthreaded mode is is the most memory-conserving mode and
+is generally the best choice for single-processor systems.  Otherwise, i.e. if
+set to B<a positive number>, a pool of an according number of worker threads
+will be employed for considering messages.  The worker threads are created
+during the startup of Courier::Filter and process messages that are dispatched
+to them by the main thread.  Logging is also done in a single separate thread.
+The multi-threaded mode requires a certain amount of memory for each thread but
+is a viable way to distribute work on multi-processor systems.  No more than
+two threads per processor are recommended.  Defaults to B<undef>.
 
 =end comment
 
@@ -171,9 +145,9 @@ is specified, logging is disabled.
 
 =item B<modules>
 
-REQUIRED.  A so-called B<filter module group> structure.  A module group is a
-reference to an array that may contain filter module objects (i.e. instances of
-sub-classes of B<Courier::Filter::Module>), as well as other module groups.
+I<Required>.  A so-called B<filter module group> structure.  A module group is
+a reference to an array that may contain filter module objects (i.e. instances
+of sub-classes of B<Courier::Filter::Module>), as well as other module groups.
 Thus, a module group is essentially a tree structure with filter modules as its
 leaves.  When considering messages, Courier::Filter walks the tree in a
 recursive-descent, depth-first order, asking every filter module for
@@ -285,11 +259,11 @@ sub new {
     my $debugging   = $options{debugging};
     
     my $socket_dir =
-	Courier::Config::COURIER_RUNTIME_DIR . '/' .
-	( $mandatory ? 'allfilters' : 'filters' );
+        Courier::Config->runtime_dir . '/' .
+        ( $mandatory ? 'allfilters' : 'filters' );
     my $socket_dir_unused =
-	Courier::Config::COURIER_RUNTIME_DIR . '/' .
-	( !$mandatory ? 'allfilters' : 'filters' );
+        Courier::Config->runtime_dir . '/' .
+        ( !$mandatory ? 'allfilters' : 'filters' );
     
     my $socket_prename          = "$socket_dir/.$name";
     my $socket_name             = "$socket_dir/$name";
@@ -298,14 +272,14 @@ sub new {
     
     if (-e $socket_name) {
         -S $socket_name
-	    or  throw Courier::Error("$socket_name already exists but is not a socket");
+            or throw Courier::Error("$socket_name already exists but is not a socket");
         
         # Try to connect to socket to see if it is alive or
         # if it is left over from a crashed Courier::Filter:
         my $test_socket = IO::Socket::UNIX->new( Peer => $socket_name );
         
         not defined($test_socket)
-            or  throw Courier::Error("Live socket $socket_name found -- is Courier::Filter already running?");
+            or throw Courier::Error("Live socket $socket_name found -- is Courier::Filter already running?");
         
         # Socket exists but is dead. Remove it:
         unlink($socket_name);
@@ -316,14 +290,14 @@ sub new {
     unlink($socket_name_unused);
     
     my $socket = IO::Socket::UNIX->new(
-	Local   => $socket_prename,
-	Listen  => SOMAXCONN
+        Local   => $socket_prename,
+        Listen  => SOMAXCONN
     )
-	or  throw Courier::Error("Unable to create socket $socket_prename");
+        or  throw Courier::Error("Unable to create socket $socket_prename");
     
     rename($socket_prename, $socket_name)
-	or  unlink($socket_prename),
-	    throw Courier::Error("Unable to rename socket $socket_prename to $socket_name");
+        or  unlink($socket_prename),
+            throw Courier::Error("Unable to rename socket $socket_prename to $socket_name");
     
     chmod(0660, $socket_name)
         or  throw Courier::Error("Unable to chmod socket $socket_name");
@@ -331,16 +305,16 @@ sub new {
     IO::Handle->new_from_fd(3, '>')->close();
     
     my $filter = {
-	name        => $name,
-	mandatory   => $mandatory,
+        name        => $name,
+        mandatory   => $mandatory,
         threads     => $threads,
         logger      => $logger,
-	modules     => $modules,
+        modules     => $modules,
         trusting    => $trusting,
         testing     => $testing,
         debugging   => $debugging,
-	socket      => $socket,
-	socket_name => $socket_name,
+        socket      => $socket,
+        socket_name => $socket_name,
         terminate   => FALSE
     };
     
@@ -395,7 +369,7 @@ The following instance methods are provided:
 
 =over
 
-=item B<run>: THROWS Courier::Error, Perl exceptions
+=item B<run>: throws I<Courier::Error>, Perl exceptions
 
 Runs the Courier::Filter.  Listens for connections from Courier on the
 courierfilter socket, asks the configured filter modules for consideration of
@@ -413,29 +387,29 @@ sub run {
     my $select = IO::Select->new(\*STDIN, $socket);
     
     while (not $filter->{terminate}) {
-	
-	# Wait for incoming connection requests
-	# or EOF from STDIN:
-	########################################
-	
-	my @ready_handles = $select->can_read();
-	
-	foreach my $handle (@ready_handles) {
-	    if ($handle == $socket) {
-		# Incoming connection request.
+        
+        # Wait for incoming connection requests
+        # or EOF from STDIN:
+        ########################################
+        
+        my @ready_handles = $select->can_read();
+        
+        foreach my $handle (@ready_handles) {
+            if ($handle == $socket) {
+                # Incoming connection request.
                 $filter->handle_connection($socket);
 #                threads->new(\&handle_connection, $filter, $socket)->detach();
-	    }
-	    elsif ($handle == \*STDIN and STDIN->eof()) {
-		# STDIN got closed.
-		$filter->{terminate} = TRUE;
-	    }
-	    else {
-		# Received data from unknown handle or from STDIN.
-		# This shouldn't happen.
-		throw Courier::Error("Received data from unknown handle or from STDIN");
-	    }
-	}
+            }
+            elsif ($handle == \*STDIN and STDIN->eof()) {
+                # STDIN got closed.
+                $filter->{terminate} = TRUE;
+            }
+            else {
+                # Received data from unknown handle or from STDIN.
+                # This shouldn't happen.
+                throw Courier::Error("Received data from unknown handle or from STDIN");
+            }
+        }
     }
     
     return;
@@ -443,7 +417,7 @@ sub run {
 
 =begin comment
 
-=item B<handle_connection($socket)>: RETURNS SCALAR, SCALAR; THROWS Perl
+=item B<handle_connection($socket)>: returns I<string>, I<string>; throws Perl
 exceptions
 
 Handles a single incoming connection to the courierfilter socket.  Reads the
@@ -466,20 +440,20 @@ sub handle_connection {
     my @control_file_names;
     
     while (my $file_name = <$connection>) {
-	chomp($file_name);
-	last unless $file_name;
-	
-	# Normalize file name:
-	$file_name =
-	    Courier::Config::COURIER_RUNTIME_DIR . '/tmp/' . $file_name
-	    if $file_name !~ m(^/);
-	
-	if (not defined($message_file_name)) {
-	    $message_file_name = $file_name;
-	}
-	else {
-	    push(@control_file_names, $file_name);
-	}
+        chomp($file_name);
+        last unless $file_name;
+        
+        # Normalize file name:
+        $file_name =
+            Courier::Config->runtime_dir . '/tmp/' . $file_name
+            if $file_name !~ m(^/);
+        
+        if (not defined($message_file_name)) {
+            $message_file_name = $file_name;
+        }
+        else {
+            push(@control_file_names, $file_name);
+        }
     }
     
     return
@@ -510,11 +484,11 @@ sub handle_connection {
         or ($filter->trusting and $message->trusted);
     
     if ($result) {
-	$code ||= 550;
+        $code ||= 550;
     }
     else {
-	$result = 'Ok';
-	$code ||= 200;
+        $result = 'Ok';
+        $code ||= 200;
     }
     
     my @lines = split(/\n/, $result);
@@ -529,9 +503,9 @@ sub handle_connection {
 
 =begin comment
 
-=item B<consult_modules>
+=item B<consult_modules>: returns I<string>, I<string>
 
-Walks the given modules group structure in a recursive-descent, depth‐first
+Walks the given modules group structure in a recursive-descent, depth-first
 order, and asks every filter module for consideration of the given message's
 acceptability.  Returns the group's acceptability result.
 
@@ -543,7 +517,7 @@ sub consult_modules {
     my ($filter, $modules, $message) = @_;
     
     ref($modules) eq 'ARRAY'
-        or  throw Courier::Error('Invalid modules group structure, array-ref expected');
+        or throw Courier::Error('Invalid modules group structure, array-ref expected');
 
     foreach my $module (@$modules) {
         my ($result, @code);
@@ -581,10 +555,10 @@ sub consult_modules {
     return undef;
 }
 
-=item B<name>: RETURNS SCALAR
+=item B<name>: returns I<string>
 
-Returns a scalar containing the name of the filter process, as set through the
-constructor's C<name> option.
+Returns the name of the filter process, as set through the constructor's
+C<name> option.
 
 =cut
 
@@ -594,7 +568,7 @@ sub name {
     return $filter->{name};
 }
 
-=item B<mandatory>: RETURNS boolean
+=item B<mandatory>: returns I<boolean>
 
 Returns a boolean value indicating whether the filter process is a mandatory
 courierfilter, as set through the constructor's C<mandatory> option.
@@ -609,10 +583,10 @@ sub mandatory {
 
 =begin comment
 
-=item B<threads>: RETURNS SCALAR
+=item B<threads>: returns I<integer>
 
-Returns a scalar containing the number of filter threads, as set through the
-constructor's C<threads> option.
+Returns the number of filter threads, as set through the constructor's
+C<threads> option.
 
 =end comment
 
@@ -624,12 +598,12 @@ sub threads {
     return $filter->{threads};
 }
 
-=item B<logger>: RETURNS Courier::Filter::Logger
+=item B<logger>: returns I<Courier::Filter::Logger>
 
-=item B<logger($logger)>: RETURNS Courier::Filter::Logger
+=item B<logger($logger)>: returns I<Courier::Filter::Logger>
 
-If C<$logger> is specified, installs a new global logger.  Returns the current
-(new) global logger.
+If C<$logger> is specified, installs a new global logger.  Returns the (newly)
+configured global logger.
 
 =cut
 
@@ -640,12 +614,12 @@ sub logger {
     return $filter->{logger};
 }
 
-=item B<modules>: RETURNS ARRAYREF
+=item B<modules>: returns I<array-ref>
 
-=item B<modules(\@modules)>: RETURNS ARRAYREF
+=item B<modules(\@modules)>: returns I<array-ref>
 
 If C<\@modules> is specified, installs a new filter module group structure.
-Returns the current (new) filter modules group structure.
+Returns the (newly) configured filter modules group structure.
 
 =cut
 
@@ -656,7 +630,7 @@ sub modules {
     return $filter->{modules};
 }
 
-=item B<trusting>: RETURNS boolean
+=item B<trusting>: returns I<boolean>
 
 Returns a boolean value indicating the trusting mode, as set through the
 constructor's C<trusting> option.
@@ -669,7 +643,7 @@ sub trusting {
     return $filter->{trusting};
 }
 
-=item B<testing>: RETURNS boolean
+=item B<testing>: returns I<boolean>
 
 Returns a boolean value indicating the global testing mode, as set through the
 constructor's C<testing> option.
@@ -682,12 +656,12 @@ sub testing {
     return $filter->{testing};
 }
 
-=item B<debugging>: RETURNS boolean
+=item B<debugging>: returns I<boolean>
 
-=item B<debugging($debugging)>: RETURNS boolean
+=item B<debugging($debugging)>: returns I<boolean>
 
 If C<$debugging> is specified, sets the global debugging mode.  Returns a
-boolean value indicating the current (new) global debugging mode.
+boolean value indicating the (newly) configured global debugging mode.
 
 =cut
 
@@ -702,13 +676,15 @@ sub debugging {
 
 =cut
 
-no warnings;
-*DESTROY = \&destroy;
+BEGIN {
+    no warnings 'once';
+    *DESTROY = \&destroy;
+}
 
 =head1 SEE ALSO
 
-L<pureperlfilter>, L<Courier::Filter::Overview>, L<Courier::Filter::Module>,
-L<Courier::Filter::Logger>
+L<courier-filter-perl>, L<Courier::Filter::Overview>,
+L<Courier::Filter::Module>, L<Courier::Filter::Logger>
 
 For AVAILABILITY, SUPPORT, and LICENSE information, see
 L<Courier::Filter::Overview>.
@@ -730,5 +706,3 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 TRUE;
-
-# vim:tw=79

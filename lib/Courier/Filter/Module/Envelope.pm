@@ -1,27 +1,27 @@
 #
 # Courier::Filter::Module::Envelope class
 #
-# (C) 2004-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Envelope.pm 199 2005-11-10 22:16:37Z julian $
+# (C) 2004-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: Envelope.pm 210 2008-03-21 19:30:31Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter::Module::Envelope - A message envelope filter module for the
+Courier::Filter::Module::Envelope - Message envelope filter module for the
 Courier::Filter framework
 
 =cut
 
 package Courier::Filter::Module::Envelope;
 
-=head1 VERSION
+use warnings;
+use strict;
 
-0.17
+use base 'Courier::Filter::Module';
 
-=cut
-
-our $VERSION = '0.17';
+use constant TRUE   => (0 == 0);
+use constant FALSE  => not TRUE;
 
 =head1 SYNOPSIS
 
@@ -53,22 +53,6 @@ our $VERSION = '0.17';
         ...
     );
 
-=cut
-
-use warnings;
-use strict;
-
-use base qw(Courier::Filter::Module);
-
-# Constants:
-##############################################################################
-
-use constant TRUE   => (0 == 0);
-use constant FALSE  => not TRUE;
-
-# Interface:
-##############################################################################
-
 =head1 DESCRIPTION
 
 This class is a filter module class for use with Courier::Filter.  It matches a
@@ -77,10 +61,8 @@ criteria.
 
 =cut
 
-sub match;
-
 # Implementation:
-##############################################################################
+###############################################################################
 
 =head2 Constructor
 
@@ -88,7 +70,7 @@ The following constructor is provided:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter::Module::Envelope
+=item B<new(%options)>: returns I<Courier::Filter::Module::Envelope>
 
 Creates a new B<Envelope> filter module.
 
@@ -99,7 +81,7 @@ options:
 
 =item B<fields>
 
-REQUIRED.  A reference to a hash containing the message envelope field names
+I<Required>.  A reference to a hash containing the message envelope field names
 and patterns (as key/value pairs) that messages are to be matched against.
 Field names are matched case-insensitively.  Patterns may either be simple
 strings (for exact, case-sensitive matches) or regular expression objects
@@ -111,11 +93,11 @@ The following envelope fields are supported:
 
 =item B<sender>
 
-The message's envelope sender (from the "MAIL FROM:" SMTP command).
+The message's envelope sender (from the "MAIL FROM" SMTP command).
 
 =item B<recipient>
 
-Any of the message's envelope recipients (from the "RCPT TO:" SMTP commands).
+Any of the message's envelope recipients (from the "RCPT TO" SMTP commands).
 
 =item B<remote_host>
 
@@ -161,8 +143,7 @@ provided instance methods.
 =cut
 
 sub match {
-    my ($module, $message) = @_;
-    my $class = ref($module);
+    my ($self, $message) = @_;
     
     my $envelope = {
         sender              => [$message->sender],
@@ -172,7 +153,7 @@ sub match {
         remote_host_helo    => [$message->remote_host_helo]
     };
     
-    my $fields = $module->{fields};
+    my $fields = $self->{fields};
     foreach my $field (keys(%$fields)) {
         my $pattern = $fields->{$field};
         my $matcher =
@@ -186,7 +167,7 @@ sub match {
                 $field_human_readable =~ tr/_/ /;
                 return
                     'Envelope: ' . (
-                        $module->{response} ||
+                        $self->{response} ||
                         "Prohibited $field_human_readable detected: $value"
                     );
             }
@@ -211,5 +192,3 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 TRUE;
-
-# vim:tw=79

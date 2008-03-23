@@ -1,27 +1,18 @@
 #
 # Courier::Filter::Logger::File class
 #
-# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: File.pm 199 2005-11-10 22:16:37Z julian $
+# (C) 2003-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: File.pm 210 2008-03-21 19:30:31Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter::Logger::File - A file logger for the Courier::Filter
-framework
+Courier::Filter::Logger::File - File logger for the Courier::Filter framework
 
 =cut
 
 package Courier::Filter::Logger::File;
-
-=head1 VERSION
-
-0.17
-
-=cut
-
-our $VERSION = '0.17';
 
 =head1 SYNOPSIS
 
@@ -50,9 +41,9 @@ our $VERSION = '0.17';
 use warnings;
 use strict;
 
-use base qw(Courier::Filter::Logger::IOHandle);
+use base 'Courier::Filter::Logger::IOHandle';
 
-use Error qw(:try);
+use Error ':try';
 
 use Courier::Error;
 
@@ -61,9 +52,6 @@ use IO::File;
 use constant TRUE   => (0 == 0);
 use constant FALSE  => not TRUE;
 
-# Interface:
-##############################################################################
-
 =head1 DESCRIPTION
 
 This class is a file logger class for use with Courier::Filter and its filter
@@ -71,10 +59,8 @@ modules.  It is derived from B<Courier::Filter::Logger::IOHandle>.
 
 =cut
 
-sub new;
-
 # Implementation:
-##############################################################################
+###############################################################################
 
 =head2 Constructor
 
@@ -82,8 +68,8 @@ The following constructor is provided:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter::Logger::File; THROWS
-Courier::Error
+=item B<new(%options)>: returns I<Courier::Filter::Logger::File>; throws
+I<Courier::Error>
 
 Creates a new logger that logs messages as lines to a file.  Opens the file for
 writing, creating it if necessary.
@@ -95,7 +81,7 @@ options:
 
 =item B<file_name>
 
-REQUIRED.  The name of the file to which log messages should be written.
+I<Required>.  The name of the file to which log messages should be written.
 
 =item B<timestamp>
 
@@ -110,7 +96,7 @@ sub new {
     my ($class, %options) = @_;
     
     my $handle = IO::File->new($options{file_name}, '>>')
-        or  throw Courier::Error("Unable to open log file '$options{file_name}' for writing");
+        or throw Courier::Error("Unable to open log file '$options{file_name}' for writing");
     
     return $class->SUPER::new(
         %options,
@@ -127,13 +113,13 @@ B<Courier::Filter::Logger::IOHandle>:
 
 =over
 
-=item B<log_error($text)>: THROWS Perl exceptions
+=item B<log_error($text)>: throws Perl exceptions
 
 Logs the error message given as C<$text> (a string which may contain newlines).
 Prefixes each line with a timestamp if the C<timestamp> option has been set
 through the constructor.
 
-=item B<log_rejected_message($message, $reason)>: THROWS Perl exceptions
+=item B<log_rejected_message($message, $reason)>: throws Perl exceptions
 
 Logs the B<Courier::Message> given as C<$message> as having been rejected due
 to C<$reason> (a string which may contain newlines).
@@ -155,5 +141,3 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 TRUE;
-
-# vim:tw=79

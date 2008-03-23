@@ -1,27 +1,34 @@
 #
 # Courier::Filter::Module::ClamAVd class
 #
-# (C) 2004-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: ClamAVd.pm 199 2005-11-10 22:16:37Z julian $
+# (C) 2004-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: ClamAVd.pm 210 2008-03-21 19:30:31Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter::Module::ClamAVd - A ClamAV clamd filter module for the
+Courier::Filter::Module::ClamAVd - ClamAV clamd filter module for the
 Courier::Filter framework
 
 =cut
 
 package Courier::Filter::Module::ClamAVd;
 
-=head1 VERSION
+use warnings;
+use strict;
 
-0.17
+use base 'Courier::Filter::Module';
 
-=cut
+use MIME::Parser 5.4;
+use ClamAV::Client;
+use File::Spec;
+    # In-memory processing doesn't work, see comments in match_mime_part().
 
-our $VERSION = '0.17';
+use constant TRUE   => (0 == 0);
+use constant FALSE  => not TRUE;
+
+use constant default_response   => 'Malware detected:';
 
 =head1 SYNOPSIS
 
@@ -51,29 +58,6 @@ our $VERSION = '0.17';
         ...
     );
 
-=cut
-
-use warnings;
-use strict;
-
-use base qw(Courier::Filter::Module);
-
-use MIME::Parser 5.4;
-use ClamAV::Client;
-use File::Spec;
-    # In-memory processing doesn't work, see comments in match_mime_part().
-
-# Constants:
-##############################################################################
-
-use constant TRUE   => (0 == 0);
-use constant FALSE  => not TRUE;
-
-use constant DEFAULT_RESPONSE   => 'Malware detected:';
-
-# Interface:
-##############################################################################
-
 =head1 DESCRIPTION
 
 This class is a filter module class for use with Courier::Filter.  It matches a
@@ -81,12 +65,8 @@ message if the configured ClamAV C<clamd> daemon detects malware in it.
 
 =cut
 
-sub new;
-
-sub match;
-
 # Implementation:
-##############################################################################
+###############################################################################
 
 =head2 Constructor
 
@@ -94,7 +74,7 @@ The following constructor is provided:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter::Module::ClamAVd
+=item B<new(%options)>: returns I<Courier::Filter::Module::ClamAVd>
 
 Creates a new B<ClamAVd> filter module.
 
@@ -170,21 +150,21 @@ sub new {
         socket_port     => $options{socket_port}
     );
     
-    my $module = $class->SUPER::new(
+    my $self = $class->SUPER::new(
         %options,
         mime_parser     => $mime_parser,
         clamav_client   => $clamav_client
     );
     
     # Default "max_message_size" option to 1024**2 (1MB):
-    $module->{max_message_size} = 1024**2
-        if not exists($module->{max_message_size});
+    $self->{max_message_size} = 1024**2
+        if not exists($self->{max_message_size});
     
     # Default "max_part_size" option to the "max_message_size" option:
-    $module->{max_part_size} = $module->{max_message_size}
-        if not exists($module->{max_part_size});
+    $self->{max_part_size} = $self->{max_message_size}
+        if not exists($self->{max_part_size});
     
-    return $module;
+    return $self;
 }
 
 =back
@@ -197,24 +177,23 @@ provided instance methods.
 =cut
 
 sub match {
-    my ($module, $message) = @_;
-    my $class = ref($module);
+    my ($self, $message) = @_;
     
     return undef
-	if  defined($module->{max_message_size})
-	and -s $message->file_name > $module->{max_message_size};
+        if  defined($self->{max_message_size})
+        and -s $message->file_name > $self->{max_message_size};
     
     #my $text = $message->text;
-    #my $part = $module->{mime_parser}->parse_data($text);
+    #my $part = $self->{mime_parser}->parse_data($text);
         # In-memory processing doesn't work, see comments in match_mime_part().
-    my $part = $module->{mime_parser}->parse_open($message->file_name);
-    my ($result, @code) = $module->match_mime_part($part);
+    my $part = $self->{mime_parser}->parse_open($message->file_name);
+    my ($result, @code) = $self->match_mime_part($part);
     
     $result &&= 'ClamAVd: ' . $result;
     
-    $module->{mime_parser}->filer->purge();
+    $self->{mime_parser}->filer->purge();
         # In-memory processing doesn't work, see comments in match_mime_part().
-    rmdir($module->{mime_parser}->filer->output_dir);
+    rmdir($self->{mime_parser}->filer->output_dir);
         #if MIME::Tools->VERSION < 6.0;
         # Purging also doesn't work properly
         # (bug filed: <http://rt.cpan.org/NoAuth/Bug.html?id=7858>).
@@ -223,21 +202,21 @@ sub match {
 }
 
 sub match_mime_part {
-    my ($module, $part) = @_;
+    my ($self, $part) = @_;
     
     if (my $body = $part->bodyhandle) {
         # No sub-parts, match this part.
         my $handle = $body->open('r');
-        my $malware_name = $module->{clamav_client}->scan_stream($handle);
-        return ($module->{response} || DEFAULT_RESPONSE) . ' ' . $malware_name
+        my $malware_name = $self->{clamav_client}->scan_stream($handle);
+        return ($self->{response} || $self->default_response) . ' ' . $malware_name
             if defined($malware_name);
     }
     else {
-	# Match all sub-parts:
-	foreach my $subpart ($part->parts) {
-	    my ($result, @code) = $module->match_mime_part($subpart);
-	    return ($result, @code) if defined($result);
-	}
+        # Match all sub-parts:
+        foreach my $subpart ($part->parts) {
+            my ($result, @code) = $self->match_mime_part($subpart);
+            return ($result, @code) if defined($result);
+        }
     }
     
     return undef;
@@ -257,5 +236,3 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 TRUE;
-
-# vim:tw=79

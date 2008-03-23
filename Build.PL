@@ -1,3 +1,11 @@
+#
+# Module::Build build script for Courier::Filter
+#
+# (C) 2005-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: Build.PL 211 2008-03-23 01:25:20Z julian $
+#
+###############################################################################
+
 use Module::Build;
 
 my $build = Module::Build->new(
@@ -6,32 +14,27 @@ my $build = Module::Build->new(
     license         => 'perl',
     requires        => {
         # Core requirements:
-        perl                => '5.8',
-        Encode              => 0,
-        IO::Handle          => 0,
-        IO::File            => 0,
-        IO::Socket::UNIX    => 0,
-        IO::Select          => 0,
+        perl                => '5.008',
         Error               => 0
     },
     recommends      => {
         # Filter module requirements:
         Net::RBLClient      => 0,
-        Mail::SPF::Query    => '1.991',
-        Net::Address::IPv4::Local
+        Mail::SPF           => 0,
+        Net::Address::IP::Local
                             => 0,
-        MIME::Tools         => '5.4',
+        DateTime            => 0,
+        DateTime::Format::Mail
+                            => 0,
+        MIME::Tools         => '5.400',
         IO::InnerFile       => '2.110',
-        Digest::MD5         => 0,
-        ClamAV::Client      => 0,
-        File::Spec          => 0,
-        Mail::SpamAssassin  => 0,
         Archive::Zip        => 0,
-        Net::DNS            => 0
+        ClamAV::Client      => 0,
+        Mail::SpamAssassin  => 0
     },
     build_requires  => {
         # Build requirements:
-        Test::Simple        => 0
+        Module::Build       => 0
     },
     script_files    => [
         'bin/test-filter-module'
@@ -45,6 +48,3 @@ my $build = Module::Build->new(
 );
 
 $build->create_build_script();
-
-# $Id: Build.PL 200 2005-11-11 02:46:35Z julian $
-# vim:tw=79

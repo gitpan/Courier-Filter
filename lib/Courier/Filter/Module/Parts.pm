@@ -1,27 +1,37 @@
 #
 # Courier::Filter::Module::Parts class
 #
-# (C) 2003-2005 Julian Mehnle <julian@mehnle.net>
-# $Id: Parts.pm 195 2005-06-11 19:47:59Z julian $
+# (C) 2003-2008 Julian Mehnle <julian@mehnle.net>
+# $Id: Parts.pm 210 2008-03-21 19:30:31Z julian $
 #
-##############################################################################
+###############################################################################
 
 =head1 NAME
 
-Courier::Filter::Module::Parts - A message (MIME multipart and ZIP archive)
+Courier::Filter::Module::Parts - Message (MIME multipart and ZIP archive)
 parts filter module for the Courier::Filter framework
 
 =cut
 
 package Courier::Filter::Module::Parts;
 
-=head1 VERSION
+use warnings;
+use strict;
 
-0.17
+use base 'Courier::Filter::Module';
 
-=cut
+use MIME::Parser 5.4;
+use IO::InnerFile 2.110;
+    # Require either MIME::Parser 5.413 or lower, or IO::InnerFile 2.110+
+    # (where IO::InnerFile::seek() properly returns TRUE when appropriate).
+use Digest::MD5;
+use File::Spec;
+    # In-memory processing doesn't work, see comments in match_mime_part().
 
-our $VERSION = '0.17';
+use constant TRUE   => (0 == 0);
+use constant FALSE  => not TRUE;
+
+use constant default_response   => 'Prohibited message part detected.';
 
 =head1 SYNOPSIS
 
@@ -61,32 +71,6 @@ our $VERSION = '0.17';
         ...
     );
 
-=cut
-
-use warnings;
-use strict;
-
-use base qw(Courier::Filter::Module);
-
-use MIME::Parser 5.4;
-use IO::InnerFile 2.110;
-    # Require either MIME::Parser 5.413 or lower, or IO::InnerFile 2.110+
-    # (where IO::InnerFile::seek() properly returns TRUE when appropriate).
-use Digest::MD5;
-use File::Spec;
-    # In-memory processing doesn't work, see comments in match_mime_part().
-
-# Constants:
-##############################################################################
-
-use constant TRUE   => (0 == 0);
-use constant FALSE  => not TRUE;
-
-use constant DEFAULT_RESPONSE   => 'Prohibited message part detected.';
-
-# Interface:
-##############################################################################
-
 =head1 DESCRIPTION
 
 This class is a filter module class for use with Courier::Filter.  It matches a
@@ -95,12 +79,8 @@ matches one of the configured signatures.
 
 =cut
 
-sub new;
-
-sub match;
-
 # Implementation:
-##############################################################################
+###############################################################################
 
 =head2 Constructor
 
@@ -108,7 +88,7 @@ The following constructor is provided:
 
 =over
 
-=item B<new(%options)>: RETURNS Courier::Filter::Module::Parts
+=item B<new(%options)>: returns I<Courier::Filter::Module::Parts>
 
 Creates a new B<Parts> filter module.
 
@@ -180,10 +160,10 @@ decompressed.
 
 =item B<signatures>
 
-REQUIRED.  A reference to an array containing the list of I<signatures> against
-which message parts are to be matched.  A signature in turn is a reference to a
-hash containing one or more so-called signature I<aspects> (as key/value pairs)
-and any signature I<options> (also as key/value pairs).
+I<Required>.  A reference to an array containing the list of I<signatures>
+against which message parts are to be matched.  A signature in turn is a
+reference to a hash containing one or more so-called signature I<aspects> (as
+key/value pairs) and any signature I<options> (also as key/value pairs).
 
 I<Signature aspects>
 
@@ -294,31 +274,31 @@ sub new {
         # In-memory processing doesn't work, see comments in match_mime_part().
     $mime_parser->use_inner_files(TRUE);
     
-    my $module = $class->SUPER::new(
+    my $self = $class->SUPER::new(
         %options,
         mime_parser => $mime_parser
     );
     
     # Default "max_message_size" option to the deprecated "max_size" option,
     # or to 1024**2 (1MB):
-    $module->{max_message_size} = (
-        exists($module->{max_size}) ? $module->{max_size} : 1024**2
+    $self->{max_message_size} = (
+        exists($self->{max_size}) ? $self->{max_size} : 1024**2
     )
-        if not exists($module->{max_message_size});
+        if not exists($self->{max_message_size});
     
     # Default "max_part_size" option to the "max_message_size" option:
-    $module->{max_part_size} = $module->{max_message_size}
-        if not exists($module->{max_part_size});
+    $self->{max_part_size} = $self->{max_message_size}
+        if not exists($self->{max_part_size});
     
     # Default "views" option to 'raw':
-    my $views = $module->{views} || { 'raw' => TRUE };
+    my $views = $self->{views} || { 'raw' => TRUE };
     
     # Transform "views" option into hashref if it was given as an arrayref:
     $views = { map(($_ => TRUE), @$views) }
         if ref($views) eq 'ARRAY';
     
     my $used_views = { %$views };
-    foreach my $signature ( @{$module->{signatures}} ) {
+    foreach my $signature ( @{$self->{signatures}} ) {
         # Default "views" option to global "views" option:
         my $signature_views = $signature->{views} || $views;
         
@@ -331,12 +311,12 @@ sub new {
 
         $signature->{views} = $signature_views;
         
-        $module->compile_signature($signature);
+        $self->compile_signature($signature);
     }
 
-    $module->{used_views} = $used_views;
+    $self->{used_views} = $used_views;
     
-    return $module;
+    return $self;
 }
 
 =back
@@ -349,24 +329,23 @@ provided instance methods.
 =cut
 
 sub match {
-    my ($module, $message) = @_;
-    my $class = ref($module);
+    my ($self, $message) = @_;
     
     return undef
-	if  defined($module->{max_message_size})
-	and -s $message->file_name > $module->{max_message_size};
+        if  defined($self->{max_message_size})
+        and -s $message->file_name > $self->{max_message_size};
     
     #my $text = $message->text;
-    #my $part = $module->{mime_parser}->parse_data($text);
+    #my $part = $self->{mime_parser}->parse_data($text);
         # In-memory processing doesn't work, see comments in match_mime_part().
-    my $part = $module->{mime_parser}->parse_open($message->file_name);
-    my ($result, @code) = $module->match_mime_part($part);
+    my $part = $self->{mime_parser}->parse_open($message->file_name);
+    my ($result, @code) = $self->match_mime_part($part);
     
     $result &&= 'Parts: ' . $result;
     
-    $module->{mime_parser}->filer->purge();
+    $self->{mime_parser}->filer->purge();
         # In-memory processing doesn't work, see comments in match_mime_part().
-    rmdir($module->{mime_parser}->filer->output_dir);
+    rmdir($self->{mime_parser}->filer->output_dir);
         #if MIME::Tools->VERSION < 6.0;
         # Purging also doesn't work properly
         # (bug filed: <http://rt.cpan.org/NoAuth/Bug.html?id=7858>).
@@ -375,7 +354,7 @@ sub match {
 }
 
 sub match_mime_part {
-    my ($module, $part) = @_;
+    my ($self, $part) = @_;
     
     if (my $body = $part->bodyhandle) {
         # No sub-parts, match this part.
@@ -394,7 +373,7 @@ sub match_mime_part {
             # bug filed: <http://rt.cpan.org/NoAuth/Bug.html?id=7855>).
             # All of this forces us to make MIME::Parser use temporary files
             # instead of doing everything exclusively in-memory.  Aaargh!!
-	
+        
         # First, we gather signature makers for all possible (and enabled)
         # views of the MIME part, then we actually test each view in turn
         # against the configured test signatures.
@@ -402,8 +381,8 @@ sub match_mime_part {
         my @views;
         
         # Raw view (the MIME part itself) (if enabled):
-        my $rawsig = $module->make_signature_from_mime_part($part);
-        if ($module->{used_views}->{'raw'}) {
+        my $rawsig = $self->make_signature_from_mime_part($part);
+        if ($self->{used_views}->{'raw'}) {
             push(
                 @views,
                 {
@@ -411,13 +390,13 @@ sub match_mime_part {
                     sig_maker   => sub { $rawsig }
                 }
             )
-                if not defined($module->{max_part_size})
-                or $rawsig->{size} <= $module->{max_part_size};
+                if not defined($self->{max_part_size})
+                or $rawsig->{size} <= $self->{max_part_size};
         }
         
         # ZIP archive members view (if enabled and MIME part is a ZIP archive):
         if (
-            $module->{used_views}->{'zip'} and
+            $self->{used_views}->{'zip'} and
             defined($rawsig->{file_name}) and
             $rawsig->{file_name} =~ /\.zip$/i
         ) {
@@ -435,12 +414,12 @@ sub match_mime_part {
                     {
                         name        => 'zip',
                         sig_maker   => sub {
-                            $module->make_signature_from_zip_archive_member($member)
+                            $self->make_signature_from_zip_archive_member($member)
                         }
                     }
                 )
-                    if not defined($module->{max_part_size})
-                    or $member->uncompressedSize <= $module->{max_part_size};
+                    if not defined($self->{max_part_size})
+                    or $member->uncompressedSize <= $self->{max_part_size};
             }
         }
         
@@ -450,7 +429,7 @@ sub match_mime_part {
             my $datasig = $view->{sig_maker}->();
 
             # Test that signature against the configured signatures:
-            foreach my $signature ( @{$module->{signatures}} ) {
+            foreach my $signature ( @{$self->{signatures}} ) {
                 # Skip this signature if it doesn't apply to the current view:
                 next if not $signature->{views}->{ $view->{name} };
                 
@@ -460,18 +439,18 @@ sub match_mime_part {
         }
     }
     else {
-	# Match all sub-parts:
-	foreach my $subpart ($part->parts) {
-	    my ($result, @code) = $module->match_mime_part($subpart);
-	    return ($result, @code) if defined($result);
-	}
+        # Match all sub-parts:
+        foreach my $subpart ($part->parts) {
+            my ($result, @code) = $self->match_mime_part($subpart);
+            return ($result, @code) if defined($result);
+        }
     }
     
     return undef;
 }
 
 sub make_signature_from_mime_part {
-    my ($module, $part) = @_;
+    my ($self, $part) = @_;
     
     my $head = $part->head;
     my $body = $part->bodyhandle;
@@ -487,7 +466,7 @@ sub make_signature_from_mime_part {
 }
 
 sub make_signature_from_zip_archive_member {
-    my ($module, $member) = @_;
+    my ($self, $member) = @_;
     
     return {
         mime_type   => undef,
@@ -501,7 +480,7 @@ sub make_signature_from_zip_archive_member {
 }
 
 sub compile_signature {
-    my ($module, $signature) = @_;
+    my ($self, $signature) = @_;
 
     my %matchers;
 
@@ -532,7 +511,7 @@ sub compile_signature {
     my @response =
         ref($signature->{response}) eq 'ARRAY' ?
             @{ $signature->{response} }
-        :   ($signature->{response} || DEFAULT_RESPONSE);
+        :   ($signature->{response} || $self->default_response);
     
     my $matcher = sub {
         # Closure with regard to %matchers.
@@ -565,5 +544,3 @@ Julian Mehnle <julian@mehnle.net>
 =cut
 
 TRUE;
-
-# vim:tw=79
